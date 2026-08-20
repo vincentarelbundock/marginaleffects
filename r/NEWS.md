@@ -7,10 +7,10 @@ New:
 * New `vcov = "unconditional"` standard errors for average predictions,
   comparisons, and slopes account for sampling variation in the covariate
   distribution. `vcovUnconditional()` supports HC0 (default), HC1, one-way
-  clustering, built-in contrasts, and weighted targets. Thanks to everyone who
-  participated in the discussion thread, and especially to @pedrohcgs for the
-  code submission and to @snhansen for theoretical guidance and independent
-  testing.
+  clustering, built-in contrasts, and weighted targets. Thanks to @grantmcdermott
+  and @ngreifer for the discussion in #1240 and #1737, and especially to
+  @pedrohcgs for the code submission in #1737 and to @snhansen for theoretical
+  guidance and independent testing.
 * `vcov = "unconditional"` now supports survey-weighted linear and generalized
   linear models fitted by `survey::svyglm()`, using their observation-level
   coefficient influence functions. Thanks to @ngreifer for the `svyglm` code.
