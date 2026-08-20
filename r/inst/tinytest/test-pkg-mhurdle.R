@@ -62,9 +62,37 @@ expect_equivalent(mfx[mfx$term == "linc", "estimate"], as.numeric(mar$dydx_linc)
 expect_equivalent(mfx[mfx$term == "educ", "estimate"], as.numeric(mar$dydx_educ), tolerance = tol)
 expect_equivalent(mfx[mfx$term == "age", "estimate"], as.numeric(mar$dydx_age), tolerance = tol)
 
-expect_equivalent(mfx[mfx$term == "linc", "std.error"], mar$SE_dydx_linc, tolerance = tol_se)
-expect_equivalent(mfx[mfx$term == "educ", "std.error"], mar$SE_dydx_educ, tolerance = tol_se)
-expect_equivalent(mfx[mfx$term == "age", "std.error"], mar$SE_dydx_age, tolerance = tol_se)
+# `margins` builds its Jacobian without varying the scale parameter of an
+# `mhurdle` model, so its standard errors are not a valid reference. Compare
+# against a delta method built on a Richardson-extrapolated Jacobian of the
+# full parameter vector instead (see `set_coef.mhurdle()`).
+requiet("numDeriv")
+mhurdle_eps <- 1e-4
+mhurdle_dydx <- function(model, variable, data) {
+    hi <- lo <- data
+    hi[[variable]] <- data[[variable]] + mhurdle_eps / 2
+    lo[[variable]] <- data[[variable]] - mhurdle_eps / 2
+    p_hi <- stats::predict(model, newdata = hi, what = "E")
+    p_lo <- stats::predict(model, newdata = lo, what = "E")
+    (p_hi - p_lo) / mhurdle_eps
+}
+mhurdle_delta_se <- function(model, fun) {
+    J <- numDeriv::jacobian(
+        function(x) {
+            m <- model
+            m$coefficients[] <- x
+            fun(m)
+        },
+        model$coefficients,
+        method = "Richardson"
+    )
+    sqrt(diag(J %*% stats::vcov(model) %*% t(J)))
+}
+
+for (v in c("linc", "educ", "age")) {
+    ref <- mhurdle_delta_se(m2, function(m) mhurdle_dydx(m, v, nd))
+    expect_equivalent(mfx[mfx$term == v, "std.error"], ref, tolerance = 0.01)
+}
 
 # marginaleffects vs. margins: AME
 mfx <- avg_slopes(m2, type = "E")
@@ -72,4 +100,27 @@ mfx <- mfx[match(c("age", "educ", "linc", "size", "smsa"), mfx$term), ]
 mar <- margins(m2)
 mar <- summary(mar)
 expect_equivalent(mfx$estimate, mar$AME, tolerance = tol)
-expect_equivalent(mfx$std.error, mar$SE, tolerance = tol_se)
+for (v in c("age", "educ", "linc", "size")) {
+    ref <- mhurdle_delta_se(m2, function(m) mean(mhurdle_dydx(m, v, Interview)))
+    expect_equivalent(mfx[mfx$term == v, "std.error"], ref, tolerance = 0.01)
+}
+
+
+# set_coef.mhurdle(): `coef()` renames the scale parameter from `sd` to
+# `sd.sd`, so name-matching against `model$coefficients` used to append a stray
+# element and leave the real scale parameter frozen.
+mod_sd <- quiet_mhurdle_fit(
+    mhurdle(shows ~ educ + size | linc,
+        data = Interview, h2 = TRUE, dist = "n", method = "bhhh")
+)
+b <- get_coef(mod_sd)
+mod_roundtrip <- set_coef(mod_sd, b)
+expect_equivalent(mod_roundtrip$coefficients, mod_sd$coefficients)
+expect_equivalent(names(mod_roundtrip$coefficients), names(mod_sd$coefficients))
+
+b["sd.sd"] <- b["sd.sd"] * 1.5
+mod_bigger_sd <- set_coef(mod_sd, b)
+expect_equivalent(unname(coef(mod_bigger_sd)["sd.sd"]), unname(b["sd.sd"]))
+expect_false(isTRUE(all.equal(
+    predict(mod_sd, newdata = Interview, what = "E"),
+    predict(mod_bigger_sd, newdata = Interview, what = "E"))))

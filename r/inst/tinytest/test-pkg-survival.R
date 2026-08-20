@@ -153,3 +153,42 @@ mod <- coxph(
 expect_warning(avg_comparisons(mod), pattern = "bootstrap")
 expect_warning(predictions(mod), pattern = "bootstrap")
 options(marginaleffects_safe = op)
+
+
+# set_coef.survreg(): `coefs` ends with one Log(scale) entry per stratum. An
+# off-by-one used to write the scale into the last regression coefficient.
+mod_scale <- survreg(Surv(time, status) ~ age + sex, data = survival::lung)
+b <- get_coef(mod_scale)
+mod_roundtrip <- set_coef(mod_scale, b)
+expect_equivalent(coef(mod_roundtrip), coef(mod_scale))
+expect_equivalent(mod_roundtrip$scale, mod_scale$scale)
+
+mod_strata <- survreg(
+    Surv(time, status) ~ age + strata(sex),
+    data = survival::lung)
+b <- get_coef(mod_strata)
+mod_roundtrip <- set_coef(mod_strata, b)
+expect_equivalent(coef(mod_roundtrip), coef(mod_strata))
+expect_equivalent(mod_roundtrip$scale, mod_strata$scale)
+
+# delta method vs. a Richardson-extrapolated Jacobian of exp(X %*% beta)
+requiet("numDeriv")
+dat_scale <- na.omit(survival::lung[, c("time", "status", "age", "sex")])
+mod_scale <- survreg(Surv(time, status) ~ age + sex, data = dat_scale)
+eps <- 1e-5
+ame <- function(b, v) {
+    hi <- lo <- dat_scale
+    hi[[v]] <- dat_scale[[v]] + eps / 2
+    lo[[v]] <- dat_scale[[v]] - eps / 2
+    X_hi <- model.matrix(~ age + sex, hi)
+    X_lo <- model.matrix(~ age + sex, lo)
+    mean(exp(X_hi %*% b[1:3]) - exp(X_lo %*% b[1:3])) / eps
+}
+b <- c(coef(mod_scale), "Log(scale)" = log(mod_scale$scale))
+V <- vcov(mod_scale)
+slo <- avg_slopes(mod_scale)
+for (v in c("age", "sex")) {
+    J <- numDeriv::jacobian(function(x) ame(x, v), b, method = "Richardson")
+    ref <- sqrt(as.numeric(J %*% V %*% t(J)))
+    expect_equivalent(slo$std.error[slo$term == v], ref, tolerance = 1e-3)
+}

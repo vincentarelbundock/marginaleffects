@@ -226,3 +226,22 @@ mod <- nnet::multinom(
 h <- hypotheses(mod, hypothesis = "Chinstrap_body_mass_g = Gentoo_body_mass_g")
 expect_equal(nrow(h), 1)
 expect_inherits(h, "hypotheses")
+
+
+# set_coef.multinom() maps coefficients onto `wts` by position, not by value:
+# a coefficient of exactly zero used to be written into a structural zero.
+tmp <- mtcars
+tmp$cyl <- as.factor(tmp$cyl)
+void <- capture.output(
+    mod_zero <- nnet::multinom(cyl ~ hp + am + mpg, data = tmp, quiet = true)
+)
+b <- get_coef(mod_zero)
+b[2] <- 0
+mod_zero <- set_coef(mod_zero, b)
+expect_equivalent(get_coef(mod_zero), b)
+expect_equivalent(get_coef(set_coef(mod_zero, b)), b)
+
+# and two coefficients which happen to tie must both land
+b[3] <- b[2] <- 0.5
+mod_tie <- set_coef(mod_zero, b)
+expect_equivalent(get_coef(mod_tie), b)

@@ -76,6 +76,25 @@ Performance:
 
 Bug fixes:
 
+* `survreg()` standard errors were wrong whenever the model estimated a scale
+  parameter: `set_coef()` wrote `Log(scale)` into the last regression
+  coefficient and read the scale back from the wrong slot. Delta method
+  standard errors for such models change (in `survival::lung`, the `sex` slope
+  standard error goes from 11.6 to 59.4).
+* `systemfit()` models fitted with *named* equations returned meaningless
+  standard errors: `set_coef()` looked for `eq1_`, `eq2_`, ... prefixes and
+  wiped the coefficients of every equation whose label was something else.
+* `mhurdle()` standard errors ignored the scale parameter, because `coef()`
+  calls it `sd.sd` while the model object stores it as `sd`. `set_coef()` now
+  maps the two, so the Jacobian column for the scale is no longer zero.
+* `set_coef()` for `nnet::multinom()` models now maps coefficients onto the
+  internal weight vector by position instead of by value. A coefficient of
+  exactly zero used to overwrite a structural zero and leave the real
+  coefficient untouched.
+* `set_coef()` no longer mutates the `nls()` model it is given. The `m`
+  component is a list of closures sharing one environment, so the Jacobian loop
+  wrote through to the user's fitted model and made standard errors
+  irreproducible across repeated calls.
 * Weighted average comparisons no longer return `NaN` when a group's first
   weight is zero. Groups with zero total weight remain undefined.
 * Affine `hypothesis` strings now use exact derivatives, preventing large

@@ -202,3 +202,22 @@ cmp <- avg_comparisons(mod, variables = "conc")
 expect_inherits(cmp, "comparisons")
 expect_false(any(is.na(cmp$estimate)))
 expect_false(any(is.na(cmp$std.error)))
+
+
+# set_coef.nls() must not write through to the caller's model: the `m`
+# component is a list of closures sharing one environment.
+DNase1 <- subset(datasets::DNase, Run == 1)
+mod <- nls(density ~ SSlogis(log(conc), Asym, xmid, scal), DNase1)
+b <- get_coef(mod)
+mod_perturbed <- set_coef(mod, b + 1)
+expect_equivalent(get_coef(mod), b)
+expect_equivalent(get_coef(mod_perturbed), b + 1)
+expect_false(isTRUE(all.equal(
+    predict(mod, newdata = DNase1),
+    predict(mod_perturbed, newdata = DNase1))))
+
+# ... so repeated calls return identical standard errors
+s1 <- avg_slopes(mod, variables = "conc")
+s2 <- avg_slopes(mod, variables = "conc")
+expect_equivalent(s1$std.error, s2$std.error)
+expect_equivalent(get_coef(mod), b)

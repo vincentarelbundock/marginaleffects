@@ -125,13 +125,58 @@ get_predict.glm <- function(
     return(out)
 }
 
-
 #' @include set_coef.R
 #' @rdname set_coef
 #' @export
 set_coef.nls <- function(model, coefs, ...) {
     out <- model
+    # `model$m` is a list of closures which all share the environments built by
+    # `stats:::nlsModel()`. Calling `setPars()` on it writes through to the
+    # caller's model: the object the Jacobian loop perturbs is the same object
+    # it perturbs *from*, which leaves the user's fitted model holding the last
+    # perturbed parameters. Clone the environments before writing.
+    out$m <- clone_nlsModel(model$m)
     out$m$setPars(coefs)
+    return(out)
+}
+
+
+# Deep copy of the closure environments behind an `nlsModel` object. Two
+# environments matter: the frame of `nlsModel()` itself (holding `setPars`, the
+# QR decomposition, ...) and the `env` it created to hold the data and the
+# current parameter values.
+clone_nlsModel <- function(m) {
+    e_model <- environment(m[["setPars"]])
+    if (!is.environment(e_model)) {
+        return(m)
+    }
+    clone_env <- function(e) {
+        out <- new.env(parent = parent.env(e))
+        for (nm in ls(e, all.names = TRUE)) {
+            assign(nm, get(nm, envir = e, inherits = FALSE), envir = out)
+        }
+        out
+    }
+    new_model <- clone_env(e_model)
+    e_data <- get0("env", envir = e_model, inherits = FALSE)
+    if (is.environment(e_data)) {
+        assign("env", clone_env(e_data), envir = new_model)
+    }
+    rebind <- function(f) {
+        if (is.function(f) && identical(environment(f), e_model)) {
+            environment(f) <- new_model
+        }
+        f
+    }
+    for (nm in ls(new_model, all.names = TRUE)) {
+        assign(
+            nm,
+            rebind(get(nm, envir = new_model, inherits = FALSE)),
+            envir = new_model
+        )
+    }
+    out <- lapply(m, rebind)
+    attributes(out) <- attributes(m)
     return(out)
 }
 

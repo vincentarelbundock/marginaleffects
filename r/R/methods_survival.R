@@ -2,14 +2,17 @@
 #' @rdname set_coef
 #' @export
 set_coef.survreg <- function(model, coefs, ...) {
-    # Reverse engineering insight::get_get_parameters.survreg(),
-    # which uses summary.survreg()
+    # `coefs` holds the regression coefficients first, followed by one
+    # `Log(scale)` entry per stratum (`insight::get_parameters.survreg()` builds
+    # it from `summary.survreg()`). Peel the scale entries off the tail: indexing
+    # by `nvar0` dropped a regression coefficient and read the scale from the
+    # wrong slot.
 
     nvar0 <- length(model$coefficients)
     nvar <- nrow(model$var)
     if (nvar > nvar0) {
-        model[["coefficients"]][] <- coefs[-nvar0]
-        model[["scale"]][] <- exp(coefs[nvar0])
+        model[["coefficients"]][] <- coefs[seq_len(nvar0)]
+        model[["scale"]][] <- exp(coefs[(nvar0 + 1):nvar])
     } else {
         model$coefficients[] <- coefs
     }

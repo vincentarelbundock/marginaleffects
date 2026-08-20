@@ -2,12 +2,31 @@
 #' @rdname set_coef
 #' @export
 set_coef.multinom <- function(model, coefs, ...) {
-    # internally, coefficients are held in the `wts` vector, with 0s
-    # interspersed. When transforming that vector to a matrix, we see that the
-    # first row and first column are all zeros.
+    # `model$wts` interleaves the estimated coefficients with structural zeros,
+    # and `coef.multinom()` -- which `get_coef.multinom()` relies on -- is a
+    # pure reshape of that vector. Matching coefficient *values* against `wts`
+    # silently misfires whenever a coefficient is exactly zero (it hits a
+    # structural zero instead) or two coefficients tie (one slot is written
+    # twice, the other never). Probe the layout with a copy whose weights are
+    # their own indices, so the mapping is positional rather than value-based.
     # NOTE: must use `newdata` in predict otherwise returns stored object.
-    b_original <- get_coef(model)
-    model$wts[match(b_original, model$wts)] <- coefs
+    probe <- model
+    probe[["wts"]] <- seq_along(model[["wts"]])
+    pos <- tryCatch(get_coef.multinom(probe), error = function(e) NULL)
+    idx <- if (is.null(pos)) {
+        NA_integer_
+    } else if (is.null(names(coefs))) {
+        # unnamed input: `get_coef()` and the probe share an order
+        seq_along(pos)
+    } else {
+        match(names(coefs), names(pos))
+    }
+    if (length(idx) != length(coefs) || anyNA(idx) || anyDuplicated(pos[idx]) > 0L) {
+        b_original <- get_coef(model)
+        model$wts[match(b_original, model$wts)] <- coefs
+        return(model)
+    }
+    model[["wts"]][pos[idx]] <- coefs
     return(model)
 }
 

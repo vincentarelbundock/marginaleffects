@@ -27,3 +27,28 @@ get_vcov.mhurdle <- function(model, vcov = NULL, ...) {
     }
     return(out)
 }
+
+
+#' @rdname set_coef
+#' @export
+set_coef.mhurdle <- function(model, coefs, ...) {
+    # `coef.mhurdle()` relabels and reorders the stored parameter vector: the
+    # scale parameter is called `sd` in `model$coefficients` but `sd.sd` in
+    # `coef()`, `vcov()`, and therefore `get_coef()`. Name-matching against the
+    # stored vector would append a stray `sd.sd` element and leave the real
+    # scale parameter untouched, zeroing out its Jacobian column. Probe the
+    # relabeling by running `coef()` on a copy whose values are the positions
+    # they occupy in `model$coefficients`.
+    probe <- model
+    probe[["coefficients"]] <- stats::setNames(
+        seq_along(model[["coefficients"]]),
+        names(model[["coefficients"]])
+    )
+    pos <- stats::coef(probe)
+    idx <- match(names(coefs), names(pos))
+    if (anyNA(idx)) {
+        return(set_coef.default(model, coefs, ...))
+    }
+    model[["coefficients"]][pos[idx]] <- coefs
+    model
+}

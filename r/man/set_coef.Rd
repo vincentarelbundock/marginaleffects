@@ -5,11 +5,12 @@
 %   R/methods_nnet.R, R/methods_crch.R, R/methods_dataframe.R,
 %   R/methods_flexsurv.R, R/methods_gamlss.R, R/methods_glmmTMB.R,
 %   R/methods_glmtoolbox.R, R/methods_glmx.R, R/methods_lme4.R,
-%   R/methods_mlm.R, R/methods_mmrm.R, R/methods_nestedLogit.R,
-%   R/methods_nlme.R, R/methods_ordinal.R, R/methods_pscl.R,
-%   R/methods_robustlmm.R, R/methods_rstpm2.R, R/methods_sampleSelection.R,
-%   R/methods_scam.R, R/methods_survey.R, R/methods_survival.R,
-%   R/methods_svyVGAM.R, R/methods_systemfit.R, R/methods_tidymodels.R
+%   R/methods_mhurdle.R, R/methods_mlm.R, R/methods_mmrm.R,
+%   R/methods_nestedLogit.R, R/methods_nlme.R, R/methods_ordinal.R,
+%   R/methods_pscl.R, R/methods_robustlmm.R, R/methods_rstpm2.R,
+%   R/methods_sampleSelection.R, R/methods_scam.R, R/methods_survey.R,
+%   R/methods_survival.R, R/methods_svyVGAM.R, R/methods_systemfit.R,
+%   R/methods_tidymodels.R
 \name{set_coef}
 \alias{set_coef}
 \alias{set_coef.default}
@@ -38,6 +39,7 @@
 \alias{set_coef.merMod}
 \alias{set_coef.lmerModLmerTest}
 \alias{set_coef.lmerMod}
+\alias{set_coef.mhurdle}
 \alias{set_coef.mlm}
 \alias{set_coef.mmrm}
 \alias{set_coef.nestedLogit}
@@ -113,6 +115,8 @@ set_coef(model, coefs, ...)
 \method{set_coef}{lmerModLmerTest}(model, coefs, ...)
 
 \method{set_coef}{lmerMod}(model, coefs, ...)
+
+\method{set_coef}{mhurdle}(model, coefs, ...)
 
 \method{set_coef}{mlm}(model, coefs, ...)
 

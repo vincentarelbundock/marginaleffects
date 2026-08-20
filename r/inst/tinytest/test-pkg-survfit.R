@@ -31,3 +31,25 @@ expect_false(anyNA(slo$std.error))
 expect_false(anyNA(cmp$std.error))
 expect_false(anyNA(hyp$std.error))
 expect_false(anyNA(pre$std.error))
+
+
+# set_coef.systemfit() must find the coefficients of *named* equations, whose
+# `coef()` labels are the equation names rather than "eq1", "eq2", ...
+sys_named <- systemfit(list(demand = mpg ~ hp, supply = qsec ~ hp), data = mtcars)
+b <- get_coef(sys_named)
+sys_roundtrip <- set_coef(sys_named, b)
+expect_equivalent(
+    coef(sys_roundtrip$eq[[1]]),
+    coef(sys_named$eq[[1]]))
+expect_equivalent(
+    coef(sys_roundtrip$eq[[2]]),
+    coef(sys_named$eq[[2]]))
+
+# each equation is estimated by OLS, so the slopes match the standalone models
+slo <- avg_slopes(sys_named)
+for (i in seq_along(sys_named$eq)) {
+    ols <- lm(formula(sys_named$eq[[i]]), data = mtcars)
+    ref <- avg_slopes(ols)
+    expect_equivalent(slo$estimate[i], ref$estimate, tolerance = 1e-6)
+    expect_equivalent(slo$std.error[i], ref$std.error, tolerance = 1e-4)
+}
