@@ -546,6 +546,7 @@ Some of the most common \code{type} values are:\tabular{ll}{
    ordinal_weightit \tab probs, response, link, lp, mean \cr
    orm \tab fitted, mean, lp \cr
    polr \tab probs \cr
+   promodel \tab mean, variance, quantile, probability, density, loglikelihood, kurtosis, skewness \cr
    rendo.base \tab response, link \cr
    rlm \tab response \cr
    selection \tab response, link, unconditional, conditional \cr

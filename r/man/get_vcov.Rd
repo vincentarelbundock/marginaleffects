@@ -5,7 +5,7 @@
 %   R/methods_glmmTMB.R, R/methods_mhurdle.R, R/methods_mlr3.R,
 %   R/methods_mmrm.R, R/methods_nestedLogit.R, R/methods_ordinal.R,
 %   R/methods_rms.R, R/methods_rstpm2.R, R/methods_scam.R, R/methods_svyVGAM.R,
-%   R/methods_systemfit.R, R/methods_tidymodels.R
+%   R/methods_systemfit.R, R/methods_tidymodels.R, R/methods_topmodels.R
 \name{get_vcov}
 \alias{get_vcov}
 \alias{get_vcov.default}
@@ -34,6 +34,7 @@
 \alias{get_predict.systemfit}
 \alias{get_vcov.model_fit}
 \alias{get_vcov.workflow}
+\alias{get_vcov.promodel}
 \title{Get a named variance-covariance matrix from a model object}
 \usage{
 get_vcov(model, ...)
@@ -89,6 +90,8 @@ get_vcov(model, ...)
 \method{get_vcov}{model_fit}(model, vcov, type = NULL, ...)
 
 \method{get_vcov}{workflow}(model, vcov, type = NULL, ...)
+
+\method{get_vcov}{promodel}(model, ...)
 }
 \arguments{
 \item{model}{Model object}

@@ -1135,6 +1135,10 @@ Some of the most common <code>type</code> values are:
 </tr>
 <tr>
  <td style="text-align: left;">
+   promodel </td><td style="text-align: left;"> mean, variance, quantile, probability, density, loglikelihood, kurtosis, skewness </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
    rendo.base </td><td style="text-align: left;"> response, link </td>
 </tr>
 <tr>

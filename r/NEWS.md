@@ -31,6 +31,7 @@ New:
 * Support for `nestedLogit::nestedLogit()` models. Thanks to @strengejacke for report #1675.
 * Support for `mmrm::mmrm()` models. Thanks to @kkmann for contribution #1000, and to @lang-benjamin and @danielinteractive for useful comments.
 * Support for `ordinal::clmm2()` models (cumulative link mixed models). Issue #1003.
+* Support for `topmodels::procast()` probabilistic model objects (class `promodel`), with `type` values: "mean", "variance", "quantile", "probability", "density", "loglikelihood", "kurtosis", and "skewness". PR #1159.
 * Improved `type` error for `aft` models.
 * Once-per-session warning when some model coefficients are `NA`, since rank deficiency can make results depend on the order of factor levels. Thanks to @andymilne for report #1744.
 
