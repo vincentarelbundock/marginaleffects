@@ -1,9 +1,9 @@
 # IPW
 
 
-Inverse Probability Weighting (IPW) is a popular technique to remove confounding in statistical modeling. It essentially involves re-weighting your sample so that it represents the population you're interested in. Typically, we begin by estimating the predicted probability that each unit is treated. Then, we use these probabilities as weights in model fitting and in the computation of marginal effects, contrasts, risk differences, ratios, etc.
+Inverse Probability Weighting (IPW) is a popular technique to remove confounding in statistical modeling. It essentially involves re-weighting your sample so that it represents the population you're interested in. Typically, we begin by estimating the predicted probability that each unit is treated. Then, we use these probabilities as weights in model fitting, and from this weighted model finally compute marginal effects, contrasts, risk differences, ratios, etc.
 
-This chapter introduces how to use `marginaleffects` for IPW. The presentation is very short. Readers who seek a more comprehensive understanding and application of these methods should refer to [Noah Greifer's excellent and detailed work on the topic](https://iqss.github.io/dss-ps/ex-weight.html) and to the [`WeightIt` package vignettes and website.](https://ngreifer.github.io/WeightIt/)
+This chapter introduces how to use `marginaleffects` for IPW. The presentation is very short. Readers who seek a more comprehensive understanding and application of these methods should refer to [Noah Greifer's excellent and detailed work on the topic](https://iqss.github.io/dss-ps/ex-weight.html) and to the [`WeightIt` package vignettes and website](https://ngreifer.github.io/WeightIt/).
 
 To illustrate, we use the Lalonde data.
 
@@ -36,13 +36,12 @@ Now, we use linear regression to model the outcome of interest: personal income 
 mod <- lm(re78 ~ treat * (age + educ + race + re74), data = lalonde, weights = wts)
 ```
 
-Finally, we call `avg_comparisons()` to compute the average treatment effect. Note that we use the `wts` argument to specify the weights to be used in the computation.
+Finally, we call `avg_comparisons()` to compute the average treatment effect.
 
 ```{r}
 #| warning: false
 avg_comparisons(mod,
     variables = "treat",
-    wts = "wts",
     vcov = "HC3")
 ```
 
