@@ -33,8 +33,19 @@ New:
 * Support for `ordinal::clmm2()` models (cumulative link mixed models). Issue #1003.
 * Improved `type` error for `aft` models.
 * Once-per-session warning when some model coefficients are `NA`, since rank deficiency can make results depend on the order of factor levels. Thanks to @andymilne for report #1744.
+* New `type = "choice"` for `survival::clogit()` models returns the conditional
+  choice probability: the softmax of the linear predictor within each stratum.
+  This is now the default `type` for `clogit`. Unlike `type = "expected"`, it
+  remains a proper probability on counterfactual grids, and it fixes the "Time
+  and status are different lengths" error raised whenever the prediction grid
+  did not have exactly as many rows as the fitted data. Thanks to @hjuerges for
+  report #1738 and to @csthiago for the earlier report #395.
 
 Breaking changes:
+
+* The default `type` for `survival::clogit()` models changes from `"expected"`
+  to `"choice"`. The old default errored out whenever more than one variable was
+  contrasted, and was not a probability away from the observed data.
 
 * The `byfun` argument is no longer supported. Use `hypothesis` for custom aggregations.
 * `autodiff()`, the JAX differentiation path, and the `reticulate` dependency

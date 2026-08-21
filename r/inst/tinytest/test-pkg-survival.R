@@ -40,6 +40,74 @@ pre <- predictions(mod, type = "lp")
 expect_inherits(pre, "predictions")
 
 
+# Issue #1738: clogit stores a response with a hard-coded row count --
+# `Surv(rep(1, 10000L), out)` -- so any `newdata` of a different size used to
+# raise "Time and status are different lengths" with the response-dependent
+# `predict.coxph()` types. `type = "choice"` routes through "lp" instead.
+exd2 <- data.frame(
+    g = rep(1:200, each = 5),
+    out = rep(0L:1L, 500),
+    x1 = sample(0L:1L, 1000, prob = c(.8, .2), replace = TRUE),
+    x2 = sample(0L:1L, 1000, prob = c(.8, .2), replace = TRUE)
+)
+mod2 <- clogit(out ~ x1 + x2 + strata(g), method = "exact", data = exd2)
+
+# two variables: the lo/hi grids are row-bound, so the call is twice as long
+expect_inherits(avg_comparisons(mod2), "comparisons")
+# a grid smaller than the fitted data
+expect_inherits(predictions(mod2, newdata = exd2[1:2, ]), "predictions")
+
+# `type = "choice"` is a genuine within-stratum choice probability: it sums to
+# one inside every choice set, on observed AND counterfactual grids.
+for (nd in list(exd2, transform(exd2, x1 = 1L), transform(exd2, x1 = 0L))) {
+    p <- predictions(mod2, type = "choice", newdata = nd)
+    expect_equivalent(as.numeric(tapply(p$estimate, nd$g, sum)), rep(1, 200))
+}
+
+# conditional logit depends only on within-stratum differences, so shifting a
+# regressor for every alternative cannot move a choice probability
+cmp2 <- avg_comparisons(mod2, type = "choice")
+expect_equivalent(cmp2$estimate, rep(0, nrow(cmp2)), tolerance = 1e-10)
+
+# an alternative-specific shift does move it, and matches the equivalent logit
+# fit on differenced regressors
+set.seed(1024)
+N <- 200
+d <- data.frame(id = 1:N)
+for (v in c("A1", "A2", "B1", "B2")) d[[v]] <- rbinom(N, 1, .5)
+uA <- d$A1 + .7 * d$A2
+uB <- d$B1 + .7 * d$B2
+d$y <- rbinom(N, 1, exp(uA) / (exp(uA) + exp(uB)))
+d$d1 <- d$A1 - d$B1
+d$d2 <- d$A2 - d$B2
+lg <- glm(y ~ d1 + d2 - 1, data = d, family = binomial)
+alt <- function(a) {
+    data.frame(
+        id = d$id, alt = a, x1 = d[[paste0(a, "1")]], x2 = d[[paste0(a, "2")]],
+        y = if (a == "A") d$y else 1L - d$y
+    )
+}
+long <- rbind(alt("A"), alt("B"))
+cl <- clogit(y ~ x1 + x2 + strata(id), data = long)
+expect_equivalent(coef(cl), coef(lg), tolerance = 1e-6)
+
+target <- avg_comparisons(lg)
+for (i in seq_along(c("x1", "x2"))) {
+    v <- c("x1", "x2")[i]
+    spec <- setNames(
+        list(data.frame(lo = long[[v]], hi = long[[v]] + (long$alt == "A"))),
+        v
+    )
+    got <- avg_comparisons(
+        cl,
+        type = "choice", newdata = long, variables = spec, by = "alt"
+    )
+    got <- got[got$alt == "A", ]
+    expect_equivalent(got$estimate, target$estimate[i], tolerance = 1e-6)
+    expect_equivalent(got$std.error, target$std.error[i], tolerance = 1e-4)
+}
+
+
 # coxph vs. Stata
 stata <- readRDS(testing_path("stata/stata.rds"))$survival_coxph_01
 test1 <<- data.frame(

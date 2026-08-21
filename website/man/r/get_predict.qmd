@@ -283,6 +283,9 @@ get_predict(
 ## S3 method for class 'coxph'
 get_predict(model, newdata = get_modeldata(model), type = "lp", ...)
 
+## S3 method for class 'clogit'
+get_predict(model, newdata = get_modeldata(model), type = "choice", ...)
+
 ## S3 method for class 'svy_vglm'
 get_predict(
   model,

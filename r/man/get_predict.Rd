@@ -62,6 +62,7 @@
 \alias{get_predict.svyolr}
 \alias{get_predict.svyglm}
 \alias{get_predict.coxph}
+\alias{get_predict.clogit}
 \alias{get_predict.svy_vglm}
 \alias{get_predict.model_fit}
 \alias{get_predict.workflow}
@@ -292,6 +293,8 @@ get_predict(
 )
 
 \method{get_predict}{coxph}(model, newdata = get_modeldata(model), type = "lp", ...)
+
+\method{get_predict}{clogit}(model, newdata = get_modeldata(model), type = "choice", ...)
 
 \method{get_predict}{svy_vglm}(
   model,

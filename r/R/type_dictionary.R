@@ -34,6 +34,7 @@ clm,prob
 clm,cum.prob
 clm,linear.predictor
 clmm2,prob
+clogit,choice
 clogit,expected
 clogit,lp
 clogit,risk
