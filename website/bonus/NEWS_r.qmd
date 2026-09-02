@@ -2,234 +2,84 @@
 
 ## 1.0.0
 
-New:
-
-* New `vcov = "unconditional"` standard errors for average predictions,
-  comparisons, and slopes account for sampling variation in the covariate
-  distribution. `vcovUnconditional()` supports HC0 (default), HC1, one-way
-  clustering, built-in contrasts, and weighted targets. Thanks to @grantmcdermott
-  and @ngreifer for the discussion in #1240 and #1737, and especially to
-  @pedrohcgs for the code submission in #1737 and to @snhansen for theoretical
-  guidance and independent testing.
-* `vcov = "unconditional"` now supports survey-weighted linear and generalized
-  linear models fitted by `survey::svyglm()`, using their observation-level
-  coefficient influence functions. Thanks to @ngreifer for the `svyglm` code.
-* `vcov = "unconditional"` gives informative errors for unsupported
-  multiple-imputation, `hypotheses()`, and fixed-effect `fixest` cases. Valid
-  `feols` cases remain supported. `vcov = vcovUnconditional` is equivalent to
-  `vcov = vcovUnconditional()`.
-* Unconditional inference is limited to `lm`, `glm`, `svyglm`, and validated
-  `fixest` cases. Tobit, `survreg`, and `coxph` models now direct users to
-  bootstrap inference because censored and survival models are outside the
-  currently validated conditional-mean setup.
-* Custom comparison functions which accept `newdata` now receive rows aligned
-  with each comparison group and delete-one sample. The fallback jackknife
-  linearization is centered at the mean delete-one estimate.
-* Support for `svyVGAM::svy_vglm()` models. Thanks to @kkranker for Issue #1730.
-* New `set_modeldata()` function to attach training data to a model object explicitly. `get_modeldata()` now checks for this attribute first, and emits a once-per-session warning when `insight::get_data()` raises warnings about data retrieval. This is safer for `lapply()`, Shiny, and nested function workflows.
-* Support for `glmtoolbox::glmgee()` and `glmtoolbox::gnm()` models. Thanks to @luifrancgom for report #1148.
-* Support for `nestedLogit::nestedLogit()` models. Thanks to @strengejacke for report #1675.
-* Support for `mmrm::mmrm()` models. Thanks to @kkmann for contribution #1000, and to @lang-benjamin and @danielinteractive for useful comments.
-* Support for `ordinal::clmm2()` models (cumulative link mixed models). Issue #1003.
-* Improved `type` error for `aft` models.
-* Once-per-session warning when some model coefficients are `NA`, since rank deficiency can make results depend on the order of factor levels. Thanks to @andymilne for report #1744.
-
 Breaking changes:
 
 * The `byfun` argument is no longer supported. Use `hypothesis` for custom aggregations.
-* `autodiff()`, the JAX differentiation path, and the `reticulate` dependency
-  have been removed. Exact analytic Jacobians now cover more models and
-  built-in comparisons, with equivalent standard errors up to floating-point
-  noise. Remove calls to `autodiff()`.
+* Removed `autodiff()`, JAX differentiation, and the `reticulate` dependency. Remove calls to `autodiff()`. The new analytic Jacobians are faster and have broader coverage (see Performance below).
+
+New features:
+
+* New `vcov = "unconditional"` standard errors for average predictions, comparisons, and slopes account for sampling variation in the covariate distribution. `vcovUnconditional()` supports HC0 (default), HC1, one-way clustering, built-in contrasts, weighted targets, `lm`, `glm`, `survey::svyglm()`, and validated `fixest::feols()` cases. Unsupported multiple-imputation, `hypotheses()`, fixed-effect `fixest`, censored, and survival cases produce informative errors and recommend bootstrap inference where appropriate. `vcov = vcovUnconditional` is equivalent to `vcov = vcovUnconditional()`. Thanks to @pedrohcgs for the code contribution in #1737; @snhansen for theoretical guidance and independent testing; and @ngreifer and @grantmcdermott for discussion in #1240 and #1737.
+* New `set_modeldata()` attaches training data to model objects. `get_modeldata()` uses it first and warns once per session about retrieval problems from `insight::get_data()`.
+* New `components(x, "jacobian_method")` reports the differentiation path.
+
+New models:
+
+* Added support for `svyVGAM::svy_vglm()` (#1730, @kkranker), `glmtoolbox::glmgee()` and `glmtoolbox::gnm()` (#1148, @luifrancgom), `nestedLogit::nestedLogit()` (#1675, @strengejacke), `mmrm::mmrm()` (#1000, @kkmann, @lang-benjamin, and @danielinteractive), and `ordinal::clmm2()` (#1003).
+* Improved the `type` error for `aft` models.
 
 Performance:
 
-* Built-in ratios, lifts, slopes, and elasticities now use exact closed-form
-  derivatives. `avg_comparisons(comparison = "ratio")` is about 5x faster in a
-  121-coefficient benchmark. Custom comparison functions remain numerical.
-* Linear `hypothesis` strings and formula shortcuts now compile to exact
-  contrast matrices. Custom functions and arbitrary formula code remain
-  numerical. Issue #1735.
-* A `hypothesis` which is not linear no longer discards the Jacobian of everything upstream of it. The hypothesis is differentiated on its own and composed by the chain rule, which also removes a full re-differentiation of the model.
-* Downstream hypotheses now compose with custom comparison functions instead of
-  re-differentiating the full pipeline. The comparison stage remains numerical.
-* New `components(x, "jacobian_method")` reports `"analytic"`, `"numeric"`, or
-  `"custom"`, reflecting the path actually used.
-* `marginaleffects_jacobian_function` is now honored with `hypothesis`, and its
-  dimensions are validated. Hooks must return the Jacobian of the final estimates.
-* Set `options(marginaleffects_hypothesis_promote = FALSE)` to disable the promotion of linear hypotheses to contrast matrices.
-* Standard errors for estimands newly eligible for the analytic path may differ from previous builds at about 1e-7. The new values are the exact ones; the old values carried finite-difference error.
-* Cached model matrices now discard observation row names without copying their numeric payload. Eligible prediction plans reuse baseline linear predictors, and `avg_comparisons()` aggregates exact Jacobians directly from cached matrices instead of materializing observation-level derivatives.
-* `MASS::glm.nb()`, `MASS::rlm()`, and `brglm2::brglmFit()` models now use package-compatible model matrices and exact analytic Jacobians for eligible predictions and built-in difference comparisons. Response-scale `glm.nb` and `brglmFit` derivatives use their fitted inverse-link functions.
+* Eligible estimands now use exact analytic Jacobians for `lm`, `glm`, `MASS::glm.nb()`, `MASS::rlm()`, `brglm2::brglmFit()`, `quantreg::rq()`, `ivreg`, `geepack::geeglm()`, `survey::svyglm()`, `rms::ols()`, and binary `rms::lrm()` models. Newly exact standard errors may differ from previous builds by about 1e-7.
+* Many `comparisons()` and `slopes()` calls are at least three times faster on large datasets.
+* Built-in ratios, lifts, slopes, and elasticities now use exact derivatives. 
+* Linear `hypothesis=` expressions and supported formula shortcuts compile to contrast matrices, and post-hoc `hypotheses()` uses the same exact path for linear expressions, including constants. Nonlinear hypotheses compose with upstream Jacobians instead of re-differentiating the full pipeline. Issue #1735. Thanks to @nremenyi for #1750.
+* Bayesian posterior draws processing is much more efficient.
 * Set `options(marginaleffects_analytic_jacobian = FALSE)` to disable analytic Jacobians and force the numerical fallback, which is useful for validation and debugging.
-* `rms::ols()` and `rms::lrm()` now use matrices constructed by `predictrms(type = "x")` for exact analytic Jacobians. This supports `ols` linear predictors and binary `lrm` link and fitted scales; unsupported ordinal response transformations retain the numerical fallback.
-* `rq`, `ivreg`, and `geeglm` predictions and eligible built-in difference comparisons now use package-compatible model matrices and exact analytic Jacobians. `geeglm` supports both link and response scales.
-* `svyglm` predictions and built-in difference comparisons now use exact analytic Jacobians on the link and response scales, including grouped and weighted averages.
-* Eligible predictions and built-in difference comparisons for `lm` models and link- or response-scale `glm` models now use exact analytic Jacobians. Matrix-native operations support unweighted and fixed-weight averages and linear matrix hypotheses without replaying individual coefficient columns. Unsupported estimands retain the numerical fallback.
-* Formula hypotheses such as `~ pairwise` and grouped variants now reuse compiled contrast plans during delta-method standard error calculations.
-* Delta-method standard errors for `comparisons()`, `avg_comparisons()`, `slopes()`, `avg_slopes()`, `predictions()`, and `avg_predictions()` now reuse a plan built from the baseline estimates instead of rebuilding loop-invariant result tables for every coefficient perturbation.
-* Grouped prediction standard errors may differ from previous development builds at about 1e-7 due to the new plan-based numeric aggregation kernel.
-* Large speedup (3x and more on large datasets) for `comparisons()` and `slopes()`: predictions returned as named vectors no longer trigger expensive row-name duplicate checks; several unnecessary full-table copies were removed from the internal comparison pipeline; and the standard error machinery no longer merges covariate columns back into intermediate results it only uses for the `estimate` column.
-* Persistent settings are now cached in memory, avoiding repeated filesystem access in hot code paths (e.g., once per estimate for internal comparison bookkeeping).
-* Bayesian comparisons: row indexing and subsetting are now computed once per term instead of once per posterior draw column, which speeds up `comparisons()` and `slopes()` for models with many draws.
-* Removed dead computations in `inferences(method = "boot")` that summarized the full bootstrap draw matrix without using the result.
 
-Bug fixes:
+Covariance and inference:
 
-* A user-supplied `vcov` matrix covering only a subset of the model
-  coefficients was accepted silently, treating the missing coefficients as
-  known constants. It now raises an error.
-* A function supplied to `vcov` which raised an error was silently replaced
-  by the default variance-covariance matrix. The error is now propagated.
-* `by=` in `comparisons()` and `slopes()` merged grouping columns on every
-  shared column name, so a dataset column named `predicted`, `term`, or
-  `contrast` collapsed the result to a single `NA` group. The merge now uses
-  row identifiers only. `by = "rowid"` also works in `comparisons()`.
-* `variables = list(x = "all")` returned fewer contrasts for whichever
-  categorical variable happened to come first in the model, because the
-  `cross = TRUE` de-duplication was applied regardless of `cross`.
-* `multcomp=` adjusted p values always tested against a null of 0, two-sided,
-  even for `ratio ~ ...` hypotheses (null 1) or one-sided `<=`/`>=` strings.
-  The null and direction are now passed to `multcomp::glht()`.
-* In-formula `factor(x, levels = ...)` was not recognized as a factor, so
-  `datagrid()` filled `x` with a rounded mean and predictions were all `NA`.
-  Formula terms are now parsed instead of matched with a regex; this also
-  fixes `as.numeric(x)` and `as.logical(x)` detection.
-* `newdata` objects which already had a `rowid` column (e.g. the output of
-  `datagrid()` or a `predictions` object) were converted to a `data.table` in
-  place, changing the caller's object.
-* `inferences(method = "boot")` and `refit()` on a model fitted with
-  `weights = <vector>` (not a column of the data) silently paired resampled
-  rows with the original weights. Such calls now raise an informative error.
-* Split and cross-validation conformal intervals used a sample quantile which
-  picked an order statistic one too low for most calibration sizes, and
-  under-covered. The `ceiling((n + 1) * conf_level)`-th smallest score is now
-  used; when the calibration set is too small, the bounds are infinite and a
-  warning is issued.
-* Conformal scores used the raw response even when the formula transformed
-  it (e.g. `log(y) ~ x`), producing meaningless intervals. The transformed
-  response is now used.
-* `survreg()` standard errors were wrong whenever the model estimated a scale
-  parameter: `set_coef()` wrote `Log(scale)` into the last regression
-  coefficient and read the scale back from the wrong slot. Delta method
-  standard errors for such models change (in `survival::lung`, the `sex` slope
-  standard error goes from 11.6 to 59.4).
-* `systemfit()` models fitted with *named* equations returned meaningless
-  standard errors: `set_coef()` looked for `eq1_`, `eq2_`, ... prefixes and
-  wiped the coefficients of every equation whose label was something else.
-* `mhurdle()` standard errors ignored the scale parameter, because `coef()`
-  calls it `sd.sd` while the model object stores it as `sd`. `set_coef()` now
-  maps the two, so the Jacobian column for the scale is no longer zero.
-* `set_coef()` for `nnet::multinom()` models now maps coefficients onto the
-  internal weight vector by position instead of by value. A coefficient of
-  exactly zero used to overwrite a structural zero and leave the real
-  coefficient untouched.
-* `set_coef()` no longer mutates the `nls()` model it is given. The `m`
-  component is a list of closures sharing one environment, so the Jacobian loop
-  wrote through to the user's fitted model and made standard errors
-  irreproducible across repeated calls.
-* Weighted average comparisons no longer return `NaN` when a group's first
-  weight is zero. Groups with zero total weight remain undefined.
-* Affine `hypothesis` strings now use exact derivatives, preventing large
-  constants from producing incorrect zero standard errors.
-* Post-hoc `hypotheses()` now uses exact derivatives for affine string
-  hypotheses on result objects, models, and estimate data frames.
-* Unconditional inference now uses exact derivatives for affine hypotheses,
-  preventing large constants from producing zero or missing standard errors.
-* `~meandev` and `~meanotherdev` now use `O(np)` time and memory instead of
-  dense `n x n` matrices (formerly 573 MB for 10,000 estimates).
+* User-supplied covariance matrices must cover all coefficients. Named matrices are reordered and validated; unnamed matrices warn about positional matching. Errors from `vcov` functions are now propagated.
+* `vcov = "stata"` now maps to HC1, matching Stata, `estimatr`, and `modelsummary`; use `vcov = "HC2"` for the previous behavior.
+* `multcomp=` and simulated Wald inference now respect the hypothesis null and direction. Bonferroni confidence intervals now match Bonferroni p values.
+* Exact zero standard errors are reported as `NA`, along with their associated inferential quantities. This distinguishes structural or constant estimands from effects estimated with very small uncertainty.
+* Per-observation `df` vectors are rejected with aggregation or hypotheses; `df = NULL` remains valid. Equivalence tests support vector-valued degrees of freedom and reject reversed bounds.
+* Weighted average comparisons no longer return `NaN` when a group's first weight is zero; groups with zero total weight remain undefined.
+
+Hypotheses and contrasts:
+
+* Numeric `variables=` functions and data frames honor `lo`/`hi` and `low`/`high` regardless of order and may return data frames, data tables, or tibbles. Logical comparisons honor their requested direction.
+* `hypothesis` formulas group by `datagrid()` variables when `by` is omitted and can resolve external variables such as `~ I(drop(t(www) %*% x)) | am`. Thanks to Matt Thomas for #1705 and @mattansb for #1707.
+* Hypothesis functions may declare `newdata` and `by`; empty results now error. Joint tests prefer exact name matches, reject ambiguous or missing matches, and report null values correctly. Matrix hypotheses preserve posterior and bootstrap draws.
+* `~meandev` and `~meanotherdev` now use `O(np)` time and memory instead of dense `n x n` matrices, reducing memory use from 573 MB for 10,000 estimates.
+* `numderiv = list("richardson", side = ...)` is now accepted; the validator previously rejected `side` and accepted the nonexistent `size` argument.
+
+Data, grids, and grouping:
+
+* Grouped comparisons and slopes support `by = "rowid"`, avoid collisions with data columns named `predicted`, `term`, or `contrast`, preserve posterior and bootstrap draws when groups are incomplete, and retain `comparison = "lift"` rows with duplicate labels. Thanks to @coughlanja for #1669.
+* Formula terms are parsed to recognize `factor(x, levels = ...)`, `as.numeric(x)`, and `as.logical(x)`, preventing invalid `datagrid()` values and `NA` predictions.
+* `datagrid()` now preserves counterfactual row identifiers across groups, supports grouped `data.table` inputs, honors `response`, validates grouping columns, and treats numeric `fixest` fixed effects as categorical. Thanks to @arcruz0 for #1685.
+* `newdata` shortcuts now handle logical, integer, binary, and missing values as documented. Existing `rowid` columns are no longer modified by reference.
+* `avg_predictions()` with factor `variables` uses all factor levels when the original model data is unavailable. Thanks to @trose64 for report #1703.
+
+Model compatibility:
+
+* Corrected standard errors for `survival::survreg()` models with estimated scale, named `systemfit()` equations, `mhurdle` scale parameters, and zero coefficients in `nnet::multinom()`.
+* Repeated standard-error calculations for `nls()` models are now reproducible.
+* `betareg` models without a precision formula now align the precision parameter names used by `get_coef()` and `get_vcov()`, allowing user-supplied covariance matrices.
+* `lm` and `glm` estimates work when `qr$qr` was removed from the fitted object; linear predictions fall back to the model matrix when `stats::predict()` fails. Thanks to @trose64 for report #1748.
+* `vcov = "HC0"` no longer changes response-scale point estimates for `glmmTMB` models with random effects; robust covariance extraction now restores the internal TMB state. Thanks to @nremenyi for the report.
+* Fixed `mira` models fitted with formula transformations and `subset=`, and enabled `predictions(<mira>, newdata = datagrid(...))` for `mice` objects. Thanks to @dmongin for #1682.
+* `flexsurv` prediction standard errors now synchronize transformed coefficients and delegate to `flexsurv::predict()` when `vcov = TRUE`. Thanks to @colinorourke for report #1670.
+* `hypotheses()` no longer errors on `survey::svyglm()` objects when no averaging is required. Thanks to @bdwilliamson for Issue #1723.
+
+Bootstrap and conformal inference:
+
+* Bootstrap and `refit()` reject models fitted with external weight vectors. Bootstrap refits no longer resolve unrelated global data, and fractional weighted bootstrap uses model-stored data. Thanks to @U8NWXD for #1713.
+* Bootstrap inference with a user-supplied `estimator` uses the `conf_level` from the estimator result.
+* Conformal intervals now use the correct finite-sample quantile, warn and return infinite bounds when calibration data are insufficient, respect transformed outcomes, and preserve absolute residuals for squared-residual CV+ scores.
+
+Predictions and comparisons:
+
 * Comparison rows are now dropped when either prediction is missing.
-* `betareg` models fit without a precision formula could not accept a user-supplied `vcov` matrix: `get_coef()` labelled the lone precision parameter `(phi)_(phi)` while `get_vcov()` called it `(phi)`.
-* `lm` and `glm` estimates no longer fail when the fit object was stripped of its `qr$qr` element to save memory. Linear predictions are now computed from the model matrix when `stats::predict()` fails. Thanks to @trose64 for report #1748.
-* `vcov = "stata"` now maps to HC1, matching Stata, `estimatr`, and
-  `modelsummary`. Use `vcov = "HC2"` for the old behavior.
-* Named user-supplied covariance matrices are reordered to coefficient order.
-  Non-matching names now produce an error instead of positional multiplication.
-* `inferences(method = "simulation", conf_type = "wald")` now tests against the stored `hypothesis` null value and respects one-sided directions, instead of always testing zero two-sided.
-* Exact zero standard errors are now reported as `0` instead of `NA`, matching
-  Python. The corresponding test statistic remains undefined.
-* Offsets declared in a model formula are now detected for model classes which do not store an `$offset` component (`quantreg::rq()`, `rms::ols()`), which keeps those models off the cached-model-matrix paths their offsets would invalidate.
-* `hypotheses(joint = ...)` now errors when a selected coefficient name matches more than one estimate, instead of silently testing their sum.
-* The `numderiv = list("richardson", side = ...)` argument is now accepted; the validator previously rejected `side` and accepted a nonexistent `size` argument.
-* Standard errors computed through `hypothesis` no longer lose accuracy on
-  large datasets. Thanks to @nremenyi for report #1750.
-* Unconditional inference now rejects non-finite scalar comparison results,
-  uses the analytic log-ratio influence function when both means are negative,
-  and permits clustered HC0 inference for saturated linear models.
-* `by` aggregation with posterior or bootstrap draws no longer flattens the draws matrix when a `by` data frame omits some term/group combinations.
-* `predictions()` now assigns the correct `rowid`, `type`, and `estimate` column names when model predictions are returned as a bare vector.
-* `equivalence` tests now support vector-valued degrees of freedom.
-* `hypotheses()` no longer passes undefined `wts` and `by` promises to model sanitization methods.
-* `inferences(method = "conformal_cv+", conformal_score = "residual_sq")` now preserves absolute residuals used to compute prediction interval half-widths.
-* Column ordering now recognizes the `variable_names_datagrid` attribute set by `datagrid()`.
-* `expect_margins()` now initializes its diagnostic message and reports missing standard error or variance columns correctly.
-* `expect_slopes()` now reports missing standard errors with the correct diagnostic message.
-* Matrix hypotheses with posterior or bootstrap draws now keep draws aligned when the internal `"1 - 1"` placeholder row is removed.
-* Hypothesis functions can now declare the documented optional `newdata` and `by` arguments.
-* `plot_predictions()` no longer adds duplicate line layers when confidence bands are present.
-* `plot_predictions()` now falls back to `"Prediction"` when the response variable has no `label` attribute.
-* Printing no longer errors when the `df` column includes `NA` values.
-* Bootstrap inference with a user-supplied `estimator` now uses the `conf_level` from the estimator result.
-* `predictions(variables = ...)` no longer records the internal `marginaleffects_internal` sentinel as a user-specified `datagrid()` variable.
-* Internal unpadding now returns the expected `out`/`draws` list even when predictions have no `rowid` column.
-* Deprecated-dot checks now call the real `stop_deprecate()` helper.
-* Bug: `vcov = "HC0"` could change response-scale point estimates for `glmmTMB` models with random effects by mutating the internal TMB state used for conditional predictions. The model state is now restored after robust covariance extraction. Thanks to @nremenyi for raising the issue.
-* `hypothesis` formula now correctly groups by `datagrid()` variables when `by` is not explicitly specified in `comparisons()` and `predictions()`. Thanks to Matt Thomas for the suggestion in #1705.
-* `hypothesis` formula with external variables (e.g., `~ I(drop(t(www) %*% x)) | am`) no longer raises a scoping error. Thanks to @mattansb for report #1707.
-* `datagrid()` now correctly treats numeric fixed effects in `fixest` models (specified via `|`) as categorical variables instead of computing their mean. Thanks to @arcruz0 for report #1685.
-* Avoid collapsing `contrast` rows when using `by` and `comparison="lift"`. The row labels were not unique. Thanks to @coughlanja for report #1669.
-* `avg_comparisons()` (and related functions) no longer return silently incorrect results for `mira` objects when the formula contains in-formula transformations like `bs()` and `subset=` was used in the model call. Thanks to @dmongin for report #1682.
-* `avg_predictions()` with factor `variables` now uses all factor levels (not just those observed in `newdata`) when the original model data is unavailable. Thanks to @trose64 for report #1703.
-* Fix standard errors for `flexsurv` predictions by syncing transformed coefficients and delegating prediction SEs to `flexsurv::predict()` when `vcov=TRUE`. Thanks to @colinorourke for report #1670.
-* `inferences(method = "boot")` no longer picks up an unrelated global `data` variable during refit. Previously, `stats::update()` stored the symbol `data` (not its value) in the refitted model's call, and subsequent data extraction via `insight::get_data()` could resolve that symbol against the calling environment. Thanks to @U8NWXD for report #1713.
-* `hypotheses()` no longer errors with `survey::svyglm()` objects when no averaging is required. Thanks to @bdwilliamson for Issue #1723.
-* Numeric `variables=` data frames and functions now honour the documented
-  `lo`/`hi` (and `low`/`high`) column names; previously a data frame with
-  `hi` before `lo` silently returned the negated contrast. Functions returning
-  a `data.table` or `tibble` are accepted.
-* Logical variables in `comparisons()` now honour `c(FALSE, TRUE)`,
-  `c(TRUE, FALSE)`, and the `rev*` shortcuts instead of always computing
-  `TRUE - FALSE`.
-* `datagrid(grid_type = "counterfactual", by = ...)` assigns `rowidcf` before
-  splitting, so it identifies the original row across groups. `datagrid()`
-  also works with a `data.table` and `by`, warns when rows have missing `by`
-  values, honours the `response` argument (previously a no-op), and reports
-  unknown `by` columns clearly.
-* `inferences(method = "fwb")` refits on the data stored in the object rather
-  than re-evaluating the original `data` symbol, so models with `NA` rows or
-  fitted on function-local data now work.
-* `transform=` no longer crashes with "missing value where TRUE/FALSE needed"
-  when a transformed confidence bound is `NaN` (e.g. `log` of a negative
-  bound), and errors clearly when the function returns the wrong length.
-* `plot_*()` with a numeric second `condition` no longer fails with "factor
-  level is duplicated" when the five-number summary collapses at two
-  significant digits; `points=` and `rug=` work with `cbind()` responses.
-* `newdata = "median"` keeps logical predictors at their mode; `"tukey"` and
-  `"grid"` expand integer-valued and 0/1 predictors as documented.
-* `predictions(<mira>, newdata = datagrid(...))` works with `mice` objects.
-* A user-supplied `vcov` matrix without column names triggers a warning, since
-  it is multiplied positionally.
-* A per-observation `df` vector is rejected with `by`, `hypothesis`, or the
-  `avg_*()` functions instead of being assigned positionally; `df = NULL` is
-  accepted.
-* `joint=` with a single string tries an exact name match before the regular
-  expression, so names with metacharacters such as `factor(cyl)6` or `hp +1`
-  work, and no match raises an informative error. The joint-test header no
-  longer recycles a vector of null values incorrectly.
-* `equivalence = c(lower, upper)` with `lower > upper` raises an error.
-* A `hypothesis` function which returns an empty result raises an error
-  instead of returning zero rows.
-* `multcomp = "bonferroni"` reports Bonferroni confidence intervals, matching
-  its p values; the other step-wise methods keep single-step intervals.
-* `print(style = "tinytable")` keeps the `Term:` and `Comparison:` notes when
-  those columns are dropped, and the decision to drop them is made on the
-  full object rather than on the printed head/tail rows.
-* `get_mode()` ignores missing values, so a variable whose most frequent
-  value is `NA` is no longer filled with `NA` in `datagrid()`.
-* `expect_margins()` no longer passes vacuously when the reference contains
-  `NA` or has a different length.
-* Removed dead code: the unused `dedup_newdata()`, and unreachable
-  `"bootstrap"`/`"outer-product"` `vcov` branches.
+* `transform=` handles `NaN` confidence bounds and reports wrong-length function results clearly.
+
+Plots, printing, and diagnostics:
+
+* Plot functions avoid duplicate lines, handle missing response labels and duplicated rounded condition values, and support `points=` and `rug=` with `cbind()` responses.
+* Printing handles `NA` values in `df`. `print(style = "tinytable")` preserves `Term:` and `Comparison:` notes when their columns are dropped and bases that decision on the full object rather than the displayed rows.
+* Fixed diagnostics and validation in `expect_margins()` and `expect_slopes()`.
+* Models with `NA` coefficients now trigger a once-per-session rank-deficiency warning. Thanks to @andymilne for #1744.
 
 ## 0.32.0
 

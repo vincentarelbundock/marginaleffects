@@ -94,7 +94,7 @@ plot_build <- function(
     # The stored response may be a combined expression such as "cbind(s, f)",
     # which is not a column of `modeldata`. Plot the first raw response
     # variable instead, and skip points/rug when no column matches.
-    dv_plot <- if (length(dv) > 0) dv[1] else dv
+    dv_plot <- if (length(dv) > 0 && !is.na(dv[1]) && nzchar(dv[1])) dv[1] else NULL
     if (!is.null(dv_plot) && !dv_plot %in% colnames(mfx@modeldata)) {
         dv_raw <- hush(insight::find_response(mfx@model, combine = FALSE, component = "all", flatten = TRUE))
         dv_raw <- intersect(dv_raw, colnames(mfx@modeldata))

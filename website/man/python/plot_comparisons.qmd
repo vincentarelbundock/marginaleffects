@@ -69,6 +69,9 @@ Type of uncertainty estimates to report (e.g. for robust standard errors). Accep
 - String: Literal indicating the kind of uncertainty estimates to return:
     - Heteroskedasticity-consistent: "HC0", "HC1", "HC2", "HC3".
 - np.ndarray: A custom square covariance matrix.
+- `vcovUnconditional()`: EXPERIMENTAL. Influence-function standard errors that
+  add sampling variation in the empirical distribution of the covariates to
+  coefficient uncertainty. Only available for averaged or aggregated effects.
 
 #### `transform`: (function) {.unnumbered}
 

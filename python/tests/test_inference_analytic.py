@@ -3,7 +3,7 @@ import numpy as np
 from marginaleffects.estimands import estimands
 from marginaleffects.hypothesis_compile import hypothesis_compile
 from marginaleffects.inference.analytic import analytic_try
-from marginaleffects.inference.delta import get_jacobian
+from marginaleffects.inference.delta import get_jacobian, get_se
 from marginaleffects.planning import (
     AggGroup,
     ComparisonPlan,
@@ -60,6 +60,12 @@ class LogitAdapter(LinearAdapter):
             return mu * (1 - mu)
 
         return inverse, derivative
+
+
+def test_exact_zero_standard_error_is_missing():
+    se = get_se(np.array([[0.0], [1e-12]]), np.array([[1.0]]))
+    assert np.isnan(se[0])
+    assert se[1] == 1e-12
 
 
 def test_analytic_prediction_jacobian_with_aggregation():
