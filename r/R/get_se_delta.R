@@ -7,7 +7,13 @@
 # whose vcov methods return bare matrices.
 align_vcov_to_coef <- function(V, model, ...) {
     vnames <- colnames(V)
-    if (is.null(vnames) || anyDuplicated(vnames) > 0L) {
+    if (is.null(vnames)) {
+        warn_sprintf(
+            "The supplied `vcov` matrix has no column names, so it is assumed to be in the same order as the model coefficients. Supply a matrix with coefficient names to have it checked and aligned."
+        )
+        return(V)
+    }
+    if (anyDuplicated(vnames) > 0L) {
         return(V)
     }
     beta <- tryCatch(get_coef(model, ...), error = function(e) NULL)
@@ -35,6 +41,15 @@ align_vcov_to_coef <- function(V, model, ...) {
     if (ncol(V) == length(beta)) {
         stop_sprintf(
             "The supplied variance-covariance matrix has the same dimension as the coefficient vector, but its names do not match the coefficient names."
+        )
+    }
+    # A matrix which covers only a subset of the (non-aliased) coefficients
+    # would silently treat the missing ones as known constants downstream.
+    missing_names <- setdiff(bnames[!is.na(beta)], vnames)
+    if (length(missing_names) > 0) {
+        stop_sprintf(
+            "The supplied variance-covariance matrix does not cover all model coefficients. Missing: %s",
+            toString(missing_names)
         )
     }
     V

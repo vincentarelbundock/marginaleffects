@@ -22,10 +22,19 @@ inferences_fwb <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", m
             w <- w * w0
         }
 
-        # Update the model's call and evaluate
+        # Update the model's call and evaluate on `modeldata` (the rows the
+        # weights correspond to; NA rows already dropped), in the formula
+        # environment so function-local data and variables resolve.
         call_mod <- insight::get_call(mfx@model)
         call_mod[["weights"]] <- w
-        boot_mod <- eval.parent(call_mod)
+        if ("data" %in% names(call_mod)) {
+            call_mod[["data"]] <- data
+        }
+        env <- tryCatch(environment(stats::formula(mfx@model)), error = function(e) NULL)
+        if (is.null(env)) {
+            env <- parent.frame()
+        }
+        boot_mod <- eval(call_mod, envir = env)
 
         # Update marginaleffects call
         call_mfx[["model"]] <- boot_mod

@@ -24,13 +24,25 @@ backtransform <- function(x, transform, draws = NULL) {
     }
 
     for (col in cols) {
-        x[[col]] <- transform(x[[col]])
+        out <- transform(x[[col]])
+        if (!is.numeric(out) || length(out) != length(x[[col]])) {
+            stop_sprintf(
+                "The `transform` function must return a numeric vector of the same length as its input (received %s of length %s for a `%s` column of length %s).",
+                class(out)[1],
+                length(out),
+                col,
+                length(x[[col]])
+            )
+        }
+        x[[col]] <- out
     }
 
-    # Issue #1204: Some inverse link functions swap the order of low and high
+    # Issue #1204: Some inverse link functions swap the order of low and high.
+    # `which()` skips NaN bounds (e.g. `log` of a negative bound) instead of
+    # crashing on an `NA` inside `if()`.
     if (all(c("conf.low", "conf.high") %in% colnames(x))) {
-        idx <- x$conf.high < x$conf.low
-        if (any(idx)) {
+        idx <- which(x$conf.high < x$conf.low)
+        if (length(idx) > 0) {
             lo <- x[["conf.low"]][idx]
             x[["conf.low"]][idx] <- x[["conf.high"]][idx]
             x[["conf.high"]][idx] <- lo

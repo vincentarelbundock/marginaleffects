@@ -31,6 +31,27 @@ refit.marginaleffects <- function(object, data = NULL, newdata = NULL, vcov = NU
     model <- mfx@model
 
     fit_again <- function(model, data) {
+        # Arguments of the model call which reference objects outside `data`
+        # (e.g. `weights = wvec`) would be re-evaluated against the original,
+        # un-resampled vector while `data` holds resampled rows: silently
+        # misaligned weights. Refuse rather than guess.
+        call_model <- tryCatch(insight::get_call(model), error = function(e) NULL)
+        if (!is.call(call_model)) {
+            call_model <- mfx@call_model
+        }
+        if (is.call(call_model)) {
+            for (arg in intersect(c("weights", "offset", "subset"), names(call_model))) {
+                vars <- all.vars(call_model[[arg]])
+                missing_vars <- setdiff(vars, colnames(data))
+                if (length(missing_vars) > 0) {
+                    stop_sprintf(
+                        "Cannot refit the model: the `%s` argument of the model call refers to `%s`, which is not a column of the data used to fit the model. Refitting on resampled rows would misalign it. Please store it as a column of the data frame before fitting the model.",
+                        arg,
+                        toString(missing_vars)
+                    )
+                }
+            }
+        }
         # Try stats::update first
         model <- tryCatch(
             stats::update(model, data = data),

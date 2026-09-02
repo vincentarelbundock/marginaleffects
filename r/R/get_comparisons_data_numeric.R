@@ -36,13 +36,9 @@ get_comparisons_data_numeric <- function(
 
     # manual high
     if (isTRUE(checkmate::check_data_frame(variable$value))) {
-        if (all(c("low", "high") %in% colnames(variable$value))) {
-            low <- variable$value$low
-            high <- variable$value$high
-        } else {
-            low <- variable$value[[1]]
-            high <- variable$value[[2]]
-        }
+        tmp <- resolve_lo_hi(variable$value, variable$name)
+        low <- tmp$lo
+        high <- tmp$hi
         lab <- "manual"
     } else if (isTRUE(variable$label %in% slopes)) {
         low <- x - h / 2
@@ -122,8 +118,15 @@ get_comparisons_data_numeric <- function(
         lab <- make_label(variable$label, c("Max", "Min"))
     } else if (isTRUE(checkmate::check_function(variable$value))) {
         tmp <- variable$value(x)
-        low <- tmp[, 1]
-        high <- tmp[, 2]
+        if (!inherits(tmp, "data.frame") || nrow(tmp) != length(x)) {
+            stop_sprintf(
+                "The function supplied for `%s` in the `variables` argument must return a data frame with one row per observation and two columns (`lo`/`hi`).",
+                variable$name
+            )
+        }
+        tmp <- resolve_lo_hi(tmp, variable$name)
+        low <- tmp$lo
+        high <- tmp$hi
         lab <- "custom"
     }
 

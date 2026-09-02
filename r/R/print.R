@@ -182,13 +182,15 @@ print.marginaleffects <- function(
         if (!is.null(mfx)) mfx@variable_names_response else NULL
     )
 
-    if ("term" %in% colnames(out) && length(unique(out$term)) == 1L) {
-        print_term_text <- sprintf("Term: %s\n", out[["term"]][1L])
+    # Decide on the full object `x`, not on the head/tail window `out`: rows
+    # omitted from the printout may carry other terms or contrasts.
+    if ("term" %in% colnames(x) && length(unique(x$term)) == 1L) {
+        print_term_text <- sprintf("Term: %s\n", x[["term"]][1L])
         useless <- c(useless, "term")
     }
 
-    if ("contrast" %in% colnames(out) && length(unique(out$contrast)) == 1L) {
-        print_contrast_text <- sprintf("Comparison: %s\n", out[["contrast"]][1L])
+    if ("contrast" %in% colnames(x) && length(unique(x$contrast)) == 1L) {
+        print_contrast_text <- sprintf("Comparison: %s\n", x[["contrast"]][1L])
         useless <- c(useless, "contrast")
     }
 
@@ -239,7 +241,8 @@ print.marginaleffects <- function(
         tab <- as.data.frame(out)
 
         args <- list(x = tab)
-        notes <- c(print_type_text, print_columns_text)
+        notes <- c(print_term_text, print_contrast_text, print_type_text, print_columns_text)
+        notes <- sub("\n$", "", notes)
         if (!is.null(notes)) args$notes <- notes
         tab <- do.call(tinytable::tt, args)
         tab <- tinytable::format_tt(tab, escape = TRUE)

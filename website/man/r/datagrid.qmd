@@ -92,7 +92,7 @@ the function to be applied to character variables.
 </td></tr>
 <tr><td style = "white-space: collapse; font-family: monospace; vertical-align: top"><code id="FUN_factor">FUN_factor</code></td>
 <td>
-the function to be applied to factor variables. This only applies if the variable in the original data is a factor. For variables converted to factor in a model-fitting formula, for example, <code>FUN_character</code> is used.
+the function to be applied to factor variables, including variables converted to factor in the model-fitting formula (e.g., <code>factor(cyl)</code>).
 </td></tr>
 <tr><td style = "white-space: collapse; font-family: monospace; vertical-align: top"><code id="FUN_logical">FUN_logical</code></td>
 <td>

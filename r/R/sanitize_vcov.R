@@ -88,7 +88,21 @@ sanitize_vcov <- function(model, vcov) {
     out <- vcov
 
     if (isTRUE(checkmate::check_function(out))) {
-        out <- hush(out(model))
+        # Silence output, messages, and warnings, but propagate errors: an
+        # error mapped to `NULL` would silently select the default vcov.
+        fun <- out
+        out <- NULL
+        tryCatch(
+            utils::capture.output({
+                out <- suppressMessages(suppressWarnings(fun(model)))
+            }),
+            error = function(e) {
+                stop_sprintf(
+                    "The function supplied to the `vcov` argument raised an error: %s",
+                    conditionMessage(e)
+                )
+            }
+        )
     }
 
     if (isTRUE(checkmate::check_matrix(out))) {

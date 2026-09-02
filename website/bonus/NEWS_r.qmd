@@ -76,6 +76,58 @@ Performance:
 
 Bug fixes:
 
+* A user-supplied `vcov` matrix covering only a subset of the model
+  coefficients was accepted silently, treating the missing coefficients as
+  known constants. It now raises an error.
+* A function supplied to `vcov` which raised an error was silently replaced
+  by the default variance-covariance matrix. The error is now propagated.
+* `by=` in `comparisons()` and `slopes()` merged grouping columns on every
+  shared column name, so a dataset column named `predicted`, `term`, or
+  `contrast` collapsed the result to a single `NA` group. The merge now uses
+  row identifiers only. `by = "rowid"` also works in `comparisons()`.
+* `variables = list(x = "all")` returned fewer contrasts for whichever
+  categorical variable happened to come first in the model, because the
+  `cross = TRUE` de-duplication was applied regardless of `cross`.
+* `multcomp=` adjusted p values always tested against a null of 0, two-sided,
+  even for `ratio ~ ...` hypotheses (null 1) or one-sided `<=`/`>=` strings.
+  The null and direction are now passed to `multcomp::glht()`.
+* In-formula `factor(x, levels = ...)` was not recognized as a factor, so
+  `datagrid()` filled `x` with a rounded mean and predictions were all `NA`.
+  Formula terms are now parsed instead of matched with a regex; this also
+  fixes `as.numeric(x)` and `as.logical(x)` detection.
+* `newdata` objects which already had a `rowid` column (e.g. the output of
+  `datagrid()` or a `predictions` object) were converted to a `data.table` in
+  place, changing the caller's object.
+* `inferences(method = "boot")` and `refit()` on a model fitted with
+  `weights = <vector>` (not a column of the data) silently paired resampled
+  rows with the original weights. Such calls now raise an informative error.
+* Split and cross-validation conformal intervals used a sample quantile which
+  picked an order statistic one too low for most calibration sizes, and
+  under-covered. The `ceiling((n + 1) * conf_level)`-th smallest score is now
+  used; when the calibration set is too small, the bounds are infinite and a
+  warning is issued.
+* Conformal scores used the raw response even when the formula transformed
+  it (e.g. `log(y) ~ x`), producing meaningless intervals. The transformed
+  response is now used.
+* `survreg()` standard errors were wrong whenever the model estimated a scale
+  parameter: `set_coef()` wrote `Log(scale)` into the last regression
+  coefficient and read the scale back from the wrong slot. Delta method
+  standard errors for such models change (in `survival::lung`, the `sex` slope
+  standard error goes from 11.6 to 59.4).
+* `systemfit()` models fitted with *named* equations returned meaningless
+  standard errors: `set_coef()` looked for `eq1_`, `eq2_`, ... prefixes and
+  wiped the coefficients of every equation whose label was something else.
+* `mhurdle()` standard errors ignored the scale parameter, because `coef()`
+  calls it `sd.sd` while the model object stores it as `sd`. `set_coef()` now
+  maps the two, so the Jacobian column for the scale is no longer zero.
+* `set_coef()` for `nnet::multinom()` models now maps coefficients onto the
+  internal weight vector by position instead of by value. A coefficient of
+  exactly zero used to overwrite a structural zero and leave the real
+  coefficient untouched.
+* `set_coef()` no longer mutates the `nls()` model it is given. The `m`
+  component is a list of closures sharing one environment, so the Jacobian loop
+  wrote through to the user's fitted model and made standard errors
+  irreproducible across repeated calls.
 * Weighted average comparisons no longer return `NaN` when a group's first
   weight is zero. Groups with zero total weight remain undefined.
 * Affine `hypothesis` strings now use exact derivatives, preventing large
@@ -131,6 +183,53 @@ Bug fixes:
 * Fix standard errors for `flexsurv` predictions by syncing transformed coefficients and delegating prediction SEs to `flexsurv::predict()` when `vcov=TRUE`. Thanks to @colinorourke for report #1670.
 * `inferences(method = "boot")` no longer picks up an unrelated global `data` variable during refit. Previously, `stats::update()` stored the symbol `data` (not its value) in the refitted model's call, and subsequent data extraction via `insight::get_data()` could resolve that symbol against the calling environment. Thanks to @U8NWXD for report #1713.
 * `hypotheses()` no longer errors with `survey::svyglm()` objects when no averaging is required. Thanks to @bdwilliamson for Issue #1723.
+* Numeric `variables=` data frames and functions now honour the documented
+  `lo`/`hi` (and `low`/`high`) column names; previously a data frame with
+  `hi` before `lo` silently returned the negated contrast. Functions returning
+  a `data.table` or `tibble` are accepted.
+* Logical variables in `comparisons()` now honour `c(FALSE, TRUE)`,
+  `c(TRUE, FALSE)`, and the `rev*` shortcuts instead of always computing
+  `TRUE - FALSE`.
+* `datagrid(grid_type = "counterfactual", by = ...)` assigns `rowidcf` before
+  splitting, so it identifies the original row across groups. `datagrid()`
+  also works with a `data.table` and `by`, warns when rows have missing `by`
+  values, honours the `response` argument (previously a no-op), and reports
+  unknown `by` columns clearly.
+* `inferences(method = "fwb")` refits on the data stored in the object rather
+  than re-evaluating the original `data` symbol, so models with `NA` rows or
+  fitted on function-local data now work.
+* `transform=` no longer crashes with "missing value where TRUE/FALSE needed"
+  when a transformed confidence bound is `NaN` (e.g. `log` of a negative
+  bound), and errors clearly when the function returns the wrong length.
+* `plot_*()` with a numeric second `condition` no longer fails with "factor
+  level is duplicated" when the five-number summary collapses at two
+  significant digits; `points=` and `rug=` work with `cbind()` responses.
+* `newdata = "median"` keeps logical predictors at their mode; `"tukey"` and
+  `"grid"` expand integer-valued and 0/1 predictors as documented.
+* `predictions(<mira>, newdata = datagrid(...))` works with `mice` objects.
+* A user-supplied `vcov` matrix without column names triggers a warning, since
+  it is multiplied positionally.
+* A per-observation `df` vector is rejected with `by`, `hypothesis`, or the
+  `avg_*()` functions instead of being assigned positionally; `df = NULL` is
+  accepted.
+* `joint=` with a single string tries an exact name match before the regular
+  expression, so names with metacharacters such as `factor(cyl)6` or `hp +1`
+  work, and no match raises an informative error. The joint-test header no
+  longer recycles a vector of null values incorrectly.
+* `equivalence = c(lower, upper)` with `lower > upper` raises an error.
+* A `hypothesis` function which returns an empty result raises an error
+  instead of returning zero rows.
+* `multcomp = "bonferroni"` reports Bonferroni confidence intervals, matching
+  its p values; the other step-wise methods keep single-step intervals.
+* `print(style = "tinytable")` keeps the `Term:` and `Comparison:` notes when
+  those columns are dropped, and the decision to drop them is made on the
+  full object rather than on the printed head/tail rows.
+* `get_mode()` ignores missing values, so a variable whose most frequent
+  value is `NA` is no longer filled with `NA` in `datagrid()`.
+* `expect_margins()` no longer passes vacuously when the reference contains
+  `NA` or has a different length.
+* Removed dead code: the unused `dedup_newdata()`, and unreachable
+  `"bootstrap"`/`"outer-product"` `vcov` branches.
 
 ## 0.32.0
 

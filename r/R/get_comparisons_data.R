@@ -14,12 +14,19 @@ get_comparisons_data <- function(
         modeldata <- newdata
     }
 
-    # safety need for extensions not supported by `insight`
-    if (any(c("factor", "character") %in% mfx@variable_class)) {
-        idx <- mfx@variable_class %in% c("factor", "character")
-        first_cross <- names(mfx@variable_class[idx])[1]
-    } else {
-        first_cross <- NULL
+    # With `cross = TRUE`, the first categorical variable being contrasted
+    # drops its reversed pairs to avoid duplicating cross-contrasts. This must
+    # only apply under `cross = TRUE`, and only to a variable actually in
+    # `variables`; otherwise `"all"` would silently lose contrasts depending
+    # on which categorical happened to come first in the model.
+    first_cross <- NULL
+    if (isTRUE(cross)) {
+        vnames <- vapply(variables, function(v) v$name, character(1))
+        vclass <- mfx@variable_class[vnames]
+        vnames <- vnames[!is.na(vclass) & vclass %in% c("factor", "character")]
+        if (length(vnames) > 0) {
+            first_cross <- vnames[1]
+        }
     }
 
     # must use `as.data.table()` because `setDT()` does not handle columns with

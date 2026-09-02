@@ -331,14 +331,18 @@ comparison_plan_build <- function(
     )
 
     if (isTRUE(checkmate::check_character(by))) {
-        tmp <- intersect(colnames(newdata), c(by, colnames(out)))
-        if (length(tmp) > 1) {
-            tmp <- subset(newdata, select = tmp)
+        # Join on row identifiers only. Joining on every shared column name
+        # silently mismatched rows whenever `newdata` carried a column with an
+        # internal name such as `predicted`, `term`, or `contrast`.
+        keys <- intersect(c("rowid", "rowidcf"), intersect(colnames(newdata), colnames(out)))
+        need <- setdiff(intersect(by, colnames(newdata)), colnames(out))
+        if (length(need) > 0 && length(keys) > 0) {
+            tmp <- unique(subset(newdata, select = c(keys, need)))
             # A failed merge is only tolerable when the grouping columns are
             # already present: without them, downstream aggregation would
             # silently drop the user's `by` groups.
             out <- tryCatch(
-                merge(out, tmp, all.x = TRUE, sort = FALSE),
+                merge(out, tmp, by = keys, all.x = TRUE, sort = FALSE),
                 error = function(e) {
                     if (all(by %in% colnames(out))) {
                         warning(e)
@@ -351,8 +355,8 @@ comparison_plan_build <- function(
                     }
                 }
             )
-            idx <- unique(c(idx, by))
         }
+        idx <- unique(c(idx, by))
     }
 
     if (!"marginaleffects_wts_internal" %in% colnames(out)) {

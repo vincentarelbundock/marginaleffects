@@ -2,6 +2,10 @@
 #' https://stackoverflow.com/a/8189441/342331
 #' @noRd
 get_mode <- function(x) {
+    # ignore missing values, consistent with the mean of numeric variables
+    if (anyNA(x) && !all(is.na(x))) {
+        x <- x[!is.na(x)]
+    }
     ux <- unique(x)
     ux[which.max(tabulate(match(x, ux)))]
 }

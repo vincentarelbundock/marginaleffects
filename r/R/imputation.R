@@ -67,6 +67,11 @@ process_imputation <- function(mfx) {
                 if (!".data" %in% rlang::call_args_names(newdata_call)) {
                     newdata_call <- rlang::call_modify(newdata_call, .data = micedata[[i]])
                 }
+            } else if (grepl("^datagrid", rlang::call_name(newdata_call))) {
+                # datagrid() needs the individual model to recover its data
+                if (!any(c("model", "newdata") %in% rlang::call_args_names(newdata_call))) {
+                    newdata_call <- rlang::call_modify(newdata_call, model = modellist[[i]])
+                }
             }
             # Evaluate the newdata call with the individual model's data
             calltmp[["newdata"]] <- eval(newdata_call)

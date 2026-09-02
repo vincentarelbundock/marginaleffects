@@ -15,11 +15,17 @@ plot_preprocess <- function(
         if (identical(condition$condition[[v]], "threenum")) {
             dat[[v]] <- fun(dat[[v]], c("-SD", "Mean", "+SD"))
         } else if (identical(condition$condition[[v]], "fivenum")) {
-            labs <- stats::setNames(
-                sort(unique(dat[[v]])),
-                format(sort(unique(dat[[v]])), digits = 2)
-            )
-            dat[[v]] <- fun(dat[[v]], names(labs))
+            # Labels must be unique: `digits = 2` collapses close values
+            # (e.g. 10.02 and 10.05) and `factor()` then fails.
+            vals <- sort(unique(dat[[v]]))
+            labs <- format(vals, digits = 2)
+            digits <- 2
+            while (anyDuplicated(labs) > 0 && digits < 15) {
+                digits <- digits + 1
+                labs <- format(vals, digits = digits)
+            }
+            labs <- make.unique(labs)
+            dat[[v]] <- fun(dat[[v]], labs)
         } else if (identical(condition$condition[[v]], "minmax")) {
             dat[[v]] <- fun(dat[[v]], c("Min", "Max"))
         } else if (identical(condition$condition[[v]], "quartile")) {
@@ -85,9 +91,18 @@ plot_build <- function(
     multi_variables <- isTRUE(length(unique(dat$marginaleffects_term_index)) > 1)
     x_is_discrete <- is_discrete(dat, v_x, mfx)
 
-    # Handle case where dv is a vector (e.g., binomial models with trials())
-    # Use the first element for plotting the raw data points
+    # The stored response may be a combined expression such as "cbind(s, f)",
+    # which is not a column of `modeldata`. Plot the first raw response
+    # variable instead, and skip points/rug when no column matches.
     dv_plot <- if (length(dv) > 0) dv[1] else dv
+    if (!is.null(dv_plot) && !dv_plot %in% colnames(mfx@modeldata)) {
+        dv_raw <- hush(insight::find_response(mfx@model, combine = FALSE, component = "all", flatten = TRUE))
+        dv_raw <- intersect(dv_raw, colnames(mfx@modeldata))
+        dv_plot <- if (length(dv_raw) > 0) dv_raw[1] else NULL
+    }
+    if (is.null(dv_plot)) {
+        points <- 0
+    }
 
     p <- ggplot2::ggplot(data = dat)
 

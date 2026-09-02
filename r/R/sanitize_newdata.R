@@ -86,15 +86,18 @@ sanitize_newdata <- function(mfx, newdata, by, wts) {
         # string -> datagrid()
         newdata <- do.call("datagrid", args)
     } else if (identical(newdata, "median")) {
-        args[["FUN_numeric"]] <- args[["FUN_integer"]] <- args[["FUN_logical"]] <-
+        # logicals keep their mode: `median()` of a logical returns 0.5 for even n
+        args[["FUN_numeric"]] <- args[["FUN_integer"]] <-
             function(x) stats::median(x, na.rm = TRUE)
         newdata <- do.call("datagrid", args)
     } else if (identical(newdata, "tukey")) {
-        args[["FUN_numeric"]] <- function(x) stats::fivenum(x, na.rm = TRUE)
+        args[["FUN_numeric"]] <- args[["FUN_integer"]] <-
+            function(x) unique(stats::fivenum(x, na.rm = TRUE))
         newdata <- do.call("datagrid", args)
     } else if (identical(newdata, "grid")) {
-        args[["FUN_numeric"]] <- function(x) stats::fivenum(x, na.rm = TRUE)
-        args[["FUN_factor"]] <- args[["FUN_character"]] <- args[["FUN_logical"]] <- unique
+        args[["FUN_numeric"]] <- args[["FUN_integer"]] <-
+            function(x) unique(stats::fivenum(x, na.rm = TRUE))
+        args[["FUN_factor"]] <- args[["FUN_character"]] <- args[["FUN_logical"]] <- args[["FUN_binary"]] <- unique
         newdata <- do.call("datagrid", args)
     } else if (identical(newdata, "balanced")) {
         # grid with all unique values of categorical variables, and numerics at their means
@@ -131,6 +134,12 @@ sanitize_newdata <- function(mfx, newdata, by, wts) {
     # Add rowid column for tracking
     if (!"rowid" %in% colnames(newdata)) {
         newdata$rowid <- seq_len(nrow(newdata))
+    } else {
+        # `setDT()` below modifies its argument by reference. The assignment
+        # above already yields a private copy; without one, the caller's
+        # object (a `datagrid()` output or a `predictions` object passed as
+        # `newdata`) would be converted to a data.table in place.
+        newdata <- data.table::copy(newdata)
     }
 
     # Add weights column if needed
@@ -285,65 +294,4 @@ add_newdata <- function(
 
     # Return the updated mfx object
     return(mfx)
-}
-
-
-dedup_newdata <- function(
-    mfx,
-    newdata,
-    by,
-    wts,
-    comparison = "difference",
-    cross = FALSE) {
-    # init
-    model <- mfx@model
-
-    # issue #1113: elasticities or custom functions should skip dedup because it is difficult to align x and y
-    elasticities <- c("eyexavg", "eydxavg", "dyexavg")
-    if (
-        isTRUE(checkmate::check_choice(comparison, elasticities)) ||
-            isTRUE(checkmate::check_function(comparison))
-    ) {
-        return(newdata)
-    }
-
-    elasticities <- c("eyex", "eydx", "dyex")
-    if (!isFALSE(by) && isTRUE(checkmate::check_choice(comparison, elasticities))) {
-        return(data.table(newdata))
-    }
-
-    flag <- isTRUE(checkmate::check_string(comparison, pattern = "avg"))
-    if (
-        !flag &&
-            (isFALSE(by) || # weights only make sense when we are marginalizing
-                !isFALSE(wts) ||
-                !isFALSE(cross) ||
-                isFALSE(getOption("marginaleffects_dedup", default = TRUE)))
-    ) {
-        return(newdata)
-    }
-
-    vclass <- attr(newdata, "marginaleffects_variable_class")
-
-    # copy to allow mod by reference later without overwriting newdata
-    out <- data.table(newdata)
-
-    dv <- mfx@variable_names_response
-    if (isTRUE(checkmate::check_string(dv)) && dv %in% colnames(out)) {
-        out[, (dv) := NULL]
-        vclass <- vclass[names(vclass) != dv]
-    }
-
-    categ <- c("factor", "character", "logical", "strata", "cluster", "binary")
-    if (!all(vclass %in% categ)) {
-        return(newdata)
-    }
-
-    cols <- colnames(out)
-    out <- out[, .("marginaleffects_wts_internal" = .N), by = cols]
-
-    out[["rowid_dedup"]] <- seq_len(nrow(out))
-    attr(out, "marginaleffects_variable_class") <- vclass
-
-    return(out)
 }

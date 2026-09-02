@@ -34,6 +34,11 @@ hypothesis_function <- function(x, newdata, hypothesis, by) {
 
     # sanity
     msg <- "The `hypothesis` argument function must return a data frame with `term` (or `hypothesis`) and `estimate` columns."
+    if (length(out) == 0 || (inherits(out, "data.frame") && nrow(out) == 0)) {
+        stop_sprintf(
+            "The `hypothesis` function returned an empty result. When `hypotheses()` is called on a model (rather than on a `marginaleffects` object), the `x` argument is the model itself, so `x$estimate` is `NULL`; use `coef(x)` instead."
+        )
+    }
     if (inherits(out, "data.frame")) {
         if (
             !all(c("term", "estimate") %in% colnames(out)) &&

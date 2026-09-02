@@ -230,16 +230,9 @@ contrast_categories_custom <- function(variable, newdata) {
         variables_df <- variable$value
     }
     checkmate::assert_data_frame(variables_df, nrows = nrow(original))
-    if (all(c("low", "high") %in% colnames(variables_df))) {
-        lo[[variable$name]] <- variables_df[["low"]]
-        hi[[variable$name]] <- variables_df[["high"]]
-    } else if (all(c("lo", "hi") %in% colnames(variables_df))) {
-        lo[[variable$name]] <- variables_df[["lo"]]
-        hi[[variable$name]] <- variables_df[["hi"]]
-    } else {
-        lo[[variable$name]] <- variables_df[[1]]
-        hi[[variable$name]] <- variables_df[[2]]
-    }
+    tmp <- resolve_lo_hi(variables_df, variable$name)
+    lo[[variable$name]] <- tmp$lo
+    hi[[variable$name]] <- tmp$hi
     out <- list(
         rowid = original$rowid,
         lo = lo,
@@ -250,4 +243,23 @@ contrast_categories_custom <- function(variable, newdata) {
         contrast_null = rep(FALSE, nrow(lo))
     )
     return(out)
+}
+
+
+# Resolve the low/high columns of a user-supplied contrast data frame by
+# name (`lo`/`hi`, `low`/`high`), falling back to position. Shared by the
+# numeric and categorical paths so both honour the documented names.
+resolve_lo_hi <- function(df, name) {
+    if (all(c("lo", "hi") %in% colnames(df))) {
+        list(lo = df[["lo"]], hi = df[["hi"]])
+    } else if (all(c("low", "high") %in% colnames(df))) {
+        list(lo = df[["low"]], hi = df[["high"]])
+    } else if (ncol(df) >= 2) {
+        list(lo = df[[1]], hi = df[[2]])
+    } else {
+        stop_sprintf(
+            "The data frame supplied for `%s` in the `variables` argument must have two columns (`lo` and `hi`).",
+            name
+        )
+    }
 }

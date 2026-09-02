@@ -18,7 +18,7 @@ unique_s <- function(x) sort(unique(x))
 #' @param response Logical should the response variable be included in the grid, even if it is not specified explicitly.
 #' @param FUN a function to be applied to all variables in the grid. This is useful when you want to apply the same function to all variables, such as `mean` or `median`. If you specify `FUN`, it will override the `grid_type` defaults, but not other `FUN_*` arguments below.
 #' @param FUN_character the function to be applied to character variables.
-#' @param FUN_factor the function to be applied to factor variables. This only applies if the variable in the original data is a factor. For variables converted to factor in a model-fitting formula, for example, `FUN_character` is used.
+#' @param FUN_factor the function to be applied to factor variables, including variables converted to factor in the model-fitting formula (e.g., `factor(cyl)`).
 #' @param FUN_logical the function to be applied to logical variables.
 #' @param FUN_integer the function to be applied to integer-ish variables (including columns without decimal places).
 #' @param FUN_binary the function to be applied to binary variables.
@@ -141,7 +141,7 @@ datagrid <- function(
 
     # sanity checks
     if (!is.null(by)) {
-        checkmate::assert_true(all(by %in% colnames(newdata)))
+        checkmate::assert_subset(by, colnames(newdata), .var.name = "by")
     }
 
     # prune data, otherwise it can be very expensive to summarize all columns
@@ -166,10 +166,23 @@ datagrid <- function(
         variable_class[missing] <- detect_variable_class(subset(newdata, select = missing))
     }
 
+    # Counterfactual grids must identify the original row across `by` groups:
+    # assign `rowidcf` before splitting, otherwise it restarts in each group.
+    if (grid_type == "counterfactual" && !"rowidcf" %in% colnames(newdata)) {
+        newdata <- as.data.frame(newdata)
+        newdata <- cbind(data.frame(rowidcf = seq_len(nrow(newdata))), newdata)
+    }
+
     if (is.null(by)) {
         idx <- data.frame()
     } else {
-        idx <- newdata[, by, drop = FALSE]
+        # `as.data.frame()`: a data.table would interpret `by` as a column symbol
+        idx <- as.data.frame(newdata)[, by, drop = FALSE]
+        if (anyNA(idx)) {
+            warn_sprintf(
+                "Rows with missing values in the `by` variable(s) are dropped from the grid."
+            )
+        }
     }
     if (ncol(idx) == 0) {
         newdata_split <- list(newdata)
@@ -187,6 +200,7 @@ datagrid <- function(
             modeldata = modeldata_for_levels,
             variable_class = variable_class,
             grid_type = grid_type,
+            response = response,
             FUN = FUN,
             FUN_character = FUN_character,
             FUN_factor = FUN_factor,
@@ -216,10 +230,6 @@ datagrid <- function(
             explicit <- do.call(data.table::CJ, values_split[[i]]$explicit)
             implicit_cols <- setdiff(names(newdata_split[[i]]), names(explicit))
             implicit <- as_data_table_select(newdata_split[[i]], implicit_cols)
-            implicit <- cbind(
-                data.table::data.table(rowidcf = seq_len(nrow(implicit))),
-                implicit
-            )
             cjdt(list(implicit, explicit))
         })
     } else {
@@ -252,6 +262,7 @@ datagrid_newdata_to_list <- function(
     modeldata = NULL,
     variable_class,
     grid_type,
+    response = FALSE,
     FUN = NULL,
     FUN_character = NULL,
     FUN_factor = NULL,
@@ -330,14 +341,18 @@ datagrid_newdata_to_list <- function(
     implicit_values <- list()
     implicit <- setdiff(colnames(newdata), names(explicit))
 
-    # balanced grid should not balance on response otherwise we multiple the rows
-    if (grid_type == "balanced") {
-        implicit <- setdiff(implicit, hush(insight::find_response(model, flatten = TRUE)))
+    # `response = FALSE` drops the response unless the user named it explicitly.
+    # A balanced grid must never balance on the response, which would
+    # multiply the rows; with `response = TRUE` it is held at its mean or mode.
+    response_names <- hush(insight::find_response(model, flatten = TRUE))
+    if (!isTRUE(response)) {
+        implicit <- setdiff(implicit, response_names)
     }
-
-    # some packages require the response variable to be included in the grid for predict()
-    # implicit <- setdiff(implicit, hush(insight::find_response(model, flatten = TRUE)))
     for (i in implicit) {
+        if (grid_type == "balanced" && i %in% response_names) {
+            implicit_values[[i]] <- get_mean_or_mode(newdata[[i]])
+            next
+        }
         if (check_variable_class(variable_class, i, "binary")) {
             implicit_values[[i]] <- .FUN_binary(newdata[[i]])
         } else if (check_variable_class(variable_class, i, "character")) {

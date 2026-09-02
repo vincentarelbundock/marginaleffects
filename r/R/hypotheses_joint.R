@@ -67,7 +67,20 @@ joint_test <- function(
     if (isTRUE(joint_index)) {
         joint_index <- seq_along(theta_hat)
     } else if (isTRUE(checkmate::check_string(joint_index))) {
-        joint_index <- grep(joint_index, names(theta_hat), perl = TRUE)
+        # Exact name first: names such as `factor(cyl)6` or `hp +1` contain
+        # regex metacharacters and would otherwise match nothing.
+        pattern <- joint_index
+        joint_index <- which(names(theta_hat) == pattern)
+        if (length(joint_index) == 0) {
+            joint_index <- grep(pattern, names(theta_hat), perl = TRUE)
+        }
+        if (length(joint_index) == 0) {
+            stop_sprintf(
+                "The `joint` string \"%s\" does not match any estimate name, neither exactly nor as a regular expression. Available names: %s",
+                pattern,
+                toString(names(theta_hat))
+            )
+        }
     }
 
     # V_hat: estimated covariance matrix
@@ -204,8 +217,9 @@ joint_test <- function(
     # Create the print_head string
     print_head <- "\nJoint hypothesis test:\n"
     if (is.character(joint_index)) {
-        for (i in joint_index) {
-            print_head <- paste0(print_head, i, sprintf(" = %s\n", hypothesis))
+        nulls <- rep_len(hypothesis, length(joint_index))
+        for (i in seq_along(joint_index)) {
+            print_head <- paste0(print_head, joint_index[i], sprintf(" = %s\n", nulls[i]))
         }
     } else if (
         inherits(

@@ -41,7 +41,7 @@ get_vcov.default <- function(model, vcov = NULL, ...) {
     if (!isTRUE(checkmate::check_matrix(out$value, min.rows = 1))) {
         out <- myTryCatch(insight::get_varcov(model))
         if (isTRUE(checkmate::check_matrix(out$value, min.rows = 1))) {
-            msg <- "Unable to extract a variance-covariance matrix using this `vcov` argument. Standard errors are computed using the default variance instead. Perhaps the model or argument is not supported by the `sandwich` ('HC0', 'HC3', ~clusterid, etc.) or `clubSandwich` ('CR0', etc.) packages. If you believe that the model is supported by one of these two packages, you can open a feature request on Github."
+            msg <- "Unable to extract a variance-covariance matrix using this `vcov` argument. Standard errors are computed using the default variance instead. Perhaps the model or argument is not supported by the `sandwich` ('HC0', 'HC3', ~clusterid, etc.) package. If you believe that the model is supported by one of these two packages, you can open a feature request on Github."
             warn_sprintf(msg)
         }
     }
@@ -140,8 +140,6 @@ get_varcov_args <- function(model, vcov) {
         # agree. This was HC2 until 2026-08, which matched no Stata estimator.
         "stata" = list(vcov = "HC1"),
         "robust" = list(vcov = "HC3"),
-        "bootstrap" = list(vcov = "BS"),
-        "outer-product" = list(vcov = "OPG"),
         list(vcov = vcov)
     )
     return(out)

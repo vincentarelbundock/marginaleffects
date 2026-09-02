@@ -134,7 +134,9 @@ expect_margins <- function(
     insight::check_if_installed("tinytest")
 
     is_equal <- function(x, y) {
-        all(abs((x - y) / x) < tolerance)
+        # `isTRUE()`: an `NA` in either vector must count as a mismatch, and
+        # unequal lengths must not recycle silently.
+        length(x) == length(y) && isTRUE(all(abs((x - y) / x) < tolerance))
     }
 
     results$type <- NULL

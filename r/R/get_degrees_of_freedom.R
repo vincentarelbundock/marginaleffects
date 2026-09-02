@@ -22,10 +22,23 @@ add_degrees_of_freedom <- function(mfx, df = Inf, by = NULL, hypothesis = NULL, 
     # Sanitize df input
     checkmate::assert(
         checkmate::check_true(df),
+        checkmate::check_null(df),
         checkmate::check_number(df, lower = 1),
         checkmate::check_numeric(df, len = nrow(newdata)),
         checkmate::check_choice(df, c("residual", "satterthwaite", "kenward-roger"))
     )
+
+    # A per-observation df vector has no meaning once estimates are aggregated
+    # with `by`, `avg_*()`, or a `hypothesis`: it would be assigned positionally
+    # to the aggregated rows.
+    if (
+        isTRUE(checkmate::check_numeric(df, min.len = 2)) &&
+            (!isFALSE(by) && !is.null(by) || !is.null(hypothesis))
+    ) {
+        stop_sprintf(
+            "A vector of degrees of freedom (`df`) is not supported with the `by` or `hypothesis` arguments, or with the `avg_*()` functions. Supply a single number instead."
+        )
+    }
 
     if (isTRUE(checkmate::check_choice(df, c("satterthwaite", "kenward-roger")))) {
         checkmate::assert_data_frame(newdata)

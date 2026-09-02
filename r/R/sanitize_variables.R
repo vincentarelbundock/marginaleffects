@@ -565,41 +565,13 @@ detect_variable_class <- function(modeldata, model = NULL) {
 
     te <- hush(insight::find_terms(model, flatten = TRUE))
 
-    # in-formula factor
-    regex <- "^(^as\\.factor|^factor)\\((.*)\\)"
-    idx <- gsub(
-        regex,
-        "\\2",
-        Filter(function(x) grepl(regex, x), te)
-    )
-    cl[names(cl) %in% idx] <- "factor"
-
-    # in-formula categoricals
-    regex <- "^(^mo|^strata)\\((.*)\\)"
-    idx <- gsub(
-        regex,
-        "\\2",
-        Filter(function(x) grepl(regex, x), te)
-    )
-    cl[names(cl) %in% idx] <- "strata"
-
-    # in-formula numeric
-    regex <- "^numeric\\((.*)\\)$|^as.numeric\\((.*)\\)$"
-    idx <- gsub(
-        regex,
-        "\\1",
-        Filter(function(x) grepl(regex, x), te)
-    )
-    cl[names(cl) %in% idx] <- "numeric"
-
-    # in-formula logical
-    regex <- "^logical\\((.*)\\)$|^as.logical\\((.*)\\)$"
-    idx <- gsub(
-        regex,
-        "\\1",
-        Filter(function(x) grepl(regex, x), te)
-    )
-    cl[names(cl) %in% idx] <- "logical"
+    # in-formula conversions: `factor(x, levels = ...)`, `as.numeric(x)`, ...
+    # Parsing handles extra arguments and nested parentheses which a regex
+    # on the term string silently mishandled.
+    cl[names(cl) %in% in_formula_wrapped(te, c("factor", "as.factor"))] <- "factor"
+    cl[names(cl) %in% in_formula_wrapped(te, c("mo", "strata"))] <- "strata"
+    cl[names(cl) %in% in_formula_wrapped(te, c("numeric", "as.numeric"))] <- "numeric"
+    cl[names(cl) %in% in_formula_wrapped(te, c("logical", "as.logical"))] <- "logical"
 
     # in-formula: fixest::i()
     fi <- NULL
@@ -671,4 +643,25 @@ check_variable_class <- function(newdata, variable = NULL, compare = NULL) {
     }
 
     return(out)
+}
+
+
+# Names of the variables wrapped by one of `funs` in formula terms, e.g.
+# "factor(x, levels = c(1, 2))" -> "x". Only a bare symbol as first argument
+# is recognized; anything else is left for the caller to treat as-is.
+in_formula_wrapped <- function(te, funs) {
+    out <- character(0)
+    for (term in te) {
+        e <- tryCatch(str2lang(term), error = function(e) NULL)
+        if (
+            is.call(e) &&
+                length(e) >= 2 &&
+                is.name(e[[1]]) &&
+                as.character(e[[1]]) %in% funs &&
+                is.name(e[[2]])
+        ) {
+            out <- c(out, as.character(e[[2]]))
+        }
+    }
+    out
 }

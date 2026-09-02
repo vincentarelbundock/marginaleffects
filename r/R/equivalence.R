@@ -24,9 +24,14 @@ equivalence <- function(x, equivalence = NULL, df = Inf, draws = NULL, ...) {
         stop_sprintf(msg)
     }
 
-    checkmate::assert_numeric(equivalence, min.len = 1, max.len = 2)
+    checkmate::assert_numeric(equivalence, min.len = 1, max.len = 2, any.missing = FALSE)
     if (length(equivalence) == 1) {
         equivalence <- c(equivalence, equivalence)
+    }
+    if (equivalence[1] > equivalence[2]) {
+        stop_sprintf(
+            "The `equivalence` argument must be a vector `c(lower, upper)` with `lower <= upper`."
+        )
     }
 
     # definitions from `emmeans`, with a different user interface based on symmetric "equivalence"
