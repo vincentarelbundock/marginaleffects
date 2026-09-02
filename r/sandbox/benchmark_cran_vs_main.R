@@ -88,7 +88,8 @@ run_benchmark <- function(lib, label, iterations, n, profile_memory) {
         x1 = rnorm(n),
         x2 = rnorm(n),
         x3 = sample(letters[1:5], n, replace = TRUE),
-        groupid = sample(letters[1:10], n, replace = TRUE)
+        groupid = sample(letters[1:10], n, replace = TRUE),
+        wts = runif(n, 0.5, 2)
       )
       mod_glm <- glm(
         y ~ treatment * (x1 + x2 + x3),
@@ -128,8 +129,22 @@ run_benchmark <- function(lib, label, iterations, n, profile_memory) {
           comparisons(mod_glm, variables = "treatment"),
         `slopes(mod_lm, variables = "X3")` =
           slopes(mod_lm, variables = "X3"),
+        `avg_slopes(mod_glm, response scale, by = groupid)` =
+          avg_slopes(
+            mod_glm,
+            variables = "x1",
+            type = "response",
+            by = "groupid"
+          ),
         `avg_comparisons(mod_glm, variables = "treatment", by = "groupid")` =
           avg_comparisons(mod_glm, variables = "treatment", by = "groupid"),
+        `avg_comparisons(mod_glm, weighted by wts)` =
+          avg_comparisons(
+            mod_glm,
+            variables = "treatment",
+            by = "groupid",
+            wts = "wts"
+          ),
         `avg_predictions(): vcov=FALSE, 32k rows` =
           avg_predictions(
             mod_mtcars,
@@ -159,6 +174,8 @@ run_benchmark <- function(lib, label, iterations, n, profile_memory) {
             hypothesis = "b1 - b3200 = 0",
             vcov = FALSE
           ),
+        `hypotheses(mod_lm, nonlinear coefficient hypothesis)` =
+          hypotheses(mod_lm, hypothesis = "b2^2 * exp(b1) = 0"),
         `inferences(): predictions simulation, R=30` =
           simulation(sim_predictions, R = 30L),
         `inferences(): predictions simulation, R=100` =
