@@ -103,6 +103,12 @@ sanitize_vcov <- function(model, vcov) {
                 )
             }
         )
+        if (!isTRUE(checkmate::check_matrix(out))) {
+            stop(
+                "The function supplied to the `vcov` argument must return a matrix.",
+                call. = FALSE
+            )
+        }
     }
 
     if (isTRUE(checkmate::check_matrix(out))) {

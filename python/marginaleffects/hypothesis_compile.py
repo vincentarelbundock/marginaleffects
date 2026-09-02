@@ -67,7 +67,7 @@ def _linear_hypothesis_matrix(expr, rowlabels, groups, n_est):
     The estimates are ``estimate @ H + offset``; the derivative is H alone,
     independent of the constant. Differentiating the constant numerically
     instead is catastrophic: a large offset cancels the probe step and
-    reports a zero standard error with full confidence.
+    incorrectly reports a constant result instead of preserving the derivative.
     """
     vectors = {}
     if groups is None:

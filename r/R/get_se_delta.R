@@ -128,12 +128,12 @@ std_error_from_jacobian <- function(J, V, object, ...) {
     tol <- sqrt(.Machine$double.eps) * max(1, scale)
     variances[variances < 0 & variances > -tol] <- 0
     se <- sqrt(variances)
-    # A zero here is a statement, not a failure: a constant estimand -- a
-    # contrast of a level with itself, a zero row of an exact Jacobian -- has
-    # variance exactly zero. Test statistics on such rows are undefined and
-    # come out NaN downstream, which is the correct separate signal. The
-    # clamping above is deliberately kept separate: it removes negative noise
-    # without turning an exact zero into a missing value.
+    # Exact zeros typically identify structural or otherwise constant
+    # estimands. Report their inferential quantities as unavailable instead of
+    # suggesting that they were estimated with arbitrarily high precision.
+    # This is an exact comparison: genuinely small positive standard errors
+    # remain unchanged.
+    se[se == 0] <- NA_real_
     list(std.error = se, jacobian = J)
 }
 

@@ -30,6 +30,8 @@ _quarto/*
 **/.quarto/
 uv.lock
 .scrutin/state.db
+r/.scrutin/state.db
 
 /.quarto/
 **/*.quarto_ipynb
+.scrutin
