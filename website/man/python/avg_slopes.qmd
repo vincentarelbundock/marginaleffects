@@ -49,17 +49,24 @@ Type of uncertainty estimates to report (e.g. for robust standard errors). Accep
 - String: Literal indicating the kind of uncertainty estimates to return:
     - Heteroskedasticity-consistent: "HC0", "HC1", "HC2", "HC3".
 - np.ndarray: A custom square covariance matrix.
+- `vcovUnconditional()`: EXPERIMENTAL. Influence-function standard errors that
+  add sampling variation in the empirical distribution of the covariates to
+  coefficient uncertainty. Only available for averaged or aggregated effects.
 
 #### `conf_level`: (float, default=0.95) {.unnumbered}
 
 Numeric value specifying the confidence level for the confidence intervals.
 
-#### `by`: (bool, List[str], optional) {.unnumbered}
+#### `by`: (bool, str, List[str], DataFrame, optional) {.unnumbered}
 
-A logical value or a list of column names in `newdata`.
+A logical value, one or more column names in `newdata`, or a data frame of group labels.
 
 - True: estimate is aggregated across the whole dataset.
-- list: estimates are aggregated for each unique combination of values in the columns.
+- str or list: estimates are aggregated for each unique combination of values in the columns.
+- DataFrame: must hold a `by` column of labels plus one or more columns matched
+  against the estimates. Several combinations of predictor values can share a
+  label, which aggregates them into a single row. Estimates the label table does
+  not cover are excluded from the aggregation, with a warning.
 
 #### `hypothesis`: (str, int, float, list of str, numpy array) {.unnumbered}
 

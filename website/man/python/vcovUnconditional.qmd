@@ -1,0 +1,17 @@
+EXPERIMENTAL: request unconditional variance in a marginaleffects call.
+
+Parameters
+----------
+type : str
+    Finite-sample adjustment, `"HC0"` (no model degrees-of-freedom factor)
+    or `"HC1"` (the conventional `n / (n - k)` factor).
+cluster : str, optional
+    Name of a column in the model data identifying clusters for one-way
+    cluster-robust inference. As in `sandwich::vcovCL()`, clustered
+    estimates carry the `G / (G - 1)` cluster-count adjustment.
+
+Returns
+-------
+VcovUnconditional
+    Pass to the `vcov` argument of `avg_predictions()`,
+    `avg_comparisons()`, or `avg_slopes()`.
