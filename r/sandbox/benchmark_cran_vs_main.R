@@ -5,7 +5,7 @@
 # The two package versions are installed in separate temporary libraries and
 # benchmarked in separate R sessions, so namespaces never collide.
 
-required <- c("bench", "callr")
+required <- c("bench", "callr", "tinytable", "webshot2")
 missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
 if (length(missing) > 0) {
   stop(
@@ -240,7 +240,7 @@ wide <- merge(
   sort = FALSE
 )
 wide$speedup <- wide$median_seconds_cran / wide$median_seconds_main
-table <- data.frame(
+report_table <- data.frame(
   Command = wide$expression,
   `CRAN version` = wide$version_cran,
   `main version` = wide$version_main,
@@ -250,38 +250,39 @@ table <- data.frame(
   check.names = FALSE
 )
 if (profile_memory) {
-  table[["CRAN memory"]] <- format_memory(wide$memory_mb_cran)
-  table[["main memory"]] <- format_memory(wide$memory_mb_main)
+  report_table[["CRAN memory"]] <- format_memory(wide$memory_mb_cran)
+  report_table[["main memory"]] <- format_memory(wide$memory_mb_main)
 }
 
-cat("\n")
-print(table, row.names = FALSE)
-
-cat("\nMarkdown table:\n\n")
-if (profile_memory) {
-  cat("| Command | CRAN | main | Speedup | CRAN memory | main memory |\n")
-  cat("|---|---:|---:|---:|---:|---:|\n")
-  for (i in seq_len(nrow(wide))) {
-    cat(sprintf(
-      "| `%s` | %ss | %ss | %s | %s | %s |\n",
-      wide$expression[i],
-      format_seconds(wide$median_seconds_cran[i]),
-      format_seconds(wide$median_seconds_main[i]),
-      format_speedup(wide$speedup[i]),
-      format_memory(wide$memory_mb_cran[i]),
-      format_memory(wide$memory_mb_main[i])
-    ))
-  }
-} else {
-  cat("| Command | CRAN | main | Speedup |\n")
-  cat("|---|---:|---:|---:|\n")
-  for (i in seq_len(nrow(wide))) {
-    cat(sprintf(
-      "| `%s` | %ss | %ss | %s |\n",
-      wide$expression[i],
-      format_seconds(wide$median_seconds_cran[i]),
-      format_seconds(wide$median_seconds_main[i]),
-      format_speedup(wide$speedup[i])
-    ))
-  }
+benchmark_table <- tinytable::tt(report_table)
+benchmark_table <- tinytable::style_tt(
+  benchmark_table,
+  j = "Speedup",
+  bold = TRUE,
+  background = "#F2F2F2"
+)
+benchmark_table <- tinytable::style_tt(
+  benchmark_table,
+  i = which(wide$speedup > 1),
+  j = "Speedup",
+  background = "#D9EAD3"
+)
+benchmark_table <- tinytable::style_tt(
+  benchmark_table,
+  i = which(wide$speedup <= 1),
+  j = "Speedup",
+  background = "#F4CCCC"
+)
+table_html <- Sys.getenv(
+  "MARGINALEFFECTS_BENCH_HTML",
+  "benchmark-results.html"
+)
+table_png <- Sys.getenv(
+  "MARGINALEFFECTS_BENCH_PNG",
+  "benchmark-results.png"
+)
+for (output in c(table_html, table_png)) {
+  dir.create(dirname(output), recursive = TRUE, showWarnings = FALSE)
+  tinytable::save_tt(benchmark_table, output = output, overwrite = TRUE)
+  cat("Table saved to:", output, "\n")
 }
