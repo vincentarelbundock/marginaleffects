@@ -149,7 +149,7 @@ std_error_from_jacobian <- function(J, V, object, ...) {
 #' @param FUN a function which accepts a `model` and other inputs and returns a
 #'   vector of estimates (marginal effects, marginal means, etc.)
 #' @param vcov accepted and ignored, so that callers can build a single
-#'   argument list for this function and for [get_se_delta()].
+#'   argument list for this function and for `get_se_delta()`.
 #' @return `NULL` when the model admits no delta method, otherwise a list with
 #'   the `jacobian`, the `method` which produced it ("custom" or "numeric"),
 #'   and the `coefs` it was differentiated at.
