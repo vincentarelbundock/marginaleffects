@@ -269,7 +269,10 @@ for (th in c("flexible", "symmetric", "equidistant")) {
     # still agree. Stata cannot either: `meoprobit` has no constrained-threshold
     # parametrization, so the cross-software fixtures in test-stata-models.R
     # only ever reach `threshold = "flexible"`, where `tJac` is the identity.
-    expect_equivalent(drop(get_tJac_clmm2(m) %*% m$Alpha), unname(m$Theta))
+    expect_equivalent(
+        drop(marginaleffects:::get_tJac_clmm2(m) %*% m$Alpha),
+        unname(m$Theta)
+    )
 }
 
 

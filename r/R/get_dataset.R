@@ -142,7 +142,7 @@ get_dataset_docs <- function(dataset, data_dict) {
     }
 
     temp_doc <- tempfile(fileext = ".html")
-    utils::download.file(documentation, temp_doc, mode = "w", quiet = TRUE)
+    utils::download.file(documentation, temp_doc, mode = "wb", quiet = TRUE)
 
     if (requireNamespace("rstudioapi")) {
         if (isTRUE(rstudioapi::isAvailable())) {

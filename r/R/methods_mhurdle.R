@@ -20,7 +20,7 @@ get_vcov.mhurdle <- function(model, vcov = NULL, ...) {
             "The `vcov` for this class of models must be TRUE or FALSE."
         )
     }
-    vcov <- sanitize_vcov(model, vcov)
+    sanitize_vcov(model, vcov)
     out <- try(stats::vcov(model), silent = TRUE)
     if (inherits(out, "try-error")) {
         out <- tryCatch(model[["vcov"]], error = function(e) NULL)

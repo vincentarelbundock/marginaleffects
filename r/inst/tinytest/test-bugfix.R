@@ -293,14 +293,16 @@ expect_equivalent(
     (sim_null1$estimate - 1) / sim_null1$std.error
 )
 
-# A constant estimand has variance exactly zero, not NA.
+# Inferential quantities are unavailable for a constant estimand.
 cmp_zero <- comparisons(
     mod_perm,
     variables = c("hp", "wt"),
     newdata = "mean",
     hypothesis = matrix(c(0, 0), ncol = 1)
 )
-expect_equivalent(cmp_zero$std.error, 0)
+expect_true(is.na(cmp_zero$std.error))
+expect_true(is.na(cmp_zero$conf.low))
+expect_true(is.na(cmp_zero$conf.high))
 
 # Stata's vce(robust) is HC1.
 expect_equivalent(
@@ -497,6 +499,12 @@ expect_error(
 expect_error(
     avg_comparisons(mod, variables = "hp", vcov = function(m) stop("boom")),
     pattern = "boom"
+)
+# a `vcov` function that returns something other than a matrix must error
+# instead of silently falling back to the model's default covariance matrix
+expect_error(
+    get_vcov(mod, vcov = stats::coef),
+    pattern = "must return a matrix"
 )
 
 # Deep review (2026-09): `by=` merge must join on row identifiers, not on

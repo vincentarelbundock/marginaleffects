@@ -5,7 +5,7 @@ get_vcov.orm <- function(model, vcov = NULL, ...) {
         msg <- "The `vcov` argument is not supported for models of this class."
         stop_sprintf(msg)
     }
-    vcov <- sanitize_vcov(model, vcov)
+    sanitize_vcov(model, vcov)
     out <- stats::vcov(model, intercepts = "all")
     return(out)
 }

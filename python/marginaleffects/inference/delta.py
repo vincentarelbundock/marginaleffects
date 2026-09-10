@@ -39,10 +39,11 @@ def get_jacobian(func, coefs, eps_vcov=None):
 def get_se(J, V):
     variances = np.sum((J @ V) * J, axis=1)
     # Tiny negative variances are floating-point noise from the quadratic
-    # form; clamp them to zero instead of letting sqrt() return NaN. An exact
-    # zero is a statement, not a failure: a constant estimand has variance
-    # exactly zero, and its undefined test statistic surfaces downstream.
-    # This mirrors std_error_from_jacobian() in the R package.
+    # form; clamp them to zero instead of letting sqrt() return NaN. Exact-zero
+    # standard errors identify structural or constant estimands and are
+    # reported as unavailable, avoiding the appearance of arbitrarily precise
+    # estimation. Genuinely small positive values remain unchanged. This
+    # mirrors std_error_from_jacobian() in the R package.
     with np.errstate(invalid="ignore"):
         scale = np.nanmax(np.abs(variances), initial=0.0)
     if not np.isfinite(scale):
@@ -50,7 +51,8 @@ def get_se(J, V):
     tol = np.sqrt(np.finfo(float).eps) * max(1.0, scale)
     variances = np.where((variances < 0) & (variances > -tol), 0.0, variances)
     with np.errstate(invalid="ignore"):
-        return np.sqrt(variances)
+        se = np.sqrt(variances)
+    return np.where(se == 0, np.nan, se)
 
 
 def add_standard_errors(out, func, model, V, eps_vcov):

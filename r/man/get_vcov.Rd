@@ -70,19 +70,19 @@ get_vcov(model, ...)
 
 \method{get_vcov}{orm}(model, vcov = NULL, ...)
 
-\method{get_vcov}{stpm2}(model, ...)
+\method{get_vcov}{stpm2}(model, vcov = NULL, ...)
 
-\method{get_vcov}{pstpm2}(model, ...)
+\method{get_vcov}{pstpm2}(model, vcov = NULL, ...)
 
-\method{get_vcov}{gsm}(model, ...)
+\method{get_vcov}{gsm}(model, vcov = NULL, ...)
 
-\method{get_vcov}{aft}(model, ...)
+\method{get_vcov}{aft}(model, vcov = NULL, ...)
 
 \method{get_vcov}{scam}(model, vcov = NULL, ...)
 
 \method{get_vcov}{svy_vglm}(model, vcov = NULL, ...)
 
-\method{get_vcov}{systemfit}(model, ...)
+\method{get_vcov}{systemfit}(model, vcov = NULL, ...)
 
 \method{get_predict}{systemfit}(model, newdata = NULL, type = NULL, ...)
 

@@ -150,7 +150,7 @@ sanitize_newdata <- function(mfx, newdata, by, wts) {
     # but as.data.table() breaks a bunch of other models, for reasons I can't
     # quite figure out
     if (inherits(model, "mlogit")) {
-        out <- as.data.table(newdata)
+        newdata <- as.data.table(newdata)
     } else {
         data.table::setDT(newdata)
     }

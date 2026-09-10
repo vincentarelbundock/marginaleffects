@@ -1,5 +1,13 @@
 # News {.unnumbered}
 
+## Development
+
+Bug fixes:
+
+* `mlogit` data are converted to `data.table` as intended; the converted object was assigned to a discarded variable.
+* `get_vcov()` methods for `systemfit`, `stpm2`, `pstpm2`, `gsm`, and `aft` models accept a `vcov` argument. These methods referred to a `vcov` object that did not exist in their scope, which resolved to `stats::vcov()` and triggered a spurious covariance computation on every call. Thanks to @etiennebacher for the `unused_object` rule in `jarl`, which surfaced this in #1764.
+* `systemfit`, `stpm2` (and `pstpm2`, `gsm`, `aft`), and `tidymodels` models now raise an explicit error when `vcov` is not `TRUE`, `FALSE`, or `NULL`. These classes extract their own covariance matrix and previously ignored a user-supplied `vcov` silently, so a request like `vcov = "HC3"` returned default standard errors without warning.
+
 ## 1.0.0
 
 Breaking changes:
@@ -32,7 +40,7 @@ Covariance and inference:
 * User-supplied covariance matrices must cover all coefficients. Named matrices are reordered and validated; unnamed matrices warn about positional matching. Errors from `vcov` functions are now propagated.
 * `vcov = "stata"` now maps to HC1, matching Stata, `estimatr`, and `modelsummary`; use `vcov = "HC2"` for the previous behavior.
 * `multcomp=` and simulated Wald inference now respect the hypothesis null and direction. Bonferroni confidence intervals now match Bonferroni p values.
-* Exact zero standard errors are reported as `0` instead of `NA`, matching Python; the corresponding test statistic remains undefined.
+* Exact zero standard errors are reported as `NA`, along with their associated inferential quantities. This distinguishes structural or constant estimands from effects estimated with very small uncertainty.
 * Per-observation `df` vectors are rejected with aggregation or hypotheses; `df = NULL` remains valid. Equivalence tests support vector-valued degrees of freedom and reject reversed bounds.
 * Weighted average comparisons no longer return `NaN` when a group's first weight is zero; groups with zero total weight remain undefined.
 

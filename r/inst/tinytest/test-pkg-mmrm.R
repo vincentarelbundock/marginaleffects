@@ -28,7 +28,12 @@ expect_false(isTRUE(all.equal(p1, p2)))
 # predictions are linear in beta: estimate = X %*% b, se = sqrt(diag(X V X'))
 nd <- datagrid(ARMCD = unique, AVISIT = unique, model = fit)
 p <- predictions(fit, newdata = nd)
-X <- insight::get_modelmatrix(fit, data = nd)
+X <- model.matrix(
+    delete.response(terms(fit)),
+    data = nd,
+    contrasts.arg = component(fit, "contrasts"),
+    xlev = component(fit, "xlev")
+)
 expect_equivalent(p$estimate, as.vector(X %*% b))
 # tolerance reflects the numeric differentiation Jacobian
 expect_equivalent(p$std.error, sqrt(diag(X %*% get_vcov(fit) %*% t(X))), tolerance = 1e-5)
