@@ -7,7 +7,7 @@ modelarchive_model <- function(name) {
         name,
         ".rds"
     )
-    try(utils::download.file(url, tmp, quiet = TRUE), silent = TRUE)
+    try(utils::download.file(url, tmp, mode = "wb", quiet = TRUE), silent = TRUE)
     out <- try(readRDS(tmp), silent = TRUE)
     return(out)
 }

@@ -39,6 +39,6 @@ get_vcov.MCMCglmm <- function(model, vcov = NULL, ...) {
             "The `vcov` argument is not supported for models of this class."
         )
     }
-    vcov <- sanitize_vcov(model, vcov)
+    sanitize_vcov(model, vcov)
     return(NULL)
 }
