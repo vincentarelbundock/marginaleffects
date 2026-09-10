@@ -60,16 +60,16 @@ get_vcov(model, vcov = NULL, ...)
 get_vcov(model, vcov = NULL, ...)
 
 ## S3 method for class 'stpm2'
-get_vcov(model, ...)
+get_vcov(model, vcov = NULL, ...)
 
 ## S3 method for class 'pstpm2'
-get_vcov(model, ...)
+get_vcov(model, vcov = NULL, ...)
 
 ## S3 method for class 'gsm'
-get_vcov(model, ...)
+get_vcov(model, vcov = NULL, ...)
 
 ## S3 method for class 'aft'
-get_vcov(model, ...)
+get_vcov(model, vcov = NULL, ...)
 
 ## S3 method for class 'scam'
 get_vcov(model, vcov = NULL, ...)
@@ -78,7 +78,7 @@ get_vcov(model, vcov = NULL, ...)
 get_vcov(model, vcov = NULL, ...)
 
 ## S3 method for class 'systemfit'
-get_vcov(model, ...)
+get_vcov(model, vcov = NULL, ...)
 
 ## S3 method for class 'systemfit'
 get_predict(model, newdata = NULL, type = NULL, ...)

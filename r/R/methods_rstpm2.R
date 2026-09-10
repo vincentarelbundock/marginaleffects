@@ -22,9 +22,9 @@ set_coef.aft <- set_coef.stpm2
 
 #' @rdname get_vcov
 #' @export
-get_vcov.stpm2 <- function(model, ...) {
+get_vcov.stpm2 <- function(model, vcov = NULL, ...) {
     insight::check_if_installed("rstpm2")
-    vcov <- sanitize_vcov(model, vcov)
+    sanitize_vcov(model, vcov)
     rstpm2::vcov(model)
 }
 
