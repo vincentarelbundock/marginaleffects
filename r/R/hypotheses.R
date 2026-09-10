@@ -75,7 +75,7 @@
 #' hypotheses(cmp, hypothesis = "b1 = b2")
 #'
 #' mfx <- slopes(mod, newdata = "mean")
-#' hypotheses(cmp, hypothesis = "b2 = 0.2")
+#' hypotheses(mfx, hypothesis = "b2 = 0.2")
 #'
 #' pre <- predictions(mod, newdata = datagrid(hp = 110, mpg = c(30, 35)))
 #' hypotheses(pre, hypothesis = "b1 = b2")
