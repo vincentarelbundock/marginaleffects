@@ -6,6 +6,7 @@ Bug fixes:
 
 * `mlogit` data are converted to `data.table` as intended; the converted object was assigned to a discarded variable.
 * `get_vcov()` methods for `systemfit`, `stpm2`, `pstpm2`, `gsm`, and `aft` models accept a `vcov` argument. These methods referred to a `vcov` object that did not exist in their scope, which resolved to `stats::vcov()` and triggered a spurious covariance computation on every call. Thanks to @etiennebacher for the `unused_object` rule in `jarl`, which surfaced this in #1764.
+* `systemfit`, `stpm2` (and `pstpm2`, `gsm`, `aft`), and `tidymodels` models now raise an explicit error when `vcov` is not `TRUE`, `FALSE`, or `NULL`. These classes extract their own covariance matrix and previously ignored a user-supplied `vcov` silently, so a request like `vcov = "HC3"` returned default standard errors without warning.
 
 ## 1.0.0
 

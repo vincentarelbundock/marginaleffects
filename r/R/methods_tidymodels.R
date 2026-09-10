@@ -78,7 +78,10 @@ get_vcov.model_fit <- function(model, vcov, type = NULL, ...) {
     if (isTRUE(type == "class")) {
         return(FALSE)
     }
-    sanitize_vcov(model, vcov)
+    if (!is.null(vcov) && !isTRUE(checkmate::check_flag(vcov))) {
+        msg <- "The `vcov` argument is not supported for models of this class."
+        stop_sprintf(msg)
+    }
     if (isTRUE(supported_engine(model))) {
         tmp <- parsnip::extract_fit_engine(model)
         out <- get_vcov(tmp)

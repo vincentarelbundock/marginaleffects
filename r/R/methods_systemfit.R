@@ -8,7 +8,10 @@ get_coef.systemfit <- function(model, ...) {
 #' @rdname get_vcov
 #' @export
 get_vcov.systemfit <- function(model, vcov = NULL, ...) {
-    sanitize_vcov(model, vcov)
+    if (!is.null(vcov) && !isTRUE(checkmate::check_flag(vcov))) {
+        msg <- "The `vcov` argument is not supported for models of this class."
+        stop_sprintf(msg)
+    }
     out <- stats::vcov(model)
     return(out)
 }
