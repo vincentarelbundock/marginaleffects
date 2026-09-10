@@ -672,6 +672,9 @@ expect_error(
 
 
 # Issue #500
+grid <- datagrid(model = brms_issue500, z = 0:1)
+expect_true("n" %in% colnames(grid))
+expect_false("y" %in% colnames(grid))
 p <- plot_predictions(brms_issue500, condition = "z")
 expect_inherits(p, "gg")
 

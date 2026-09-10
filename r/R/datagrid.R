@@ -345,6 +345,15 @@ datagrid_newdata_to_list <- function(
     # A balanced grid must never balance on the response, which would
     # multiply the rows; with `response = TRUE` it is held at its mean or mode.
     response_names <- hush(insight::find_response(model, flatten = TRUE))
+    # For brms, `find_response()` also returns auxiliary variables from the
+    # left-hand side, such as the denominator in `y | trials(n)`. Those are
+    # required in `newdata`; only the modeled outcome itself should be dropped.
+    if (inherits(model, "brmsfit")) {
+        brms_response_names <- c(model$formula$resp, model$formula$responses)
+        if (length(brms_response_names) > 0) {
+            response_names <- intersect(response_names, brms_response_names)
+        }
+    }
     if (!isTRUE(response)) {
         implicit <- setdiff(implicit, response_names)
     }

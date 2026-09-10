@@ -17,10 +17,11 @@ document: r-document py-document ## Both: generate docs and populate website/man
 # ==============================================================================
 
 r-runnersup:
-	cd r && awk '!/tinytest/' .Rbuildignore > temp && mv temp .Rbuildignore
+	cd r && cp .Rbuildignore .Rbuildignore.runners-backup
+	cd r && awk '!/^\^inst\/tinytest\$$/ && !/^\^tests\$$/' .Rbuildignore.runners-backup > .Rbuildignore
 
 r-runnersdown:
-	cd r && git restore .Rbuildignore
+	cd r && mv .Rbuildignore.runners-backup .Rbuildignore
 
 r-install: r-document ## R: install package (dependencies=FALSE)
 	cd r && Rscript -e "devtools::install(dependencies = FALSE)"
@@ -34,6 +35,9 @@ r-document: ## R: generate roxygen docs and populate website/man/r
 	@Rscript -e 'invisible(sapply(Sys.glob("r/man/*.Rd"), altdoc:::.rd2qmd, "website/man/r", "r"))'
 	@rm -rf r/altdoc
 	cp -f r/NEWS.md website/bonus/NEWS_r.qmd
+
+r-build: ## R: build source package without shipping tests
+	cd r && R CMD build .
 
 r-check: r-document r-runnersup ## R: run R CMD check
 	cd r && Rscript -e "devtools::check()"; status=$$?; \
