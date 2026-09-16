@@ -123,7 +123,14 @@ def sanitize_datagrid_factor(
     ):
         # Get the categories/levels
         if newdata_col.dtype == pl.Categorical:
-            levels = newdata_col.cat.get_categories().to_list()
+            # `cat.get_categories()` is deprecated, and it reads the global
+            # string cache, which may hold levels belonging to unrelated datasets.
+            levels = (
+                newdata_col.cast(pl.String)
+                .unique(maintain_order=True)
+                .drop_nulls()
+                .to_list()
+            )
         else:
             # For character data treated as categorical, get sorted unique values
             levels = sorted(newdata_col.unique().drop_nulls().to_list())

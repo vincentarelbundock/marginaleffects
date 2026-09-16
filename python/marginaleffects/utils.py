@@ -126,7 +126,17 @@ def upcast(df, reference):
 
                 # string & cat
                 elif good in [pl.Categorical, pl.Enum]:
-                    categories = reference[col].cat.get_categories()
+                    if good == pl.Enum:
+                        categories = good.categories
+                    else:
+                        # `cat.get_categories()` is deprecated, and it reads the
+                        # global string cache, which may hold levels belonging to
+                        # unrelated datasets. Collect the levels observed in both
+                        # frames instead, in order of appearance.
+                        levels = reference[col].cast(pl.String)
+                        if bad in [pl.Categorical, pl.Enum, pl.String]:
+                            levels = pl.concat([levels, df[col].cast(pl.String)])
+                        categories = levels.unique(maintain_order=True).drop_nulls()
                     df = df.with_columns(pl.col(col).cast(pl.Enum(categories)))
                     reference = reference.with_columns(
                         pl.col(col).cast(pl.Enum(categories))
