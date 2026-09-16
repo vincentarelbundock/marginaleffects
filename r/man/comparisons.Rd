@@ -423,8 +423,8 @@ with \code{avg}. For example, \code{comparison = "difference"} becomes
    lnoravg \tab function (hi, lo) log((mean(hi)/(1 - mean(hi)))/(mean(lo)/(1 - mean(lo)))) \cr
    lift \tab function (hi, lo) (hi - lo)/lo \cr
    liftavg \tab function (hi, lo) (mean(hi - lo))/mean(lo) \cr
-   expdydx \tab function (hi, lo, eps) ((exp(hi) - exp(lo))/exp(eps))/eps \cr
-   expdydxavg \tab function (hi, lo, eps) mean(((exp(hi) - exp(lo))/exp(eps))/eps) \cr
+   expdydx \tab function (hi, lo, eps) (exp(hi) - exp(lo))/eps \cr
+   expdydxavg \tab function (hi, lo, eps) mean((exp(hi) - exp(lo))/eps) \cr
 }
 }
 

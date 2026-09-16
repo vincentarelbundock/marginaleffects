@@ -70,9 +70,9 @@ def sanitize_comparison(comparison, by, wts=None):
         "lift": "lift",
         "liftavg": "liftavg",
         "liftavgwts": "liftavg",
-        "expdydx": "exp(dY/dX)",
-        "expdydxavg": "exp(dY/dX)",
-        "expdydxavgwts": "exp(dY/dX)",
+        "expdydx": "d exp(Y)/dX",
+        "expdydxavg": "d exp(Y)/dX",
+        "expdydxavgwts": "d exp(Y)/dX",
     }
 
     if out not in lab:

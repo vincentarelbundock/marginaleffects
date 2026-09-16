@@ -44,10 +44,10 @@ get_comparisons_data_numeric <- function(
         low <- x - h / 2
         high <- x + h / 2
         lab <- variable$label
-    } else if (identical(variable$label, "exp(dY/dX)")) {
+    } else if (identical(variable$label, "d exp(Y)/dX")) {
         low <- x - h / 2
         high <- x + h / 2
-        lab <- "exp(dY/dX)"
+        lab <- "d exp(Y)/dX"
 
         # contrast_label is designed for categorical predictors
         # numeric contrasts first

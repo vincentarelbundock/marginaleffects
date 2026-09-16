@@ -67,12 +67,12 @@ estimands = {
         ((hi * w).sum() - (lo * w).sum()) / (lo * w).sum()
     ),
     "expdydx": lambda hi, lo, eps, x, y, w: prep(
-        ((np.exp(hi) - np.exp(lo)) / np.exp(eps)) / eps
+        (np.exp(hi) - np.exp(lo)) / eps
     ),
     "expdydxavg": lambda hi, lo, eps, x, y, w: prep(
-        (((hi.exp() - lo.exp()) / np.exp(eps)) / eps).mean()
+        ((hi.exp() - lo.exp()) / eps).mean()
     ),
     "expdydxavgwts": lambda hi, lo, eps, x, y, w: prep(
-        ((((np.exp(hi) - np.exp(lo)) / np.exp(eps)) / eps) * w).sum() / w.sum()
+        (((np.exp(hi) - np.exp(lo)) / eps) * w).sum() / w.sum()
     ),
 }

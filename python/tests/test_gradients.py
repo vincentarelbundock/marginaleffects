@@ -46,7 +46,7 @@ def test_exact_comparison_gradients(key):
 
     def evaluate(a, b):
         if key == "expdydxavg":
-            return np.atleast_1d(np.mean((np.exp(a) - np.exp(b)) / np.exp(eps) / eps))
+            return np.atleast_1d(np.mean((np.exp(a) - np.exp(b)) / eps))
         a = pl.Series(a)
         b = pl.Series(b)
         x_arg = pl.Series(x)

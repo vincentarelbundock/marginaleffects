@@ -405,7 +405,7 @@ cmp1 <- comparisons(
     brms_lognormal_hurdle,
     variables = list(lifeExp = eps),
     newdata = datagrid(lifeExp = seq(30, 80, 10)),
-    comparison = function(hi, lo) (exp(hi) - exp(lo)) / exp(eps),
+    comparison = function(hi, lo) (exp(hi) - exp(lo)) / eps,
     dpar = "mu"
 )
 cmp2 <- comparisons(

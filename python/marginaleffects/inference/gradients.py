@@ -79,9 +79,7 @@ def comparison_gradient_exact(fun_key, hi, lo, *, eps=None, x=None, w=None):
         x = np.asarray(x, dtype=float)
         return a * x / eps, -a * x / eps
     if fun_key == "expdydx":
-        scale = np.exp(eps) * eps
-        return np.exp(hi) / scale, -np.exp(lo) / scale
+        return np.exp(hi) / eps, -np.exp(lo) / eps
     if fun_key in {"expdydxavg", "expdydxavgwts"}:
-        scale = np.exp(eps) * eps
-        return a * np.exp(hi) / scale, -a * np.exp(lo) / scale
+        return a * np.exp(hi) / eps, -a * np.exp(lo) / eps
     return None

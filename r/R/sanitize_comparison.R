@@ -45,9 +45,9 @@ comparison_function_dict <- list(
     "liftavg" = function(hi, lo) (mean(hi - lo)) / mean(lo),
     "liftavgwts" = function(hi, lo, w) (wmean(hi - lo, w)) / wmean(lo, w),
 
-    "expdydx" = function(hi, lo, eps) ((exp(hi) - exp(lo)) / exp(eps)) / eps,
-    "expdydxavg" = function(hi, lo, eps) mean(((exp(hi) - exp(lo)) / exp(eps)) / eps),
-    "expdydxavgwts" = function(hi, lo, eps, w) wmean(((exp(hi) - exp(lo)) / exp(eps)) / eps, w)
+    "expdydx" = function(hi, lo, eps) (exp(hi) - exp(lo)) / eps,
+    "expdydxavg" = function(hi, lo, eps) mean((exp(hi) - exp(lo)) / eps),
+    "expdydxavgwts" = function(hi, lo, eps, w) wmean((exp(hi) - exp(lo)) / eps, w)
 )
 
 # Exact derivatives of the built-in comparison functions.
@@ -160,13 +160,13 @@ comparison_gradient_exact <- function(fun_key, hi, lo, args) {
       list(hi = a * x / eps, lo = -a * x / eps)
     },
     expdydx = list(
-      hi = exp(hi) / (exp(eps) * eps),
-      lo = -exp(lo) / (exp(eps) * eps)
+      hi = exp(hi) / eps,
+      lo = -exp(lo) / eps
     ),
     expdydxavg = ,
     expdydxavgwts = list(
-      hi = a * exp(hi) / (exp(eps) * eps),
-      lo = -a * exp(lo) / (exp(eps) * eps)
+      hi = a * exp(hi) / eps,
+      lo = -a * exp(lo) / eps
     ),
     NULL
   )
@@ -218,9 +218,9 @@ comparison_label_dict <- list(
     # All three must carry the label: get_comparisons_data_numeric() keys the
     # eps-step derivative contrast off it, and without an entry the averaged
     # variants silently fell back to the default "+1" unit contrast.
-    "expdydx" = "exp(dY/dX)",
-    "expdydxavg" = "exp(dY/dX)",
-    "expdydxavgwts" = "exp(dY/dX)"
+    "expdydx" = "d exp(Y)/dX",
+    "expdydxavg" = "d exp(Y)/dX",
+    "expdydxavgwts" = "d exp(Y)/dX"
 )
 
 sanity_comparison <- function(comparison) {

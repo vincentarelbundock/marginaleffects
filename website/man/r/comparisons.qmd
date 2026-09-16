@@ -913,11 +913,11 @@ with <code>avg</code>. For example, <code>comparison = "difference"</code> becom
 </tr>
 <tr>
  <td style="text-align: left;">
-   expdydx </td><td style="text-align: left;"> function (hi, lo, eps) ((exp(hi) - exp(lo))/exp(eps))/eps </td>
+   expdydx </td><td style="text-align: left;"> function (hi, lo, eps) (exp(hi) - exp(lo))/eps </td>
 </tr>
 <tr>
  <td style="text-align: left;">
-   expdydxavg </td><td style="text-align: left;"> function (hi, lo, eps) mean(((exp(hi) - exp(lo))/exp(eps))/eps) 
+   expdydxavg </td><td style="text-align: left;"> function (hi, lo, eps) mean((exp(hi) - exp(lo))/eps) 
 </td>
 </tr>
 

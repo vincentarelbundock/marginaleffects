@@ -439,5 +439,5 @@ def test_slope_family_recognized_across_variants():
     # the eps-sensitive expdydx estimand matches R tightly. The regression
     # this guards produced 18155 instead of roughly -7.3.
     exp = avg_comparisons(pois, variables="mpg", comparison="expdydx")
-    assert exp["contrast"][0] == "exp(dY/dX)"
-    np.testing.assert_allclose(exp["estimate"].to_numpy(), [-7.275478782587], rtol=1e-6)
+    assert exp["contrast"][0] == "d exp(Y)/dX"
+    np.testing.assert_allclose(exp["estimate"].to_numpy(), [-7.292596262888], rtol=1e-6)

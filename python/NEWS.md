@@ -1,3 +1,12 @@
+# Development
+
+Bug fixes:
+
+* `expdydx` (and `expdydxavg`, `expdydxavgwts`) divided by a spurious
+  `exp(eps)` factor, biasing estimates and standard errors toward zero when
+  `eps` was large. The shortcut now computes `(exp(hi) - exp(lo)) / eps`, and
+  its label is `d exp(Y)/dX` instead of `exp(dY/dX)`. R issue #1762.
+
 # 0.6.1
 
 Breaking change:
