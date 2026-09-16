@@ -74,7 +74,11 @@
 #' equivalents. Supported model classes are validated through an allow-list.
 #' Survey-weighted linear and generalized linear models fitted by
 #' [survey::svyglm()] are supported using their observation-level coefficient
-#' influence functions.
+#' influence functions. Propensity-score-weighted models fitted by
+#' `WeightIt::glm_weightit()` or `WeightIt::lm_weightit()` are supported because
+#' their `estfun()` and `bread()` methods already account for estimation of the
+#' weights; the multi-equation `multinom_weightit`, `ordinal_weightit`, and
+#' `coxph_weightit` classes are not supported.
 #' For multiple-imputation objects, unconditional variance is estimated in each
 #' completed dataset and the results are pooled using Rubin's rules. Prediction
 #' methods that return posterior draws, censored and survival models such as

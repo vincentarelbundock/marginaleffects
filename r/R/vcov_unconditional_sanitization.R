@@ -65,7 +65,17 @@ validate_unconditional_model_support <- function(model, kind) {
         stop_sprintf(msg, primary_class)
     }
 
-    if (isTRUE(primary_class %in% c("lm", "glm", "svyglm"))) {
+    # `glm_weightit` (and its `lm_weightit` alias, which shares the class) is
+    # included because `WeightIt` supplies `estfun()` and `bread()` methods
+    # that already fold the weight-estimation correction into the
+    # outcome-coefficient scores, so `scores %*% bread` is a complete influence
+    # function in the convention used by `get_unconditional_beta_dot()`. The
+    # multi-equation siblings `multinom_weightit` and `ordinal_weightit` are
+    # deliberately excluded: their grouped estimate tables index past the
+    # length of the row IDs, which silently drops the empirical-distribution
+    # term for every group after the first. `coxph_weightit` is rejected by the
+    # survival guard above.
+    if (isTRUE(primary_class %in% c("lm", "glm", "svyglm", "glm_weightit"))) {
         return(invisible(TRUE))
     }
 
@@ -95,8 +105,8 @@ validate_unconditional_model_support <- function(model, kind) {
 
     reason <- paste0(
         "only explicitly validated model classes are supported. ",
-        "Currently supported classes include `lm`, `glm`, `svyglm`, and selected ",
-        "`fixest` models"
+        "Currently supported classes include `lm`, `glm`, `svyglm`, ",
+        "`glm_weightit`, and selected `fixest` models"
     )
     msg <- paste0(
         "`vcov = \"unconditional\"` is not currently supported for models ",

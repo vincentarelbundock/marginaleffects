@@ -2,6 +2,10 @@
 
 ## Development
 
+New features:
+
+* `vcov = "unconditional"` supports `WeightIt::glm_weightit()` and `WeightIt::lm_weightit()` models. `multinom_weightit` and `ordinal_weightit` remain unsupported. Thanks to @ngreifer for report #1765.
+
 Bug fixes:
 
 * `mlogit` data are converted to `data.table` as intended; the converted object was assigned to a discarded variable.

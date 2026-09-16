@@ -62,7 +62,11 @@ matrices through \code{sandwich::estfun()}/\code{sandwich::bread()} or model-spe
 equivalents. Supported model classes are validated through an allow-list.
 Survey-weighted linear and generalized linear models fitted by
 \code{\link[survey:svyglm]{survey::svyglm()}} are supported using their observation-level coefficient
-influence functions.
+influence functions. Propensity-score-weighted models fitted by
+\code{WeightIt::glm_weightit()} or \code{WeightIt::lm_weightit()} are supported because
+their \code{estfun()} and \code{bread()} methods already account for estimation of the
+weights; the multi-equation \code{multinom_weightit}, \code{ordinal_weightit}, and
+\code{coxph_weightit} classes are not supported.
 For multiple-imputation objects, unconditional variance is estimated in each
 completed dataset and the results are pooled using Rubin's rules. Prediction
 methods that return posterior draws, censored and survival models such as

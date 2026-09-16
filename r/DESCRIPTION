@@ -196,6 +196,7 @@ Suggests:
     truncreg,
     tsModel,
     VGAM,
+    WeightIt,
     withr,
     workflows,
     yaml,
