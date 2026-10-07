@@ -70,7 +70,7 @@ add_model_matrix_attribute <- function(mfx = NULL, newdata = NULL, model = NULL)
     # supported models (no inheritance)
     supported <- c(
         "lm", "glm", "rq", "ols", "lrm", "ivreg", "geeglm", "svyglm",
-        "negbin", "rlm", "brglmFit"
+        "negbin", "rlm", "brglmFit", "fixest"
     )
     if (!isTRUE(class(model)[1] %in% supported)) {
         return(newdata)
