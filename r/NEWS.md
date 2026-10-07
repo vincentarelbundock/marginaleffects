@@ -9,7 +9,8 @@ New features:
 Performance:
 
 * Exact analytic Jacobians for linear `fixest::feols()` models, including absorbed fixed effects and varying slopes, and for `fixest::feglm()` models without fixed effects. IV models are excluded. Thanks to @grantmcdermott.
-* `vcov = "unconditional"` reuses the exact analytic effect Jacobian when the estimand is eligible, instead of always differentiating numerically, and `components(x, "jacobian_method")` now reports the path it used. Thanks to @grantmcdermott.
+* Exact analytic Jacobians for `WeightIt::glm_weightit()` and `WeightIt::lm_weightit()` models, including those with estimated weights. Thanks to @grantmcdermott.
+* `vcov = "unconditional"` reuses the exact analytic effect Jacobian when the estimand is eligible, instead of always differentiating numerically. This applies to all analytic-eligible models (e.g., `lm`, `glm`, `fixest`, etc.). Thanks to @grantmcdermott.
 
 Bug fixes:
 
