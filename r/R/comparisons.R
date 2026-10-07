@@ -334,6 +334,12 @@ comparisons <- function(
     dots[["modeldata"]] <- NULL # dont' pass twice
     args <- utils::modifyList(args, dots)
     contrast_data <- do_call(get_comparisons_data, args)
+    # get_comparisons_data() caches model matrices only for delta-method
+    # inference, but the unconditional path reuses the effect Jacobian too.
+    if (unconditional) {
+        contrast_data$lo <- add_model_matrix_attribute(mfx, contrast_data$lo)
+        contrast_data$hi <- add_model_matrix_attribute(mfx, contrast_data$hi)
+    }
 
     args <- list(
         mfx = mfx,
