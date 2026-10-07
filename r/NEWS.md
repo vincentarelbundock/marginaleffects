@@ -6,6 +6,11 @@ New features:
 
 * `vcov = "unconditional"` supports `WeightIt::glm_weightit()` and `WeightIt::lm_weightit()` models. `multinom_weightit` and `ordinal_weightit` remain unsupported. Thanks to @ngreifer for report #1765.
 
+Performance:
+
+* Exact analytic Jacobians for linear `fixest::feols()` models, including absorbed fixed effects and varying slopes, and for `fixest::feglm()` models without fixed effects. IV models are excluded. Thanks to @grantmcdermott.
+* `vcov = "unconditional"` reuses the exact analytic effect Jacobian when the estimand is eligible, instead of always differentiating numerically, and `components(x, "jacobian_method")` now reports the path it used. Thanks to @grantmcdermott.
+
 Bug fixes:
 
 * `mlogit` data are converted to `data.table` as intended; the converted object was assigned to a discarded variable.
