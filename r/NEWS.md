@@ -12,6 +12,8 @@ Bug fixes:
 * `get_vcov()` methods for `systemfit`, `stpm2`, `pstpm2`, `gsm`, and `aft` models accept a `vcov` argument. These methods referred to a `vcov` object that did not exist in their scope, which resolved to `stats::vcov()` and triggered a spurious covariance computation on every call. Thanks to @etiennebacher for the `unused_object` rule in `jarl`, which surfaced this in #1764.
 * `systemfit`, `stpm2` (and `pstpm2`, `gsm`, `aft`), and `tidymodels` models now raise an explicit error when `vcov` is not `TRUE`, `FALSE`, or `NULL`. These classes extract their own covariance matrix and previously ignored a user-supplied `vcov` silently, so a request like `vcov = "HC3"` returned default standard errors without warning.
 * `expdydx` (and `expdydxavg`, `expdydxavgwts`) divided by a spurious `exp(eps)` factor, biasing estimates and standard errors toward zero when `eps` was large. The shortcut now computes `(exp(hi) - exp(lo)) / eps`, and its label is `d exp(Y)/dX` instead of `exp(dY/dX)`. Issue #1762.
+* `predictions()` and friends dropped the `newdata` columns for models with a `group` column (`multinom`, `polr`, `clm`, `mblogit`, brms `categorical()`/`cumulative()`, etc.) when a factor in `newdata` did not use all its levels. Padding rows all shared one `rowid`, which blocked the merge, and `by` then silently dropped the missing variables, averaging over them instead of by them. Thanks to @carlislerainey for report #1768.
+* `datagrid()` kept the response variable in the grid for `brms` models whose response name contains `_` or `.`, because `brms` strips those characters from its internal response names. Thanks to @carlislerainey for report #1768.
 
 ## 1.0.0
 
