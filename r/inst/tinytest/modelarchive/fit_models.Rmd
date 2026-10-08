@@ -112,6 +112,13 @@ brms_lognormal_hurdle <- brm(
 brms_mv_1 <- insight::download_model("brms_mv_1")
 brms_categorical_1 <- insight::download_model("brms_categorical_1")
 
+# categorical with an underscore in the response name: brms stores `gearf` (#1768)
+dat <- transform(mtcars, gear_f = factor(gear))
+brms_categorical_underscore <- brm(gear_f ~ mpg, data = dat,
+  family = categorical(), backend = "cmdstanr", seed = 1024,
+  chains = 2, iter = 1000, silent = 2, refresh = 0)
+saveRDS(brms_categorical_underscore, "data/brms_categorical_underscore.rds")
+
 
 # logit with random effects
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/plm/EmplUK.csv")
