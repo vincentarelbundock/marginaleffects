@@ -67,3 +67,66 @@ expect_equivalent(
     numeric_se(avg_predictions(mod_lm, by = "D", vcov = "unconditional")),
     tolerance = 1e-6
 )
+
+
+# feols with absorbed fixed effects reproduces lm() with dummies exactly
+set.seed(48103)
+n <- 300
+sim <- data.frame(
+    id = factor(sample(1:20, n, TRUE)),
+    year = factor(sample(1:6, n, TRUE)),
+    firm = factor(sample(1:8, n, TRUE)),
+    x1 = rnorm(n),
+    D = rbinom(n, 1, 0.5)
+)
+sim$y <- sim$D * (1 + 0.5 * sim$x1) + 0.3 * sim$x1 + as.numeric(sim$id) / 10 +
+    as.numeric(sim$year) / 5 + as.numeric(sim$firm) / 7 + rnorm(n)
+
+compare_lm <- function(mf, ml, vcov_lm = TRUE, FUN = avg_comparisons, ...) {
+    a <- FUN(mf, ...)
+    b <- FUN(ml, ..., vcov = vcov_lm)
+    expect_equal(components(a, "jacobian_method"), "analytic")
+    expect_equivalent(a$estimate, b$estimate, tolerance = 1e-10)
+    expect_equivalent(a$std.error, b$std.error, tolerance = 1e-8)
+}
+
+# one, two, and three fixed effects; slopes with by
+compare_lm(
+    feols(y ~ D * x1 | id, data = sim, vcov = "iid"),
+    lm(y ~ D * x1 + id, data = sim),
+    variables = "D"
+)
+compare_lm(
+    feols(y ~ D * x1 | id + year, data = sim, vcov = "iid"),
+    lm(y ~ D * x1 + id + year, data = sim),
+    FUN = avg_slopes,
+    variables = "x1",
+    by = "D"
+)
+compare_lm(
+    feols(y ~ D * x1 | id + year + firm, data = sim, vcov = "iid"),
+    lm(y ~ D * x1 + id + year + firm, data = sim),
+    variables = "D"
+)
+
+# i() interactions
+compare_lm(
+    feols(y ~ D + D:x1 + i(year, x1, ref = 1) | id + year, data = sim, vcov = "iid"),
+    lm(y ~ D + D:x1 + year:x1 + id + year, data = sim),
+    variables = "D"
+)
+
+# heteroskedasticity-robust and clustered standard errors
+ml <- lm(y ~ D * x1 + id + year, data = sim)
+compare_lm(
+    feols(y ~ D * x1 | id + year, data = sim, vcov = "hetero"),
+    ml,
+    vcov_lm = sandwich::vcovHC(ml, type = "HC1"),
+    variables = "D"
+)
+compare_lm(
+    feols(y ~ D * x1 | id + year, data = sim, vcov = ~id, ssc = ssc(K.fixef = "full")),
+    ml,
+    vcov_lm = sandwich::vcovCL(ml, cluster = ~id, type = "HC1"),
+    variables = "D"
+)
