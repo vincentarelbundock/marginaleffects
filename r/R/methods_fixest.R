@@ -105,11 +105,13 @@ get_model_matrix.fixest <- function(model, newdata, mfx = NULL) {
     # `i()` omits columns for levels absent from `newdata`. Those columns are
     # identically zero for these rows.
     beta_names <- names(stats::coef(model))
-    absent <- setdiff(beta_names, colnames(X))
-    if (length(absent) > 0L) {
-        X <- cbind(X, matrix(0, nrow(X), length(absent), dimnames = list(NULL, absent)))
+    if (identical(colnames(X), beta_names)) {
+        return(X)
     }
-    X[, beta_names, drop = FALSE]
+    # One allocation; absent columns stay zero, the rest are filled in place.
+    out <- matrix(0, nrow(X), length(beta_names), dimnames = list(NULL, beta_names))
+    out[, colnames(X)] <- X
+    out
 }
 
 
