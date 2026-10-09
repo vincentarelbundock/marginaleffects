@@ -250,6 +250,8 @@ plan_unconditional_se <- function(
         "Unconditional"
     }
     mfx@jacobian <- diag(nrow(V))
+    # provenance of the effect Jacobian J, not of the identity stored above
+    mfx@jacobian_method <- attr(J, "marginaleffects_jacobian_method", exact = TRUE)
 
     list(mfx = mfx, estimates = estimates)
 }
@@ -274,9 +276,8 @@ get_unconditional_plan_jacobian <- function(
     # This path combines the derivative with observation-level influence
     # functions instead of a coefficient covariance matrix, so the resolver is
     # asked for the Jacobian alone and no covariance is ever propagated here.
-    # Numerical differentiation only: eligibility for the analytic derivative
-    # is decided for the delta method, whose fallbacks differ from the ones
-    # this decomposition requires.
+    # The effect Jacobian is the same derivative the delta method uses, so the
+    # analytic path applies whenever the estimand is eligible.
     jac <- compute_plan_jacobian(
         plan = plan,
         mfx = mfx,
@@ -286,14 +287,14 @@ get_unconditional_plan_jacobian <- function(
         dots = dots,
         contrast_data = contrast_data,
         variables = variables,
-        numderiv = numderiv,
-        analytic = FALSE
+        numderiv = numderiv
     )
 
     J <- jac$jacobian
     if (!isTRUE(checkmate::check_matrix(J, mode = "numeric", nrows = nrow(estimates)))) {
         stop_sprintf("Unable to compute the unconditional effect Jacobian.")
     }
+    attr(J, "marginaleffects_jacobian_method") <- jac$method %||% "numeric"
     J
 }
 

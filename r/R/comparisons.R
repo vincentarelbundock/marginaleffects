@@ -329,7 +329,8 @@ comparisons <- function(
     args <- list(
         mfx = mfx,
         variables = predictors,
-        cross = cross
+        cross = cross,
+        unconditional = unconditional
     )
     dots[["modeldata"]] <- NULL # dont' pass twice
     args <- utils::modifyList(args, dots)
