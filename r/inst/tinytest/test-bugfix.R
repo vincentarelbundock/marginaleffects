@@ -744,3 +744,29 @@ res <- slopes(mod, variables = "hp")
 fake <- data.frame(dydx_hp = rep(NA_real_, 32), SE_dydx_hp = NA_real_)
 flag <- isTRUE(as.logical(marginaleffects:::expect_margins(res, fake, se = TRUE)))
 expect_false(flag)
+
+
+# Issue #1768: padding rows shared one rowid, so `newdata` columns were
+# dropped for models with a `group` column, and `by` silently pruned them
+if (requiet("nnet")) {
+    dat_1768 <- transform(mtcars, gear = factor(gear), am_f = factor(am))
+    mod_1768 <- nnet::multinom(gear ~ mpg + am_f, data = dat_1768, trace = FALSE)
+    grid_1768 <- datagrid(mpg = c(15, 25), am_f = "0", model = mod_1768)
+    p <- predictions(mod_1768, newdata = grid_1768, type = "probs")
+    expect_true(all(c("mpg", "am_f") %in% colnames(p)))
+    expect_equal(nrow(p), 6)
+    p <- predictions(mod_1768, newdata = grid_1768, by = c("group", "mpg"), type = "probs")
+    expect_equal(nrow(p), 6)
+    expect_true("mpg" %in% colnames(p))
+}
+
+# Issue #1768: brms strips `_` from response names, so datagrid() kept the
+# response in the grid
+if (requiet("brms")) {
+    mod_1768_brms <- readRDS(testing_path("modelarchive/data/brms_categorical_underscore.rds"))
+    nd <- datagrid(model = mod_1768_brms, mpg = c(15, 25))
+    expect_false("gear_f" %in% colnames(nd))
+    p <- predictions(mod_1768_brms, newdata = datagrid(mpg = c(15, 25)))
+    expect_true("mpg" %in% colnames(p))
+    expect_equal(nrow(p), 6)
+}

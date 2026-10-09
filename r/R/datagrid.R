@@ -348,10 +348,13 @@ datagrid_newdata_to_list <- function(
     # For brms, `find_response()` also returns auxiliary variables from the
     # left-hand side, such as the denominator in `y | trials(n)`. Those are
     # required in `newdata`; only the modeled outcome itself should be dropped.
+    # brms strips `.` and `_` from response names (`vote_1992` -> `vote1992`),
+    # so we compare on names sanitized the same way. Issue #1768.
     if (inherits(model, "brmsfit")) {
         brms_response_names <- c(model$formula$resp, model$formula$responses)
         if (length(brms_response_names) > 0) {
-            response_names <- intersect(response_names, brms_response_names)
+            sanitized <- gsub("\\.|_", "", make.names(response_names))
+            response_names <- response_names[sanitized %in% brms_response_names]
         }
     }
     if (!isTRUE(response)) {

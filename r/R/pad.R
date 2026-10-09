@@ -51,7 +51,9 @@ pad <- function(model, newdata) {
         setcolorder(padding, to_keep)
         data.table::setDF(padding)
 
-        padding$rowid <- -1 * padding$rowid
+        # unique negative ids: duplicated ids prevent merging `newdata` columns
+        # back onto the estimates (#1768)
+        padding$rowid <- -seq_len(nrow(padding))
 
         # merge padding with original newdata
         return(rbindlist(list(padding, newdata)))
