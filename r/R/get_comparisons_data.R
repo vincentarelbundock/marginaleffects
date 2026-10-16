@@ -2,6 +2,7 @@ get_comparisons_data <- function(
     mfx,
     variables,
     cross,
+    unconditional = FALSE,
     ...) {
     newdata <- mfx@newdata
     model <- mfx@model
@@ -179,8 +180,9 @@ get_comparisons_data <- function(
         }
     }
 
-    # Cache model matrices only when delta-method inference will reuse them.
-    if (isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
+    # Cache model matrices only when delta-method or unconditional inference
+    # will reuse them for the effect Jacobian.
+    if (unconditional || isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
         lo <- add_model_matrix_attribute(mfx, lo)
         hi <- add_model_matrix_attribute(mfx, hi)
     }
