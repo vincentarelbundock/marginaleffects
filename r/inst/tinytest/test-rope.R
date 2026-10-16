@@ -15,7 +15,10 @@ post <- get_draws(p1, "DxP")
 p2 <- apply(post, 2, function(v) {
     mean(lo <= v & v <= hi)
 })
-p3 <- bayestestR::p_rope(p1, range = c(lo, hi))$p_ROPE
+# bayestestR 0.20.0 made p_rope() a wrapper for rope(ci = 1), so the column
+# is now ROPE_Percentage instead of p_ROPE
+p3 <- bayestestR::p_rope(p1, range = c(lo, hi))
+p3 <- if ("p_ROPE" %in% names(p3)) p3$p_ROPE else p3$ROPE_Percentage
 
 ## Option 2: $Pr(\theta \in ROPE | \theta \in CI)$ This is Kruschke's CI+ROPE rule.
 p4 <- apply(post, 2, function(v) {

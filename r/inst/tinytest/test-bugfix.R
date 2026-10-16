@@ -770,3 +770,27 @@ if (requiet("brms")) {
     expect_true("mpg" %in% colnames(p))
     expect_equal(nrow(p), 6)
 }
+
+
+# Issue #1771: `by` variables named Predicted, SE, CI_low, or CI_high were
+# renamed to estimate, std.error, conf.low, conf.high and overwrote the output
+dat_1771 <- mtcars
+dat_1771$SE <- factor(dat_1771$cyl)
+dat_1771$Predicted <- factor(dat_1771$am)
+dat_1771$CI_low <- factor(dat_1771$vs)
+dat_1771$CI_high <- factor(dat_1771$gear)
+dat_1771$grp <- factor(dat_1771$cyl)
+mod_1771 <- lm(mpg ~ SE + Predicted + CI_low + CI_high + hp, data = dat_1771)
+mod_1771_ref <- lm(mpg ~ grp + Predicted + CI_low + CI_high + hp, data = dat_1771)
+for (v in c("SE", "Predicted", "CI_low", "CI_high")) {
+    p <- avg_predictions(mod_1771, by = v)
+    expect_true(v %in% colnames(p), info = v)
+    expect_true(is.numeric(p$estimate), info = v)
+    expect_true(is.numeric(p$std.error), info = v)
+    expect_false(anyNA(p$conf.low), info = v)
+}
+p <- avg_predictions(mod_1771, by = "SE")
+p_ref <- avg_predictions(mod_1771_ref, by = "grp")
+expect_equivalent(p$estimate, p_ref$estimate)
+expect_equivalent(p$std.error, p_ref$std.error)
+expect_equivalent(p$conf.low, p_ref$conf.low)

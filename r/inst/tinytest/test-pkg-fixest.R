@@ -17,8 +17,16 @@ expect_comparisons(mod_simple)
 options(marginaleffects_safe = TRUE)
 mod <- feols(y ~ x1 + i(period, treat, 5) | id + period, base_did)
 hyp <- as.numeric(1:10 %in% 6:10)
-# not supported
-expect_warning(hypotheses(mod, hypothesis = hyp, vcov = "HC0"), pattern = "sandwich")
+# not supported by sandwich; insight >= 1.6.0 computes HC0 for fixest itself,
+# so the fallback warning is only raised with older versions of insight
+if (utils::packageVersion("insight") >= "1.6.0") {
+    d0 <- hypotheses(mod, hypothesis = hyp, vcov = "HC0")
+    d1 <- hypotheses(mod, hypothesis = hyp, vcov = NULL)
+    expect_inherits(d0, "data.frame")
+    expect_false(isTRUE(all.equal(d0$std.error, d1$std.error)))
+} else {
+    expect_warning(hypotheses(mod, hypothesis = hyp, vcov = "HC0"), pattern = "sandwich")
+}
 # supported
 d <- hypotheses(mod, hypothesis = hyp, vcov = "HC1")
 expect_inherits(d, "data.frame")
