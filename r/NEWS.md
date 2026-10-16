@@ -14,6 +14,7 @@ Bug fixes:
 * `expdydx` (and `expdydxavg`, `expdydxavgwts`) divided by a spurious `exp(eps)` factor, biasing estimates and standard errors toward zero when `eps` was large. The shortcut now computes `(exp(hi) - exp(lo)) / eps`, and its label is `d exp(Y)/dX` instead of `exp(dY/dX)`. Issue #1762.
 * `predictions()` and friends dropped the `newdata` columns for models with a `group` column (`multinom`, `polr`, `clm`, `mblogit`, brms `categorical()`/`cumulative()`, etc.) when a factor in `newdata` did not use all its levels. Padding rows all shared one `rowid`, which blocked the merge, and `by` then silently dropped the missing variables, averaging over them instead of by them. Thanks to @carlislerainey for report #1768.
 * `datagrid()` kept the response variable in the grid for `brms` models whose response name contains `_` or `.`, because `brms` strips those characters from its internal response names. Thanks to @carlislerainey for report #1768.
+* `predictions()` silently overwrote its output columns when a `by` variable was named `Predicted`, `SE`, `CI_low`, or `CI_high`. A leftover `setnames()` call renamed those columns to `estimate`, `std.error`, `conf.low`, and `conf.high`, so the group labels replaced the standard errors or estimates. The dead code is removed. Thanks to @jmgirard for report #1771.
 
 ## 1.0.0
 

@@ -289,14 +289,7 @@ predictions <- function(
 
     # two cases when tmp is a data.frame
     # get_predict gets us rowid with the original rows
-    if (inherits(tmp, "data.frame")) {
-        setnames(
-            tmp,
-            old = c("Predicted", "SE", "CI_low", "CI_high"),
-            new = c("estimate", "std.error", "conf.low", "conf.high"),
-            skip_absent = TRUE
-        )
-    } else {
+    if (!inherits(tmp, "data.frame")) {
         tmp <- data.frame(mfx@newdata$rowid, mfx@type, tmp)
         colnames(tmp) <- c("rowid", "type", "estimate")
         if ("rowidcf" %in% colnames(mfx@newdata)) {
