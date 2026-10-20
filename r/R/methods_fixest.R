@@ -97,6 +97,14 @@ get_model_matrix.fixest <- function(model, newdata, mfx = NULL) {
     # Skip the build for models (IV, fenegbin, feglm with fixed effects, ...)
     # whose analytic path would reject the matrix anyway.
     if (!is.null(mfx)) {
+        # Unlike lm/glm, fixest predictions do not reuse the matrix, so it only
+        # feeds the analytic Jacobian, which these settings bypass.
+        if (
+            !isTRUE(getOption("marginaleffects_analytic_jacobian", default = TRUE)) ||
+                !is.null(settings_get("jacobian_function"))
+        ) {
+            return(NULL)
+        }
         # `invlink(link)` predictions are differentiated on the link scale
         type <- if (identical(mfx@type, "invlink(link)")) "link" else mfx@type
         if (is.null(get_prediction_jacobian_spec(model, type = type))) {

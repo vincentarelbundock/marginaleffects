@@ -185,3 +185,15 @@ p_num <- predictions(logit)
 options(old)
 expect_equivalent(p$conf.low, p_num$conf.low, tolerance = 1e-6)
 expect_equivalent(p$conf.high, p_num$conf.high, tolerance = 1e-6)
+
+# no matrix is built when the analytic Jacobian is bypassed
+mfx <- marginaleffects:::new_marginaleffects_internal(model = mod_bare, call = call("test"))
+mfx@type <- "response"
+expect_true(is.matrix(get_model_matrix(mod_bare, mtcars, mfx = mfx)))
+old <- options(marginaleffects_analytic_jacobian = FALSE)
+expect_null(get_model_matrix(mod_bare, mtcars, mfx = mfx))
+options(old)
+marginaleffects:::settings_set("jacobian_function", function(...) NULL)
+expect_null(get_model_matrix(mod_bare, mtcars, mfx = mfx))
+marginaleffects:::settings_set("jacobian_function", NULL)
+expect_true(is.matrix(get_model_matrix(mod_bare, mtcars, mfx = mfx)))
