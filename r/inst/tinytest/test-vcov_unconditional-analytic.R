@@ -145,8 +145,8 @@ expect_equivalent(
     c(mean(prediction_lm_0), mean(prediction_lm_1)),
     tolerance = 1e-9
 )
-# The public path obtains the final target Jacobian numerically, whereas this
-# reference uses its exact design-matrix derivative.
+# Both the public path and this reference use the exact design-matrix
+# derivative of the target.
 expect_equivalent(vcov(out_lm), V_lm, tolerance = 1e-6)
 
 comparison_lm <- avg_comparisons(
