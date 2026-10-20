@@ -171,3 +171,14 @@ compare_lm(
     lm(mpg ~ hp + factor(cyl), data = mtcars),
     variables = "cyl"
 )
+
+# unit-level predictions default to type = "invlink(link)", which is
+# differentiated on the link scale
+p <- predictions(logit)
+expect_equal(components(p, "type"), "invlink(link)")
+expect_equal(components(p, "jacobian_method"), "analytic")
+old <- options(marginaleffects_analytic_jacobian = FALSE)
+p_num <- predictions(logit)
+options(old)
+expect_equivalent(p$conf.low, p_num$conf.low, tolerance = 1e-6)
+expect_equivalent(p$conf.high, p_num$conf.high, tolerance = 1e-6)

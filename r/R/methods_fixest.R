@@ -96,8 +96,12 @@ sanitize_model_specific.fixest <- function(model, vcov = TRUE, calling_function 
 get_model_matrix.fixest <- function(model, newdata, mfx = NULL) {
     # Skip the build for models (IV, fenegbin, feglm with fixed effects, ...)
     # whose analytic path would reject the matrix anyway.
-    if (!is.null(mfx) && is.null(get_prediction_jacobian_spec(model, type = mfx@type))) {
-        return(NULL)
+    if (!is.null(mfx)) {
+        # `invlink(link)` predictions are differentiated on the link scale
+        type <- if (identical(mfx@type, "invlink(link)")) "link" else mfx@type
+        if (is.null(get_prediction_jacobian_spec(model, type = type))) {
+            return(NULL)
+        }
     }
     # Absorbed fixed effects (and varying slopes) are constants with respect to
     # the coefficients, so the RHS design matrix is the full derivative.
