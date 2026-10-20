@@ -124,12 +124,15 @@ compare_lm(
     vcov_lm = sandwich::vcovHC(ml, type = "HC1"),
     variables = "D"
 )
-compare_lm(
-    feols(y ~ D * x1 | id + year, data = sim, vcov = ~id, ssc = ssc(K.fixef = "full")),
-    ml,
-    vcov_lm = sandwich::vcovCL(ml, cluster = ~id, type = "HC1"),
-    variables = "D"
-)
+# `K.fixef` replaced `fixef.K` in fixest 0.13.0
+if (utils::packageVersion("fixest") >= "0.13.0") {
+    compare_lm(
+        feols(y ~ D * x1 | id + year, data = sim, vcov = ~id, ssc = ssc(K.fixef = "full")),
+        ml,
+        vcov_lm = sandwich::vcovCL(ml, cluster = ~id, type = "HC1"),
+        variables = "D"
+    )
+}
 
 # bare i() terms: model.matrix() drops the lowest level present in newdata as
 # if it were the reference (fixest#687). Those cases must fall back to finite
