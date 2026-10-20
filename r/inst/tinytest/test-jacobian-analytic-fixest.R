@@ -130,3 +130,44 @@ compare_lm(
     vcov_lm = sandwich::vcovCL(ml, cluster = ~id, type = "HC1"),
     variables = "D"
 )
+
+# bare i() terms: model.matrix() drops the lowest level present in newdata as
+# if it were the reference (fixest#687). Those cases must fall back to finite
+# differences, not zero-fill a column the predictions use.
+compare_lm_numeric <- function(mf, ml, FUN = avg_comparisons, ...) {
+    a <- FUN(mf, ...)
+    b <- FUN(ml, ...)
+    expect_equal(components(a, "jacobian_method"), "numeric")
+    expect_equivalent(a$estimate, b$estimate, tolerance = 1e-10)
+    expect_equivalent(a$std.error, b$std.error, tolerance = 1e-6)
+}
+mod_bare <- feols(mpg ~ hp + i(cyl), data = mtcars, vcov = "iid")
+expect_null(get_model_matrix(mod_bare, subset(mtcars, cyl != 4)))
+compare_lm_numeric(
+    mod_bare,
+    lm(mpg ~ hp + factor(cyl), data = mtcars),
+    FUN = avg_predictions,
+    newdata = subset(mtcars, cyl != 4),
+    by = "cyl"
+)
+# exactly-zero coefficient (tied cell means) evades the replay check
+tied <- data.frame(g = rep(c("a", "b", "c", "d"), each = 20))
+tied$yb <- c(rep(0:1, 20), rep(c(0, 1, 1, 1), 5), rep(c(1, 0, 0, 0, 0), 4))
+compare_lm_numeric(
+    feols(yb ~ i(g), data = tied, vcov = "iid"),
+    lm(yb ~ g, data = tied),
+    variables = list(g = "sequential")
+)
+# with every level present, bare i() stays analytic
+compare_lm(
+    mod_bare,
+    lm(mpg ~ hp + factor(cyl), data = mtcars),
+    variables = "hp"
+)
+# every row at the reference level: model.matrix() names the column
+# `i(factor_var = cyl, ref = 4)1`, which is not a coefficient
+compare_lm(
+    feols(mpg ~ hp + i(cyl, ref = 4), data = mtcars, vcov = "iid"),
+    lm(mpg ~ hp + factor(cyl), data = mtcars),
+    variables = "cyl"
+)
