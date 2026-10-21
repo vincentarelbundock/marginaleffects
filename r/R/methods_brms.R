@@ -78,6 +78,20 @@ get_predict.brmsfit <- function(
             ncol(draws),
             nrow(newdata)
         )
+        subset_vars <- tryCatch(
+            {
+                bt <- brms::brmsterms(stats::formula(model))
+                unlist(lapply(bt$terms, function(x) all.vars(x$adforms$subset)))
+            },
+            error = function(e) NULL
+        )
+        if (length(subset_vars) > 0) {
+            msg <- sprintf(
+                "%s This model uses `subset()` on the response(s) (%s), and `brms` returns predictions only for rows in the subset of the selected `resp`. Supply a `newdata` restricted to that subset. `brms` checks every response's subset variable, so the others must be TRUE in at least one row of `newdata`.",
+                msg,
+                toString(subset_vars)
+            )
+        }
         stop_sprintf(msg)
     }
 
