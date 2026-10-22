@@ -8,6 +8,7 @@ New features:
 
 Bug fixes:
 
+* `print(x, "tinytable")` and Quarto/Rmarkdown rendering failed with "Input is not a list" when the table had no footnotes, for example `hypotheses(mod, hypothesis = 0.5)`.
 * Corrected the documented elasticity formulas and interpretations for `slopes()` and related functions. Thanks to @KWB4484 for report #1776.
 * `mlogit` data are converted to `data.table` as intended; the converted object was assigned to a discarded variable.
 * `get_vcov()` methods for `systemfit`, `stpm2`, `pstpm2`, `gsm`, and `aft` models accept a `vcov` argument. These methods referred to a `vcov` object that did not exist in their scope, which resolved to `stats::vcov()` and triggered a spurious covariance computation on every call. Thanks to @etiennebacher for the `unused_object` rule in `jarl`, which surfaced this in #1764.

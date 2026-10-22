@@ -243,7 +243,7 @@ print.marginaleffects <- function(
         args <- list(x = tab)
         notes <- c(print_term_text, print_contrast_text, print_type_text, print_columns_text)
         notes <- sub("\n$", "", notes)
-        if (!is.null(notes)) args$notes <- notes
+        if (length(notes) > 0) args$notes <- notes
         tab <- do.call(tinytable::tt, args)
         tab <- tinytable::format_tt(tab, escape = TRUE)
 

@@ -55,3 +55,8 @@ expect_snapshot_print(
 expect_snapshot_print(
     comparisons(mod, hypothesis = ~ I(mean(x)) | cyl),
     "print-issue1579_02")
+
+# tinytable output without footnotes: `notes` must not be character(0)
+mod <- lm(mpg ~ hp + wt, mtcars)
+tab <- print(hypotheses(mod, hypothesis = 0.5), "tinytable")
+expect_inherits(tab, "tinytable")
