@@ -40,8 +40,8 @@ $$\eta_4=\frac{\partial \hat{y}}{\partial x_1}\cdot \frac{x_1}{\hat{y}}$$
 with interpretations roughly as follows:
 
 1. "dydx": Increasing the $x_1$ variable by 1 unit is associated with a change of $\eta_1$ units in $y$.
-2. "dyex": Increasing the $x_1$ variable by 100% of its baseline value is associated with a change of $\eta_2$ units in $y$.
-3. "eydx": Increasing the $x_1$ variable by 1 unit is associated with a change of $\eta_3$% of $y$'s baseline value.
+2. "dyex": Increasing the $x_1$ variable by 1% of its baseline value is associated with a change of $\eta_2/100$ units in $y$.
+3. "eydx": Increasing the $x_1$ variable by 1 unit is associated with a proportional change of $\eta_3$ in $y$, that is, a change of $100\cdot\eta_3$% of $y$'s baseline value.
 4. "eyex": Increasing $x_1$ by 1% of its baseline value is associated with a change of $\eta_4$% in the baseline value of $y$.
 
 
@@ -91,7 +91,7 @@ print(float(s_dyex["estimate"][0]))
 :::
 
 
-Increasing the `x` variable by 100% of its baseline value is associated with a change of $\eta_1=`{r} s$estimate`$ units in $y$. Notice that the `slopes()` estimates are scaled differently than in the manual computation.
+The `slopes()` estimate is $\eta_2=`{r} s$estimate`$. Increasing the `x` variable by 1% of its baseline value is associated with a change of $\eta_2/100=`{r} s$estimate / 100`$ units in $y$. Notice that the `slopes()` estimate is scaled differently than in the manual computation: it is 100 times larger.
 
 ::: {.panel-tabset group="language"}
 ### R
@@ -118,7 +118,7 @@ print(float(s_eydx["estimate"][0]))
 ```
 :::
 
-Increasing the `x` variable by 1 unit is associated with a change of $\eta_2=`{r} s$estimate`\%$ of $y$'s baseline value.
+Increasing the `x` variable by 1 unit is associated with a proportional change of $\eta_3=`{r} s$estimate`$ in $y$, that is, a change of `{r} 100 * s$estimate`% of $y$'s baseline value.
 
 ::: {.panel-tabset group="language"}
 ### R
@@ -143,4 +143,4 @@ print(float(s_eyex["estimate"][0]))
 :::
 
 
-Increasing `x` by 1% of its baseline value is associated with a change of $\eta_3=`{r} s$estimate`\%$ in the baseline value of $y$.
+Increasing `x` by 1% of its baseline value is associated with a change of $\eta_4=`{r} s$estimate`\%$ in the baseline value of $y$.

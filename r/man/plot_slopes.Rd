@@ -94,9 +94,9 @@ one-way clustered unconditional inference.
 \item{slope}{string indicates the type of slope or (semi-)elasticity to compute:
 \itemize{
 \item "dydx": dY/dX
-\item "eyex": dY/dX * Y / X
-\item "eydx": dY/dX * Y
-\item "dyex": dY/dX / X
+\item "eyex": dY/dX * X / Y
+\item "eydx": dY/dX / Y
+\item "dyex": dY/dX * X
 \item Y is the predicted value of the outcome; X is the observed value of the predictor.
 }}
 

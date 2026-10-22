@@ -68,9 +68,9 @@
 #' first entry in the error message is used by default. See the Type section in the documentation below.
 #' @param slope string indicates the type of slope or (semi-)elasticity to compute:
 #' - "dydx": dY/dX
-#' - "eyex": dY/dX * Y / X
-#' - "eydx": dY/dX * Y
-#' - "dyex": dY/dX / X
+#' - "eyex": dY/dX * X / Y
+#' - "eydx": dY/dX / Y
+#' - "dyex": dY/dX * X
 #' - Y is the predicted value of the outcome; X is the observed value of the predictor.
 #' @param wts logical, string or numeric: weights to use when computing average predictions, contrasts or slopes. These weights only affect the averaging in `avg_*()` or with the `by` argument, and not unit-level estimates. See `?weighted.mean`
 #' + string: column name of the weights variable in `newdata`. When supplying a column name to `wts`, it is recommended to supply the original data (including the weights variable) explicitly to `newdata`.

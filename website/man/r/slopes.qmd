@@ -241,13 +241,13 @@ string indicates the type of slope or (semi-)elasticity to compute:
 <li> &quot;dydx&quot;: dY/dX
 
 </li>
-<li> &quot;eyex&quot;: dY/dX * Y / X
+<li> &quot;eyex&quot;: dY/dX * X / Y
 
 </li>
-<li> &quot;eydx&quot;: dY/dX * Y
+<li> &quot;eydx&quot;: dY/dX / Y
 
 </li>
-<li> &quot;dyex&quot;: dY/dX / X
+<li> &quot;dyex&quot;: dY/dX * X
 
 </li>
 <li> Y is the predicted value of the outcome; X is the observed value of the predictor.

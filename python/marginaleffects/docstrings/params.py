@@ -8,9 +8,9 @@ PARAM_SLOPE = """\
 The type of slope or (semi-)elasticity to compute. Acceptable values are:
 
 - "dydx": dY/dX
-- "eyex": dY/dX * Y / X
-- "eydx": dY/dX * Y
-- "dyex": dY/dX / X"""
+- "eyex": dY/dX * X / Y
+- "eydx": dY/dX / Y
+- "dyex": dY/dX * X"""
 
 PARAM_HYPOTHESIS = """\
 #### `hypothesis`: (str, int, float, list of str, numpy array)
