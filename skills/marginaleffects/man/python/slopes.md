@@ -35,9 +35,9 @@ See the package website and vignette for examples:
 `slope`: (str) The type of slope or (semi-)elasticity to compute. Acceptable values are:
 
 - "dydx": dY/dX
-- "eyex": dY/dX * Y / X
-- "eydx": dY/dX * Y
-- "dyex": dY/dX / X
+- "eyex": dY/dX * X / Y
+- "eydx": dY/dX / Y
+- "dyex": dY/dX * X
 
 `vcov`: (bool, np.ndarray, default=True) Type of uncertainty estimates to report (e.g. for robust standard errors). Acceptable values are:
 

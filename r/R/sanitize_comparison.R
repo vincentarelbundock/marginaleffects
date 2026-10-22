@@ -174,7 +174,7 @@ comparison_gradient_exact <- function(fun_key, hi, lo, args) {
 
 
 # Comparison keys the derivative table above is not expected to handle: `eyex`
-# and `eydx` and their averaged variants divide by the observed outcome `y`,
+# and `eydx` and their averaged variants divide by the predicted outcome `y`,
 # which marks their groups `uses_y` and disqualifies the analytic path
 # upstream, so no closed form is recorded for them by design. Kept as data so
 # the registry test can assert the exclusion rather than hardcode it twice.
