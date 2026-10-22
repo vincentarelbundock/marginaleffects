@@ -37,15 +37,18 @@ $$\eta_2=\frac{\partial \hat{y}}{\partial x_1}\cdot x_1$$
 $$\eta_3=\frac{\partial \hat{y}}{\partial x_1}\cdot \frac{1}{\hat{y}}$$ 
 $$\eta_4=\frac{\partial \hat{y}}{\partial x_1}\cdot \frac{x_1}{\hat{y}}$$
 
-with interpretations roughly as follows:
+with interpretations as follows:
 
 1. "dydx": Increasing the $x_1$ variable by 1 unit is associated with a change of $\eta_1$ units in $y$.
 2. "dyex": Increasing the $x_1$ variable by 1% of its baseline value is associated with a change of $\eta_2/100$ units in $y$.
 3. "eydx": Increasing the $x_1$ variable by 1 unit is associated with a proportional change of $\eta_3$ in $y$, that is, a change of $100\cdot\eta_3$% of $y$'s baseline value.
 4. "eyex": Increasing $x_1$ by 1% of its baseline value is associated with a change of $\eta_4$% in the baseline value of $y$.
 
+These finite-change interpretations are exact when the prediction is linear in the focal predictor, as in the examples below. For nonlinear prediction functions, they are first-order approximations valid for sufficiently small changes in the predictor.
 
 With the `marginaleffects` package, these quantities are easy to compute with the `slopes()` function and the `slope` argument. 
+
+The `avg_slopes()` function averages the observation-specific quantities. In particular, average proportional changes generally differ from proportional changes in the average prediction.
 
 ::: {.panel-tabset group="language"}
 ### R
@@ -54,7 +57,7 @@ library(marginaleffects)
 dat <- transform(mtcars, y = mpg, x = wt)
 mod <- lm(y ~ x, data = dat)
 
-pct_change_x <- mean(dat$x) / 100
+pct_change_x <- dat$x / 100
 p0 <- predict(mod)
 p1 <- predict(mod, newdata = transform(dat, x = x + pct_change_x))
 mean(p1 - p0)
@@ -78,7 +81,7 @@ dat = mtcars.assign(
 
 mod = smf.ols("y ~ x", data=dat).fit()
 
-pct_change_x = dat["x"].mean() / 100
+pct_change_x = dat["x"] / 100
 
 p0 = mod.predict(dat)
 p1 = mod.predict(dat.assign(x=dat["x"] + pct_change_x))
@@ -91,7 +94,7 @@ print(float(s_dyex["estimate"][0]))
 :::
 
 
-The `slopes()` estimate is $\eta_2=`{r} s$estimate`$. Increasing the `x` variable by 1% of its baseline value is associated with a change of $\eta_2/100=`{r} s$estimate / 100`$ units in $y$. Notice that the `slopes()` estimate is scaled differently than in the manual computation: it is 100 times larger.
+The `avg_slopes()` estimate is the average semi-elasticity, `{r} round(s$estimate, 3)`. Increasing each observation's `x` by 1% of its baseline value is associated with an average change of `{r} round(s$estimate / 100, 3)` units in predicted `y`. The `avg_slopes()` estimate is 100 times the average change computed manually.
 
 ::: {.panel-tabset group="language"}
 ### R
@@ -118,7 +121,7 @@ print(float(s_eydx["estimate"][0]))
 ```
 :::
 
-Increasing the `x` variable by 1 unit is associated with a proportional change of $\eta_3=`{r} s$estimate`$ in $y$, that is, a change of `{r} 100 * s$estimate`% of $y$'s baseline value.
+Increasing each observation's `x` by 1 unit is associated with an average proportional change of `{r} round(s$estimate, 3)` in predicted `y`, or `{r} round(100 * s$estimate, 1)`%. Each observation's change is expressed relative to its own baseline prediction before averaging.
 
 ::: {.panel-tabset group="language"}
 ### R
@@ -143,4 +146,4 @@ print(float(s_eyex["estimate"][0]))
 :::
 
 
-Increasing `x` by 1% of its baseline value is associated with a change of $\eta_4=`{r} s$estimate`\%$ in the baseline value of $y$.
+Increasing each observation's `x` by 1% of its baseline value is associated with an average percentage change of `{r} round(s$estimate, 3)`% in predicted `y`, with each change expressed relative to that observation's baseline prediction.
