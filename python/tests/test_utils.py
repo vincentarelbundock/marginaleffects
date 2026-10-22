@@ -1,7 +1,7 @@
 import pytest
 import pandas as pd
 import polars as pl
-import duckdb
+import pyarrow as pa
 from marginaleffects.utils import ingest
 from marginaleffects.datasets import get_dataset
 
@@ -17,9 +17,6 @@ def get_sample_data():
     )
 
 
-sample_data = get_sample_data()
-
-
 @pytest.fixture
 def sample_pandas_df():
     return get_sample_data()
@@ -33,9 +30,7 @@ def sample_polars_df():
 
 @pytest.fixture
 def sample_arrow_df():
-    with duckdb.connect() as con:
-        out = con.execute("SELECT * FROM sample_data").arrow()
-    return out
+    return pa.Table.from_pandas(get_sample_data(), preserve_index=False)
 
 
 def test_ingest_pandas(sample_pandas_df):
