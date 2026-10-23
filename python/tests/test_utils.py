@@ -1,7 +1,7 @@
 import pytest
 import pandas as pd
 import polars as pl
-import duckdb
+import pyarrow as pa
 from marginaleffects.utils import ingest
 from marginaleffects.datasets import get_dataset
 
@@ -17,9 +17,6 @@ def get_sample_data():
     )
 
 
-sample_data = get_sample_data()
-
-
 @pytest.fixture
 def sample_pandas_df():
     return get_sample_data()
@@ -33,9 +30,7 @@ def sample_polars_df():
 
 @pytest.fixture
 def sample_arrow_df():
-    with duckdb.connect() as con:
-        out = con.execute("SELECT * FROM sample_data").arrow()
-    return out
+    return pa.Table.from_pandas(get_sample_data(), preserve_index=False)
 
 
 def test_ingest_pandas(sample_pandas_df):
@@ -89,3 +84,18 @@ def test_get_dataset_doc(input_args, expected_output):
     output = get_dataset(**input_args)
     assert isinstance(output, str), "Result should be a str"
     assert output.endswith("html"), "Expected output to be a URL"
+
+
+def test_get_type_dictionary_binary():
+    from marginaleffects.sanitize.utils import get_type_dictionary
+
+    dat = pl.DataFrame(
+        {
+            "f": [0.0, 1.0, 1.0],
+            "fn": [0.0, 0.5, 1.0],
+            "i": pl.Series([0, 1, 1], dtype=pl.UInt8),
+            "in": [0, 2, 1],
+        }
+    )
+    out = get_type_dictionary(modeldata=dat)
+    assert out == {"f": "binary", "fn": "numeric", "i": "binary", "in": "integer"}

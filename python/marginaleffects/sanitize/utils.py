@@ -77,12 +77,12 @@ def get_type_dictionary(formula=None, modeldata=None):
         t_n = [pl.Float32, pl.Float64]
         t_b = [pl.Boolean]
         if modeldata[v].dtype in t_i:
-            if modeldata[v].is_in([0, 1]).all():
+            if ((modeldata[v] == 0) | (modeldata[v] == 1)).all():
                 out[v] = "binary"
             else:
                 out[v] = "integer"
         elif modeldata[v].dtype in t_n:
-            if modeldata[v].is_in([0, 1]).all():
+            if ((modeldata[v] == 0) | (modeldata[v] == 1)).all():
                 out[v] = "binary"
             else:
                 out[v] = "numeric"

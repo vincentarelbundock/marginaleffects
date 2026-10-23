@@ -14,6 +14,6 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{generics}{\code{\link[generics]{components}}, \code{\link[generics]{glance}}, \code{\link[generics]{prune}}, \code{\link[generics]{tidy}}}
+  \item{generics}{\code{\link[generics:components]{components()}}, \code{\link[generics:glance]{glance()}}, \code{\link[generics:prune]{prune()}}, \code{\link[generics:tidy]{tidy()}}}
 }}
 

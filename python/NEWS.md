@@ -2,6 +2,9 @@
 
 Bug fixes:
 
+* Polars 2.0 compatibility: detecting binary variables raised
+  `InvalidOperationError` for float columns, because `is_in()` no longer
+  coerces `Float64` values to match an integer list.
 * `expdydx` (and `expdydxavg`, `expdydxavgwts`) divided by a spurious
   `exp(eps)` factor, biasing estimates and standard errors toward zero when
   `eps` was large. The shortcut now computes `(exp(hi) - exp(lo)) / eps`, and

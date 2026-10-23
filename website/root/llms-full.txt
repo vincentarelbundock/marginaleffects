@@ -5298,13 +5298,13 @@ string indicates the type of slope or (semi-)elasticity to compute:
 <li> &quot;dydx&quot;: dY/dX
 
 </li>
-<li> &quot;eyex&quot;: dY/dX * Y / X
+<li> &quot;eyex&quot;: dY/dX * X / Y
 
 </li>
-<li> &quot;eydx&quot;: dY/dX * Y
+<li> &quot;eydx&quot;: dY/dX / Y
 
 </li>
-<li> &quot;dyex&quot;: dY/dX / X
+<li> &quot;dyex&quot;: dY/dX * X
 
 </li>
 <li> Y is the predicted value of the outcome; X is the observed value of the predictor.
@@ -8499,13 +8499,13 @@ string indicates the type of slope or (semi-)elasticity to compute:
 <li> &quot;dydx&quot;: dY/dX
 
 </li>
-<li> &quot;eyex&quot;: dY/dX * Y / X
+<li> &quot;eyex&quot;: dY/dX * X / Y
 
 </li>
-<li> &quot;eydx&quot;: dY/dX * Y
+<li> &quot;eydx&quot;: dY/dX / Y
 
 </li>
-<li> &quot;dyex&quot;: dY/dX / X
+<li> &quot;dyex&quot;: dY/dX * X
 
 </li>
 <li> Y is the predicted value of the outcome; X is the observed value of the predictor.
@@ -9615,9 +9615,9 @@ See the package website and vignette for examples:
 `slope`: (str) The type of slope or (semi-)elasticity to compute. Acceptable values are:
 
 - "dydx": dY/dX
-- "eyex": dY/dX * Y / X
-- "eydx": dY/dX * Y
-- "dyex": dY/dX / X
+- "eyex": dY/dX * X / Y
+- "eydx": dY/dX / Y
+- "dyex": dY/dX * X
 
 `vcov`: (bool, np.ndarray, default=True) Type of uncertainty estimates to report (e.g. for robust standard errors). Acceptable values are:
 
@@ -9774,9 +9774,9 @@ See the package website and vignette for examples:
 `slope`: (str) The type of slope or (semi-)elasticity to compute. Acceptable values are:
 
 - "dydx": dY/dX
-- "eyex": dY/dX * Y / X
-- "eydx": dY/dX * Y
-- "dyex": dY/dX / X
+- "eyex": dY/dX * X / Y
+- "eydx": dY/dX / Y
+- "dyex": dY/dX * X
 
 `vcov`: (bool, np.ndarray, default=True) Type of uncertainty estimates to report (e.g. for robust standard errors). Acceptable values are:
 
