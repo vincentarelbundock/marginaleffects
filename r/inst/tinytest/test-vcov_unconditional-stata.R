@@ -68,22 +68,10 @@ specs <- list(
 # floor is Stata's own convergence tolerance, not R's.
 tol_estimate <- 1e-4
 
-# Slopes get their own bound: marginaleffects differentiates the estimand
-# numerically while Stata does so analytically, which costs about one order of
-# magnitude. This is finite-difference error, not a disagreement about the
-# variance -- shrinking `eps` makes it worse, not better, because the default
-# already sits near the cancellation optimum.
-#
-# The non-canonical fits carry the same bounds as the rest: aligning the
+# Standard errors, slopes included, use exact analytic Jacobians, as Stata does.
+# The non-canonical fits carry the same bound as the rest: aligning the
 # information matrix in `unconditional.do` took them from 3-10% away to ~1e-5.
-#
-# The slope bound is 1e-3 rather than 1e-4 because the finite-difference error
-# is itself host-dependent: the same calls land at 4e-5 and 9e-5 on Linux but
-# at 1.2e-4 on macOS. A bound between those measures the host, not the
-# estimator.
-tol_std_error <- function(canonical, command) {
-    if (startsWith(command, "avg_slopes")) 1e-3 else 1e-5
-}
+tol_std_error <- 1e-5
 
 cmd <- function(spec, command) {
     m <- spec$model
@@ -143,7 +131,7 @@ for (mod_name in names(specs)) {
         expect_equal(
             mfx$std.error,
             sta$std_error,
-            tolerance = tol_std_error(spec$canonical, command),
+            tolerance = tol_std_error,
             info = paste(label, "std.error")
         )
     }

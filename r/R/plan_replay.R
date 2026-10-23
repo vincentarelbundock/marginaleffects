@@ -303,15 +303,13 @@ compute_plan_jacobian <- function(
     contrast_data = NULL,
     variables = NULL,
     numderiv = NULL,
-    analytic = TRUE,
     propagate = NULL) {
     # Explicit user Jacobians retain priority. Everything else prefers the
     # analytic derivative, which is on by default, and falls back to numerical
     # differentiation when the estimand is not eligible for it.
     custom_jacobian <- settings_get("jacobian_function")
 
-    analytic_enabled <- isTRUE(analytic) &&
-        isTRUE(getOption("marginaleffects_analytic_jacobian", default = TRUE))
+    analytic_enabled <- isTRUE(getOption("marginaleffects_analytic_jacobian", default = TRUE))
     if (is.null(custom_jacobian) && analytic_enabled) {
         J <- get_jacobian_analytic(
             model = mfx@model,

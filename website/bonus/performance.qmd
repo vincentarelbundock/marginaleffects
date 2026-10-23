@@ -205,10 +205,13 @@ components(p, "jacobian_method")
 
 Eligible models include `lm`, `glm`, `MASS::glm.nb()`, `MASS::rlm()`,
 `brglm2::brglmFit()`, `rms::ols()`, `rms::lrm()`, `quantreg::rq()`,
-`ivreg::ivreg()`, `geepack::geeglm()`, and `survey::svyglm()`, on both the link
-and response scales. Predictions, the built-in `comparison` functions, `by`
-groups, weights, and linear `hypothesis` arguments are all supported. Anything
-outside that set falls back to finite differences automatically.
+`ivreg::ivreg()`, `geepack::geeglm()`, `survey::svyglm()`,
+`WeightIt::glm_weightit()`, `WeightIt::lm_weightit()`, `fixest::feols()`
+(except IV models), and `fixest::feglm()` without fixed effects, on both the
+link and response scales. Predictions, the built-in `comparison` functions, `by`
+groups, weights, linear `hypothesis` arguments, and `vcov = "unconditional"` are
+all supported. Anything outside that set falls back to finite differences
+automatically.
 
 To see the difference the analytic path makes, disable it and compare:
 

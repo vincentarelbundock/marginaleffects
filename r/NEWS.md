@@ -6,6 +6,10 @@ New features:
 
 * `vcov = "unconditional"` supports `WeightIt::glm_weightit()` and `WeightIt::lm_weightit()` models. `multinom_weightit` and `ordinal_weightit` remain unsupported. Thanks to @ngreifer for report #1765.
 
+Performance:
+
+* Exact analytic Jacobians for additional model classes and VCOVs: `fixest::feols()` (excl. IV models) and `fixest::feglm()` (excl. models with FEs), `WeightIt::glm_weightit()` and `WeightIt::lm_weightit()`, and `vcov = "unconditional"` (extends automatically to analytic-eligible models, e.g. `lm`, `glm`, `fixest`, etc.). Thanks to @grantmcdermott for PR #1769.
+
 Bug fixes:
 
 * `print(x, "tinytable")` and Quarto/Rmarkdown rendering failed with "Input is not a list" when the table had no footnotes, for example `hypotheses(mod, hypothesis = 0.5)`.
