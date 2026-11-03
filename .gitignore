@@ -36,3 +36,6 @@ r/.scrutin
 
 /.quarto/
 **/*.quarto_ipynb
+.kata.local.toml
+# roborev snapshots
+/.roborev/
