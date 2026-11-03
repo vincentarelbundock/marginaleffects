@@ -188,3 +188,38 @@ def test_prediction_grid_keeps_fitted_transforms(interaction_data, fit_model, fo
     result = predictions(model, newdata=grid, eps_vcov=1e-6).sort("rowid")
     np.testing.assert_allclose(result["estimate"], expected, atol=1e-12, rtol=0)
     assert_uncertainty(result, fitted, expected, gradient)
+
+
+def test_treatment_reference_keeps_fitted_category_order():
+    # Polars categories enter formulaic in order of appearance; the adapter
+    # must reuse that fitted order whether or not C() has extra arguments.
+    rng = np.random.default_rng(4)
+    data = pl.DataFrame(
+        {"g": ["c", "a", "b"] * 50, "x": rng.normal(size=150)}
+    ).with_columns(pl.col("g").cast(pl.Categorical))
+    data = data.with_columns(y=pl.col("x") + rng.normal(size=150))
+    contrasts = {}
+    for formula in ["y ~ C(g) + x", "y ~ C(g, Treatment(reference='b')) + x"]:
+        model = fit_statsmodels(formula, data, sm.OLS)
+        contrasts[formula] = avg_comparisons(model, variables="g")["contrast"]
+    assert contrasts["y ~ C(g) + x"].to_list() == ["a - c", "b - c"]
+    assert contrasts["y ~ C(g, Treatment(reference='b')) + x"].to_list() == [
+        "a - c",
+        "b - c",
+    ]
+
+
+@pytest.mark.parametrize(
+    ("key", "expected"),
+    [
+        ("g", "g"),
+        ("C(g)", "g"),
+        ("C( g )", "g"),
+        ("C(g, Treatment(reference='b'))", "g"),
+        ("C(g,Sum)", "g"),
+    ],
+)
+def test_encoder_state_variable_names(key, expected):
+    from marginaleffects.sanitize.validation import encoder_variable_name
+
+    assert encoder_variable_name(key) == expected
