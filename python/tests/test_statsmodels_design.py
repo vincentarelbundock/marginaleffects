@@ -1,14 +1,24 @@
 """Regression tests for training-design preservation (issue #1758)."""
 
 import numpy as np
+import pandas as pd
 import patsy
 import polars as pl
 import pytest
 import statsmodels.api as sm
+import statsmodels.formula
 import statsmodels.formula.api as smf
 from scipy.stats import t
+from statsmodels.miscmodels.ordinal_model import OrderedModel
 
-from marginaleffects import avg_comparisons, comparisons, fit_statsmodels, predictions
+from marginaleffects import (
+    avg_comparisons,
+    avg_slopes,
+    comparisons,
+    fit_statsmodels,
+    predictions,
+)
+from marginaleffects.statsmodels.model import ModelStatsmodels
 
 FORMULAS = [
     "y ~ cat1 * cat2",
@@ -43,19 +53,47 @@ def interaction_data(request):
     return data
 
 
-@pytest.fixture(params=["formulaic", "patsy"])
+def use_formula_engine(engine):
+    """Select statsmodels' formula engine, returning the previous setting."""
+    previous = statsmodels.formula.options.formula_engine
+    statsmodels.formula.options.formula_engine = engine
+    return previous
+
+
+@pytest.fixture(params=["patsy", "formulaic"])
+def formula_engine(request):
+    """Run a test under each statsmodels formula engine, then restore it."""
+    previous = use_formula_engine(request.param)
+    try:
+        yield request.param
+    finally:
+        use_formula_engine(previous)
+
+
+@pytest.fixture(params=["fit_statsmodels", "patsy", "formulaic"])
 def fit_model(request):
-    def fit(formula, data, engine):
-        if request.param == "formulaic":
+    if request.param == "fit_statsmodels":
+
+        def fit(formula, data, engine):
             model = fit_statsmodels(
                 formula, data=data, engine=engine, kwargs_fit={"disp": 0}
             )
             return model, model.get_fitted_model()
+
+        yield fit
+        return
+
+    def fit(formula, data, engine):
         factory = smf.logit if engine is sm.Logit else smf.ols
         fitted = factory(formula, data=data.to_pandas()).fit(disp=0)
         return fitted, fitted
 
-    return fit
+    # Native formula fits use statsmodels' global engine option.
+    previous = use_formula_engine(request.param)
+    try:
+        yield fit
+    finally:
+        use_formula_engine(previous)
 
 
 def native_design(fitted, data):
@@ -71,14 +109,13 @@ def native_design(fitted, data):
             )
     spec = getattr(fitted.model.data, "model_spec", None)
     if spec is None:
-        spec = getattr(fitted.model.data, "design_info", None)
+        spec = fitted.model.data.orig_exog.model_spec
     if isinstance(spec, patsy.DesignInfo):
         matrix = patsy.build_design_matrices([spec], frame)[0]
     else:
-        matrix = fitted.model.data.orig_exog.model_spec.get_model_matrix(
-            frame, context={"np": np}
-        )
-    return np.asarray(matrix)
+        matrix = spec.get_model_matrix(frame, context={"np": np})
+    matrix = pd.DataFrame(np.asarray(matrix), columns=spec.column_names)
+    return matrix[fitted.model.exog_names].to_numpy()
 
 
 def native_prediction_gradient(fitted, matrix):
@@ -190,6 +227,86 @@ def test_prediction_grid_keeps_fitted_transforms(interaction_data, fit_model, fo
     assert_uncertainty(result, fitted, expected, gradient)
 
 
+@pytest.fixture
+def mixed_data():
+    rng = np.random.default_rng(758)
+    n = 400
+    data = pd.DataFrame(
+        {
+            "x": rng.normal(size=n),
+            "g": pd.Categorical(rng.choice(["a", "b", "c"], n)),
+            "h": pd.Categorical(rng.choice(["u", "v"], n)),
+        }
+    )
+    latent = data["x"] + (data["g"] == "b") - (data["h"] == "v") * 0.5
+    latent = latent + rng.logistic(size=n)
+    data["yo"] = pd.Categorical(
+        np.select([latent < -0.5, latent < 1], ["lo", "mid"], "hi"),
+        categories=["lo", "mid", "hi"],
+        ordered=True,
+    )
+    data["ym"] = rng.choice([0, 1, 2], n)
+    data["y"] = latent
+    return data
+
+
+def long_predictions(fitted):
+    """Native multi-outcome predictions in marginaleffects' (group, rowid) order."""
+    return np.asarray(fitted.predict()).T.ravel()
+
+
+def assert_replays_fitted_spec(fitted):
+    vault = ModelStatsmodels(fitted).vault
+    assert vault.design_info_patsy is not None or vault.model_spec is not None
+
+
+@pytest.mark.parametrize(
+    "formula", ["yo ~ x + g*h", "yo ~ g*h + x", "yo ~ x + g", "yo ~ bs(x, df=3) + g*h"]
+)
+def test_ordered_model_matches_native_predict(formula_engine, mixed_data, formula):
+    fitted = OrderedModel.from_formula(formula, mixed_data, distr="logit").fit(
+        method="bfgs", disp=0, maxiter=500
+    )
+    assert_replays_fitted_spec(fitted)
+    result = predictions(fitted).sort("group", "rowid")
+    np.testing.assert_allclose(
+        result["estimate"], long_predictions(fitted), atol=1e-10, rtol=0
+    )
+    # A subset must reuse fitted transform state (e.g. spline knots). Build
+    # the expected design by name: under formulaic, statsmodels' own
+    # `predict(newdata)` replays OrderedModel's spec in the wrong column order.
+    grid = mixed_data.iloc[:25]
+    spec = fitted.model.data.model_spec
+    if isinstance(spec, patsy.DesignInfo):
+        matrix = patsy.build_design_matrices([spec], grid)[0]
+    else:
+        matrix = spec.get_model_matrix(grid)
+    matrix = pd.DataFrame(np.asarray(matrix), columns=spec.column_names)
+    names = fitted.model.exog_names[: fitted.model.exog.shape[1]]
+    probs = fitted.model.predict(fitted.params, matrix[names].to_numpy())
+    expected = np.asarray(probs).T.ravel()
+    result = predictions(fitted, newdata=grid).sort("group", "rowid")
+    np.testing.assert_allclose(result["estimate"], expected, atol=1e-10, rtol=0)
+
+
+@pytest.mark.parametrize("formula", ["ym ~ x + g*h", "ym ~ g*h + x"])
+def test_mnlogit_matches_native_predict(formula_engine, mixed_data, formula):
+    fitted = smf.mnlogit(formula, mixed_data).fit(disp=0)
+    assert_replays_fitted_spec(fitted)
+    result = predictions(fitted).sort("group", "rowid")
+    np.testing.assert_allclose(
+        result["estimate"], long_predictions(fitted), atol=1e-10, rtol=0
+    )
+
+
+def test_treatment_reference_matches_native_predict(formula_engine, mixed_data):
+    fitted = smf.ols("y ~ C(g, Treatment(reference='b')) + x", mixed_data).fit()
+    result = predictions(fitted).sort("rowid")
+    np.testing.assert_allclose(
+        result["estimate"], np.asarray(fitted.predict()), atol=1e-10, rtol=0
+    )
+
+
 def test_treatment_reference_keeps_fitted_category_order():
     # Polars categories enter formulaic in order of appearance; the adapter
     # must reuse that fitted order whether or not C() has extra arguments.
@@ -223,3 +340,29 @@ def test_encoder_state_variable_names(key, expected):
     from marginaleffects.sanitize.validation import encoder_variable_name
 
     assert encoder_variable_name(key) == expected
+
+
+def double(values):
+    return 2 * values
+
+
+def test_user_function_in_formula(formula_engine, mixed_data):
+    fitted = smf.ols("y ~ double(x) + g", mixed_data).fit()
+    if formula_engine == "patsy":
+        # Patsy stores the namespace used at fit time.
+        result = avg_slopes(fitted, variables="x")
+        np.testing.assert_allclose(
+            result["estimate"], [2 * fitted.params["double(x)"]], rtol=1e-6
+        )
+        return
+    # statsmodels' formulaic path does not keep the fitting namespace, so the
+    # adapter cannot evaluate `double` again; it must say so clearly.
+    with pytest.raises(ValueError, match=r"does not keep the namespace.*double\(x\)"):
+        avg_slopes(fitted, variables="x")
+
+
+def test_rebuilt_design_missing_fitted_column_raises(mixed_data):
+    fitted = smf.ols("y ~ x + g", mixed_data).fit()
+    model = ModelStatsmodels(fitted)
+    with pytest.raises(ValueError, match=r"lacks these columns.*'x'"):
+        model._align_to_fitted(np.zeros((2, 3)), ["Intercept", "g[T.b]", "g[T.c]"])
