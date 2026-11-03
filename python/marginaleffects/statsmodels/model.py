@@ -114,12 +114,14 @@ class ModelStatsmodels(ModelAbstract):
         except FactorEvaluationError as exc:
             raise ValueError(
                 "marginaleffects could not rebuild the design matrix of this "
-                "statsmodels model with formulaic. statsmodels does not keep "
-                "the namespace in which a formula was evaluated with the "
-                "formulaic engine, so only columns of the data and `np` are "
-                "available when building new design matrices. Create the "
-                "transformed variable as a data column before fitting, or fit "
-                "with statsmodels.formula.options.formula_engine = 'patsy'. "
+                "statsmodels model with formulaic. Only columns of the data "
+                "and `np` are available when building new design matrices. "
+                "Check that `newdata` contains every variable in the formula. "
+                "If the formula calls a user-defined function: statsmodels "
+                "does not keep the namespace in which a formulaic formula was "
+                "evaluated, so create the transformed variable as a data "
+                "column before fitting, or fit with "
+                "statsmodels.formula.options.formula_engine = 'patsy'. "
                 f"Formulaic error: {exc}"
             ) from exc
 
