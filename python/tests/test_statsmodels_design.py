@@ -55,8 +55,13 @@ def interaction_data(request):
 
 def use_formula_engine(engine):
     """Select statsmodels' formula engine, returning the previous setting."""
-    previous = statsmodels.formula.options.formula_engine
-    statsmodels.formula.options.formula_engine = engine
+    options = getattr(statsmodels.formula, "options", None)
+    if options is None:
+        if engine == "formulaic":
+            pytest.skip("statsmodels 0.14 has only the native Patsy engine")
+        return None
+    previous = options.formula_engine
+    options.formula_engine = engine
     return previous
 
 
@@ -108,6 +113,8 @@ def native_design(fitted, data):
                 training[column].cat.categories
             )
     spec = getattr(fitted.model.data, "model_spec", None)
+    if spec is None:
+        spec = getattr(fitted.model.data, "design_info", None)
     if spec is None:
         spec = fitted.model.data.orig_exog.model_spec
     if isinstance(spec, patsy.DesignInfo):
@@ -276,7 +283,9 @@ def test_ordered_model_matches_native_predict(formula_engine, mixed_data, formul
     # the expected design by name: under formulaic, statsmodels' own
     # `predict(newdata)` replays OrderedModel's spec in the wrong column order.
     grid = mixed_data.iloc[:25]
-    spec = fitted.model.data.model_spec
+    spec = getattr(fitted.model.data, "model_spec", None)
+    if spec is None:
+        spec = fitted.model.data.design_info
     if isinstance(spec, patsy.DesignInfo):
         matrix = patsy.build_design_matrices([spec], grid)[0]
     else:
