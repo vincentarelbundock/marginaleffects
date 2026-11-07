@@ -443,6 +443,15 @@ if (exists("ordinal", envir = asNamespace("glmmTMB"))) {
     h <- hypotheses(m_ord)
     expect_equal(nrow(h), 7) # 3 fixed effects + 4 cutpoints
     expect_true(all(h$std.error > 0))
+
+    # intercept-only: no free fixed effects, only cutpoints (roborev job 1118)
+    m_int <- glmmTMB::glmmTMB(rating ~ 1 + (1 | bottle), data = wine, family = glmmTMB::ordinal())
+    expect_equal(length(get_coef(m_int)), 4)
+    nd1 <- datagrid(model = m_int)
+    ref1 <- predict(m_int, newdata = nd1, type = "probs", re.form = NA, se.fit = TRUE)
+    p1 <- predictions(m_int, newdata = nd1, re.form = NA)
+    expect_equivalent(p1$estimate, c(ref1$fit), tolerance = 1e-6)
+    expect_equivalent(p1$std.error, c(ref1$se.fit), tolerance = 1e-4)
 }
 
 # plot_*() pass `vcov = NULL`, which sanitize_model_specific.glmmTMB() rejected

@@ -125,7 +125,7 @@ get_coef.glmmTMB <- function(model, ...) {
         lev <- get_group_names(model)
         b <- setdiff(names(glmmTMB::fixef(model)$cond), "(Intercept)")
         nam <- c(
-            paste0("cond~", b),
+            if (length(b) > 0) paste0("cond~", b) else character(0),
             paste(lev[-length(lev)], lev[-1], sep = "|")
         )
         out <- model$fit$par[glmmTMB_ordinal_index(model)]
