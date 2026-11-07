@@ -338,7 +338,6 @@ def test_treatment_reference_keeps_fitted_category_order():
 @pytest.mark.parametrize(
     ("key", "expected"),
     [
-        ("g", "g"),
         ("C(g)", "g"),
         ("C( g )", "g"),
         ("C(g, Treatment(reference='b'))", "g"),
@@ -346,9 +345,9 @@ def test_treatment_reference_keeps_fitted_category_order():
     ],
 )
 def test_encoder_state_variable_names(key, expected):
-    from marginaleffects.sanitize.validation import encoder_variable_name
+    from marginaleffects.formula import parse_variables_categorical
 
-    assert encoder_variable_name(key) == expected
+    assert parse_variables_categorical(key)[0] == expected
 
 
 def double(values):
@@ -375,3 +374,20 @@ def test_rebuilt_design_missing_fitted_column_raises(mixed_data):
     model = ModelStatsmodels(fitted)
     with pytest.raises(ValueError, match=r"lacks these columns.*'x'"):
         model._align_to_fitted(np.zeros((2, 3)), ["Intercept", "g[T.b]", "g[T.c]"])
+
+
+@pytest.mark.parametrize("formula", FORMULAS[-2:])
+def test_formula_fallback_aligns_to_fitted_columns(interaction_data, formula):
+    # Without a fitted spec, ``get_exog`` rebuilds the design with patsy, which
+    # orders these interaction columns differently from formulaic (#1758).
+    model = fit_statsmodels(formula, interaction_data, sm.OLS)
+    expected = predictions(model).sort("rowid")["estimate"].to_numpy()
+    model.vault.model_spec = None
+    model.vault.formula_engine = "patsy"
+    result = predictions(model).sort("rowid")["estimate"].to_numpy()
+    np.testing.assert_allclose(result, expected, atol=1e-12, rtol=0)
+
+
+def test_fit_statsmodels_stores_model_spec(interaction_data):
+    model = fit_statsmodels("y ~ cat1 * cat2 + num", interaction_data, sm.OLS)
+    assert model.vault.model_spec is not None

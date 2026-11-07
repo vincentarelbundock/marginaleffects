@@ -32,15 +32,17 @@ def _fitted_design_spec(model):
     """
     data = model.model.data
     exog_names = _fitted_exog_names(model)
+    if not exog_names:
+        return None
     candidates = (
-        getattr(data, "model_spec", None),
-        getattr(data, "design_info", None),
-        getattr(getattr(data, "orig_exog", None), "model_spec", None),
+        lambda: getattr(data, "model_spec", None),
+        lambda: getattr(data, "design_info", None),
+        lambda: getattr(getattr(data, "orig_exog", None), "model_spec", None),
     )
-    for spec in candidates:
-        columns = getattr(spec, "column_names", None)
+    for candidate in candidates:
+        columns = getattr(candidate(), "column_names", None)
         if columns is not None and set(exog_names).issubset(columns):
-            return spec
+            return candidate()
     return None
 
 
@@ -93,15 +95,23 @@ class ModelStatsmodels(ModelAbstract):
             exog = self._replay_model_spec(newdata)
             return self._align_to_fitted(exog, exog.columns)
 
+        # No fitted spec: rebuild from the formula. Patsy and Formulaic can
+        # order the same columns differently, so align by name whenever the
+        # rebuilt names cover the fitted ones.
         formula = self.get_formula()
         if self.vault.formula_engine == "patsy":
-            return patsy.dmatrix(formula.split("~", 1)[1], newdata.to_pandas())
+            exog = patsy.dmatrix(formula.split("~", 1)[1], newdata.to_pandas())
+            columns = exog.design_info.column_names
+        else:
+            from ..formula import model_matrices
 
-        from ..formula import model_matrices
-
-        _, exog = model_matrices(
-            formula, newdata, formula_engine=self.get_formula_engine()
-        )
+            _, exog = model_matrices(
+                formula, newdata, formula_engine=self.get_formula_engine()
+            )
+            columns = getattr(exog, "columns", None)
+        fitted_names = _fitted_exog_names(self.model)
+        if columns is not None and fitted_names and set(fitted_names).issubset(columns):
+            return self._align_to_fitted(exog, columns)
         return exog
 
     def _replay_model_spec(self, newdata):
@@ -134,16 +144,18 @@ class ModelStatsmodels(ModelAbstract):
         """
         import pandas as pd
 
-        exog = pd.DataFrame(np.asarray(exog), columns=list(columns))
+        columns = list(columns)
         fitted_names = _fitted_exog_names(self.model)
-        missing = [name for name in fitted_names if name not in exog.columns]
+        position = {name: i for i, name in enumerate(columns)}
+        missing = [name for name in fitted_names if name not in position]
         if missing:
             raise ValueError(
                 "The design matrix rebuilt from the fitted formula specification "
                 f"lacks these columns of the fitted model: {missing}. "
-                f"Rebuilt columns: {list(exog.columns)}."
+                f"Rebuilt columns: {columns}."
             )
-        return exog[fitted_names]
+        index = [position[name] for name in fitted_names]
+        return pd.DataFrame(np.asarray(exog)[:, index], columns=fitted_names)
 
     def get_vcov(self, vcov=True):
         if isinstance(vcov, bool):
@@ -191,20 +203,12 @@ class ModelStatsmodels(ModelAbstract):
         return "OrderedModel" in type(self.model.model).__name__
 
     def get_predict(self, params, newdata: pl.DataFrame):
-        if isinstance(newdata, np.ndarray):
-            exog = newdata
-        elif hasattr(newdata, "to_numpy"):
-            exog = newdata.to_numpy()
-        else:
-            exog = np.asarray(self.get_exog(newdata))
-        # OrderedModel uses thresholds instead of an intercept. Designs replayed
-        # from a fitted spec already match ``exog_names``; the formula fallback
-        # in ``get_exog`` may still include an intercept column.
-        if (
-            self._is_ordered_model()
-            and isinstance(exog, np.ndarray)
-            and exog.shape[1] == self.model.model.k_vars + 1
-        ):
+        # ``newdata`` is a design matrix built by ``get_exog``.
+        exog = newdata if isinstance(newdata, np.ndarray) else newdata.to_numpy()
+        # OrderedModel uses thresholds instead of an intercept. Designs aligned
+        # to ``exog_names`` already lack it; an unaligned formula fallback in
+        # ``get_exog`` may still include an intercept column.
+        if self._is_ordered_model() and exog.shape[1] == self.model.model.k_vars + 1:
             exog = exog[:, 1:]
         p = self.model.model.predict(params, exog)
         if p.ndim == 1:
@@ -323,5 +327,6 @@ def fit_statsmodels(
         modeldata=d,
         formula=formula,
         package="statsmodels",
+        model_spec=X.model_spec,
     )
     return ModelStatsmodels(mod, vault)

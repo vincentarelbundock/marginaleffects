@@ -1,4 +1,3 @@
-import re
 import warnings
 
 import numpy as np
@@ -6,16 +5,6 @@ import polars as pl
 
 from .. import formula as fml
 from .utils import get_type_dictionary, validate_string_columns
-
-# First argument of a formulaic ``C(...)`` encoder key, e.g. ``g`` in
-# ``C(g, Treatment(reference='b'))``.
-_C_FIRST_ARG = re.compile(r"^C\(\s*([^,()]+)")
-
-
-def encoder_variable_name(key: str) -> str:
-    """Return the data column named by a formulaic ``encoder_state`` key."""
-    match = _C_FIRST_ARG.match(key)
-    return match.group(1).strip() if match else key
 
 
 class ModelValidation:
@@ -115,7 +104,9 @@ class ModelValidation:
         if model_spec and hasattr(model_spec, "encoder_state"):
             for var_name, (kind, state) in model_spec.encoder_state.items():
                 if "categories" in state:
-                    actual_var = encoder_variable_name(var_name)
+                    # ``C(g, Treatment(reference='b'))`` -> ``g``
+                    parsed = fml.parse_variables_categorical(var_name)
+                    actual_var = parsed[0] if parsed else var_name
                     formulaic_categories[actual_var] = state["categories"]
 
         # For statsmodels/patsy models, use pandas categorical orders
