@@ -60,6 +60,8 @@ plot_comparisons <- function(
     gray = getOption("marginaleffects_plot_gray", default = FALSE),
     draw = TRUE,
     ...) {
+    # `NULL` means the default; some models reject it in `predictions()` et al.
+    if (is.null(vcov)) vcov <- TRUE
     vcov <- sanitize_vcov_request(vcov)
     if (inherits(model, c("mira", "amest"))) {
         msg <- "This function does not support multiple imputation. Call `comparisons()` or `avg_comparisons()` instead. These functions return easy to plot data frames."

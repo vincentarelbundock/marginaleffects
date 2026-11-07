@@ -444,3 +444,12 @@ if (exists("ordinal", envir = asNamespace("glmmTMB"))) {
     expect_equal(nrow(h), 7) # 3 fixed effects + 4 cutpoints
     expect_true(all(h$std.error > 0))
 }
+
+# plot_*() pass `vcov = NULL`, which sanitize_model_specific.glmmTMB() rejected
+p <- plot_predictions(mod_simple, by = "am", draw = FALSE)
+expect_inherits(p, "data.frame")
+expect_true(all(!is.na(p$std.error)))
+p <- plot_comparisons(mod_simple, variables = "wt", by = "am", draw = FALSE)
+expect_inherits(p, "data.frame")
+p <- plot_slopes(mod_simple, variables = "wt", condition = "am", draw = FALSE)
+expect_inherits(p, "data.frame")

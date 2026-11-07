@@ -13,6 +13,7 @@ Performance:
 
 Bug fixes:
 
+* `plot_predictions()`, `plot_comparisons()`, and `plot_slopes()` failed for all `glmmTMB` models, because their default `vcov = NULL` was rejected by the `glmmTMB` argument check.
 * `print(x, "tinytable")` and Quarto/Rmarkdown rendering failed with "Input is not a list" when the table had no footnotes, for example `hypotheses(mod, hypothesis = 0.5)`.
 * Corrected the documented elasticity formulas and interpretations for `slopes()` and related functions. Thanks to @KWB4484 for report #1776.
 * `mlogit` data are converted to `data.table` as intended; the converted object was assigned to a discarded variable.
