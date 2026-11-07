@@ -62,3 +62,28 @@ expect_true("pred.set" %in% colnames(p))
 expect_equal(nrow(p), nrow(dat$test))
 coverage <- mean(mapply(function(y, s) y %in% s, as.character(p$Species), p$pred.set))
 expect_true(coverage >= 0.8)
+
+# classification: a fold that loses an outcome class. multinom becomes binary
+# and `predictions()` returns only the non-reference class; the reference class
+# keeps the remaining probability, and the absent class gets 0.
+d2 <- iris[iris$Species != "virginica", ]
+m2 <- nnet::multinom(Species ~ Sepal.Length, data = d2, trace = FALSE) |> suppressWarnings()
+p2 <- predictions(m2, newdata = iris[c(1, 51, 101), ], vcov = FALSE)
+cc <- marginaleffects:::conformal_complete_classes(p2, levels(iris$Species), d2$Species)
+cc <- cc[order(cc$rowid, cc$group), ]
+expect_equal(nrow(cc), 9)
+expect_equivalent(cc$estimate[cc$group == "setosa"], 1 - p2$estimate)
+expect_equivalent(cc$estimate[cc$group == "virginica"], c(0, 0, 0))
+expect_equivalent(as.numeric(tapply(cc$estimate, cc$rowid, sum)), c(1, 1, 1))
+
+# end to end: a single virginica observation, so one fold trains without it
+set.seed(48103)
+train <- rbind(iris[iris$Species != "virginica", ], iris[101, ])
+test <- iris[c(1:5, 51:55), ]
+mod <- nnet::multinom(Species ~ Sepal.Length + Sepal.Width, data = train, trace = FALSE)
+p <- suppressWarnings(
+    predictions(mod, newdata = test, conf_level = 0.9) |>
+        inferences(method = "conformal_cv+", R = 5, data_train = train, conformal_score = "softmax"))
+expect_equal(nrow(p), nrow(test))
+coverage <- mean(mapply(function(y, s) y %in% s, as.character(p$Species), p$pred.set))
+expect_true(coverage >= 0.8)
