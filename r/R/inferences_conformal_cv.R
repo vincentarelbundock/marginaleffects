@@ -31,6 +31,7 @@ conformal_cv_plus <- function(x,
         classes <- unique(c(
             as.character(out$group),
             as.character(data_train[[response_name]])))
+        classes <- classes[!is.na(classes)]
     }
 
     idx <- sample.int(nrow(data_train), nrow(data_train))
@@ -42,12 +43,15 @@ conformal_cv_plus <- function(x,
         i <- idx[[k]]
         data_cv <- data_train[-i, , drop = FALSE]
         model_cv <- conformal_refit_fold(mfx, data_cv)
+        if (is_group) {
+            observed_cv <- conformal_observed_classes(model_cv, data_cv, response_name)
+        }
 
         # out-of-fold scores
         pred_cv <- conformal_predict_fold(mfx, model_cv, data_train[i, , drop = FALSE])
         if (is_group) {
             pred_cv <- conformal_complete_classes(
-                pred_cv, classes, data_cv[[response_name]])
+                pred_cv, classes, observed_cv)
         }
         score_k <- get_conformal_score(pred_cv, score = score, mfx = mfx)
         resid_k <- attr(score_k, "residual_abs")
@@ -59,7 +63,7 @@ conformal_cv_plus <- function(x,
         pred_test <- conformal_predict_fold(mfx, model_cv, data_test)
         if (is_group) {
             pred_test <- conformal_complete_classes(
-                pred_test, classes, data_cv[[response_name]])
+                pred_test, classes, observed_cv)
         }
         preds_test[[k]] <- conformal_align_fold(out, pred_test, is_group)
     }
@@ -97,6 +101,18 @@ conformal_predict_fold <- function(mfx, model, newdata) {
 }
 
 
+# Outcome classes in the observations a fold model was actually fit on, which
+# excludes rows dropped for missing outcomes or predictors.
+conformal_observed_classes <- function(model, data, response_name) {
+    response <- tryCatch(insight::get_response(model), error = function(e) NULL)
+    if (is.null(response) || is.data.frame(response)) {
+        response <- data[[response_name]]
+    }
+    response <- unique(as.character(response))
+    response[!is.na(response)]
+}
+
+
 # A fold can lose outcome classes. A class absent from the fold's training
 # data has probability 0. A class present in training can still be missing
 # from the predictions: when a multinomial model becomes binary within a fold,
@@ -105,11 +121,13 @@ conformal_predict_fold <- function(mfx, model, newdata) {
 conformal_complete_classes <- function(pred, classes, response_train) {
     pred <- as.data.frame(pred)
     pred$group <- as.character(pred$group)
+    classes <- classes[!is.na(classes)]
     missing <- setdiff(classes, unique(pred$group))
     if (length(missing) == 0) {
         return(pred)
     }
-    in_train <- missing %in% unique(as.character(response_train))
+    response_train <- as.character(response_train)
+    in_train <- missing %in% unique(response_train[!is.na(response_train)])
     template <- pred[!duplicated(pred$rowid), , drop = FALSE]
     total <- tapply(pred$estimate, pred$rowid, sum)[as.character(template$rowid)]
     remainder <- pmax(0, 1 - as.numeric(total))
