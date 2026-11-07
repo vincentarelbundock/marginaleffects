@@ -9,6 +9,43 @@ from ..sanitize.utils import validate_types
 from ..utils import ingest
 
 
+def _fitted_exog_names(model):
+    """Names of the fitted ``exog`` columns.
+
+    ``exog_names`` can append extra parameters after the design columns (e.g.,
+    OrderedModel thresholds), so keep only the first ``exog.shape[1]`` names.
+    """
+    names = list(getattr(model.model, "exog_names", None) or [])
+    exog = getattr(model.model, "exog", None)
+    if exog is not None and np.ndim(exog) == 2:
+        names = names[: np.shape(exog)[1]]
+    return names
+
+
+def _fitted_design_spec(model):
+    """Return the fitted Patsy DesignInfo or Formulaic ModelSpec, if any.
+
+    Native formula fits store the spec on ``model.model.data`` (``model_spec``,
+    or ``design_info`` in older statsmodels); ``fit_statsmodels()`` passes a
+    Formulaic ``ModelMatrix`` whose ``model_spec`` stays on ``orig_exog``. A
+    candidate is used only if it can produce every fitted ``exog`` column.
+    """
+    data = model.model.data
+    exog_names = _fitted_exog_names(model)
+    if not exog_names:
+        return None
+    candidates = (
+        lambda: getattr(data, "model_spec", None),
+        lambda: getattr(data, "design_info", None),
+        lambda: getattr(getattr(data, "orig_exog", None), "model_spec", None),
+    )
+    for candidate in candidates:
+        columns = getattr(candidate(), "column_names", None)
+        if columns is not None and set(exog_names).issubset(columns):
+            return candidate()
+    return None
+
+
 class ModelStatsmodels(ModelAbstract):
     def __init__(self, model, vault=None):
         if vault is None:
@@ -34,36 +71,91 @@ class ModelStatsmodels(ModelAbstract):
         vault.variable_names = [
             model.model.endog_names
         ] + fml.extract_patsy_variable_names(vault.formula, vault.modeldata)
-        if not hasattr(model, "formula"):
+
+        # Replay the fitted encoding: Formulaic and Patsy can order the same
+        # interaction terms differently, and transforms have fitted state.
+        spec = _fitted_design_spec(model)
+        if isinstance(spec, patsy.DesignInfo):
+            vault.design_info_patsy = spec
+        elif spec is not None:
+            vault.model_spec = spec
+        elif vault.model_spec is None:
             vault.formula_engine = "patsy"
-            if hasattr(model.model.data, "design_info"):
-                vault.design_info_patsy = model.model.data.design_info
         super().__init__(model, vault)
 
     def get_exog(self, newdata: pl.DataFrame):
-        """Build design matrix using patsy for statsmodels models."""
-        import re
-
+        """Build a prediction matrix with the fitted model's encoding."""
         if self.vault.design_info_patsy is not None:
-            f = self.vault.design_info_patsy
-        else:
-            f = self.get_formula()
+            exog = patsy.build_design_matrices(
+                [self.vault.design_info_patsy], newdata.to_pandas()
+            )[0]
+            return self._align_to_fitted(exog, exog.design_info.column_names)
 
-        if callable(f):
-            _, exog = f(newdata)
-        elif self.vault.formula_engine == "patsy":
-            fml_rhs = re.sub(
-                r".*~", "", f if isinstance(f, str) else self.get_formula()
-            )
-            exog = patsy.dmatrix(fml_rhs, newdata.to_pandas())
+        if self.vault.model_spec is not None:
+            exog = self._replay_model_spec(newdata)
+            return self._align_to_fitted(exog, exog.columns)
+
+        # No fitted spec: rebuild from the formula. Patsy and Formulaic can
+        # order the same columns differently, so align by name whenever the
+        # rebuilt names cover the fitted ones.
+        formula = self.get_formula()
+        if self.vault.formula_engine == "patsy":
+            exog = patsy.dmatrix(formula.split("~", 1)[1], newdata.to_pandas())
+            columns = exog.design_info.column_names
         else:
             from ..formula import model_matrices
 
             _, exog = model_matrices(
-                f, newdata, formula_engine=self.get_formula_engine()
+                formula, newdata, formula_engine=self.get_formula_engine()
             )
-
+            columns = getattr(exog, "columns", None)
+        fitted_names = _fitted_exog_names(self.model)
+        if columns is not None and fitted_names and set(fitted_names).issubset(columns):
+            return self._align_to_fitted(exog, columns)
         return exog
+
+    def _replay_model_spec(self, newdata):
+        from formulaic.errors import FactorEvaluationError
+
+        try:
+            return self.vault.model_spec.get_model_matrix(
+                newdata.to_pandas(), context={"np": np}
+            )
+        except FactorEvaluationError as exc:
+            raise ValueError(
+                "marginaleffects could not rebuild the design matrix of this "
+                "statsmodels model with formulaic. Only columns of the data "
+                "and `np` are available when building new design matrices. "
+                "Check that `newdata` contains every variable in the formula. "
+                "If the formula calls a user-defined function: statsmodels "
+                "does not keep the namespace in which a formulaic formula was "
+                "evaluated, so create the transformed variable as a data "
+                "column before fitting, or fit with "
+                "statsmodels.formula.options.formula_engine = 'patsy'. "
+                f"Formulaic error: {exc}"
+            ) from exc
+
+    def _align_to_fitted(self, exog, columns):
+        """Select and order rebuilt columns like the fitted ``exog``.
+
+        A replayed specification can order columns differently from the
+        fitted design (OrderedModel subsets the spec to drop its intercept),
+        so match by name instead of position.
+        """
+        import pandas as pd
+
+        columns = list(columns)
+        fitted_names = _fitted_exog_names(self.model)
+        position = {name: i for i, name in enumerate(columns)}
+        missing = [name for name in fitted_names if name not in position]
+        if missing:
+            raise ValueError(
+                "The design matrix rebuilt from the fitted formula specification "
+                f"lacks these columns of the fitted model: {missing}. "
+                f"Rebuilt columns: {columns}."
+            )
+        index = [position[name] for name in fitted_names]
+        return pd.DataFrame(np.asarray(exog)[:, index], columns=fitted_names)
 
     def get_vcov(self, vcov=True):
         if isinstance(vcov, bool):
@@ -111,20 +203,12 @@ class ModelStatsmodels(ModelAbstract):
         return "OrderedModel" in type(self.model.model).__name__
 
     def get_predict(self, params, newdata: pl.DataFrame):
-        if isinstance(newdata, np.ndarray):
-            exog = newdata
-        elif hasattr(newdata, "to_numpy"):
-            exog = newdata.to_numpy()
-        else:
-            newdata = newdata.to_pandas()
-            _y, exog = patsy.dmatrices(self.get_formula(), newdata)
-        # OrderedModel uses thresholds instead of intercept, so strip the
-        # intercept column that patsy adds to the design matrix.
-        if (
-            self._is_ordered_model()
-            and isinstance(exog, np.ndarray)
-            and exog.shape[1] == self.model.model.k_vars + 1
-        ):
+        # ``newdata`` is a design matrix built by ``get_exog``.
+        exog = newdata if isinstance(newdata, np.ndarray) else newdata.to_numpy()
+        # OrderedModel uses thresholds instead of an intercept. Designs aligned
+        # to ``exog_names`` already lack it; an unaligned formula fallback in
+        # ``get_exog`` may still include an intercept column.
+        if self._is_ordered_model() and exog.shape[1] == self.model.model.k_vars + 1:
             exog = exog[:, 1:]
         p = self.model.model.predict(params, exog)
         if p.ndim == 1:
@@ -243,5 +327,6 @@ def fit_statsmodels(
         modeldata=d,
         formula=formula,
         package="statsmodels",
+        model_spec=X.model_spec,
     )
     return ModelStatsmodels(mod, vault)

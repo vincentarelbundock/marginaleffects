@@ -104,8 +104,9 @@ class ModelValidation:
         if model_spec and hasattr(model_spec, "encoder_state"):
             for var_name, (kind, state) in model_spec.encoder_state.items():
                 if "categories" in state:
-                    # Extract the actual variable name (remove C() wrapper if present)
-                    actual_var = var_name.replace("C(", "").replace(")", "")
+                    # ``C(g, Treatment(reference='b'))`` -> ``g``
+                    parsed = fml.parse_variables_categorical(var_name)
+                    actual_var = parsed[0] if parsed else var_name
                     formulaic_categories[actual_var] = state["categories"]
 
         # For statsmodels/patsy models, use pandas categorical orders

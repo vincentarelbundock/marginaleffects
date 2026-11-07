@@ -2,6 +2,15 @@
 
 Bug fixes:
 
+* `fit_statsmodels()` predictions and comparisons now reuse the fitted design
+  specification, preserving coefficient order for categorical interactions
+  combined with numeric terms. Native statsmodels formula fits also preserve
+  their fitted category encodings and transform state, such as spline knots.
+  Issue #1758. Rebuilt columns are matched to the fitted design by name,
+  which fixes `OrderedModel` under statsmodels' formulaic engine. With that
+  engine, formulas calling user-defined functions now raise an informative
+  error, because statsmodels does not keep the namespace needed to evaluate
+  them.
 * Polars 2.0 compatibility: detecting binary variables raised
   `InvalidOperationError` for float columns, because `is_in()` no longer
   coerces `Float64` values to match an integer list.
