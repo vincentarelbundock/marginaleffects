@@ -10,7 +10,7 @@ Bug fixes:
   which fixes `OrderedModel` under statsmodels' formulaic engine. With that
   engine, formulas calling user-defined functions now raise an informative
   error, because statsmodels does not keep the namespace needed to evaluate
-  them.
+  them. Thanks to @JorAlEs for Pull Request #1779.
 * Polars 2.0 compatibility: detecting binary variables raised
   `InvalidOperationError` for float columns, because `is_in()` no longer
   coerces `Float64` values to match an integer list.
