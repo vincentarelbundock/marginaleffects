@@ -87,3 +87,26 @@ p <- suppressWarnings(
 expect_equal(nrow(p), nrow(test))
 coverage <- mean(mapply(function(y, s) y %in% s, as.character(p$Species), p$pred.set))
 expect_true(coverage >= 0.8)
+
+# a test row with a missing predictor keeps NA bounds; other rows are computed
+mod <- lm(mpg ~ hp + wt, mtcars)
+test <- mtcars[1:4, ]
+test$hp[2] <- NA
+set.seed(48103)
+p <- predictions(mod, newdata = test) |>
+    inferences(method = "conformal_cv+", R = 5, data_train = mtcars)
+expect_equal(nrow(p), 4)
+expect_true(is.na(p$pred.low[2]) && is.na(p$pred.high[2]))
+expect_false(anyNA(p$pred.low[-2]))
+expect_false(anyNA(p$pred.high[-2]))
+
+# classification: the unestimable row gets an NA set and keeps its place
+mod <- nnet::multinom(Species ~ Sepal.Length + Sepal.Width, data = iris, trace = FALSE)
+test <- iris[c(1, 51, 101), ]
+test$Sepal.Width[2] <- NA
+set.seed(48103)
+p <- predictions(mod, newdata = test) |>
+    inferences(method = "conformal_cv+", R = 5, data_train = iris, conformal_score = "softmax")
+expect_equal(p$rowid, 1:3)
+expect_true(identical(p$pred.set[[2]], NA_character_))
+expect_true(length(p$pred.set[[1]]) > 0 && !anyNA(p$pred.set[[1]]))

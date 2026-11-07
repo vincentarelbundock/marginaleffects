@@ -51,7 +51,9 @@ conformal_cv_plus <- function(x,
         }
         score_k <- get_conformal_score(pred_cv, score = score, mfx = mfx)
         resid_k <- attr(score_k, "residual_abs")
-        scores[[k]] <- if (is.null(resid_k)) as.numeric(score_k) else resid_k
+        score_k <- if (is.null(resid_k)) as.numeric(score_k) else resid_k
+        # observations with missing predictors cannot be scored
+        scores[[k]] <- score_k[!is.na(score_k)]
 
         # fold-model predictions at the test points, aligned to `out`
         pred_test <- conformal_predict_fold(mfx, model_cv, data_test)
@@ -121,16 +123,18 @@ conformal_complete_classes <- function(pred, classes, response_train) {
 }
 
 
-# Fold-model test predictions in the row order of `out`.
+# Fold-model test predictions in the row order of `out`. Test rows that the
+# full-data model cannot estimate (e.g., missing predictors) may be absent or
+# NA; they keep NA here and get NA bounds.
 conformal_align_fold <- function(out, pred, is_group) {
     key <- function(d) {
         if (is_group) paste(d$rowid, as.character(d$group), sep = "\r") else d$rowid
     }
-    est <- pred$estimate[match(key(out), key(pred))]
-    if (anyNA(est)) {
+    pos <- match(key(out), key(pred))
+    if (any(is.na(pos) & !is.na(out$estimate))) {
         stop_sprintf("Failed to align cross-validation predictions with the test set.")
     }
-    est
+    pred$estimate[pos]
 }
 
 
@@ -157,9 +161,11 @@ conformal_cv_plus_intervals <- function(out, scores, preds_test, conf_level) {
     low <- high <- rep(NA_real_, m)
 
     # Process test points in chunks so that the n x chunk matrix stays small.
+    # test points with a missing fold prediction keep NA bounds
+    valid <- which(colSums(is.na(P)) == 0)
     chunk <- max(1L, floor(1e7 / n))
-    for (start in seq(1L, m, by = chunk)) {
-        cols <- start:min(m, start + chunk - 1L)
+    for (start in seq(1L, length(valid), by = chunk)) {
+        cols <- valid[start:min(length(valid), start + chunk - 1L)]
         mu <- P[fold, cols, drop = FALSE]
         if (k_hi > n) {
             high[cols] <- Inf
@@ -192,12 +198,27 @@ conformal_cv_plus_sets <- function(out, scores, preds_test, conf_level, mfx) {
         count <- count + findInterval(test_score, s_k, left.open = TRUE)
     }
 
-    keep <- out[count < threshold, , drop = FALSE]
+    keep <- out[!is.na(count) & count < threshold, , drop = FALSE]
     data.table::setDT(keep)
     keep <- keep[,
         .(pred.set = list(unique(group))),
         by = c("rowid", response_name)
     ]
+    # Every test row keeps its place: NA when it cannot be estimated (e.g.,
+    # missing predictors), an empty set when no class qualifies.
+    absent <- out[!duplicated(out$rowid) & !out$rowid %in% keep$rowid, , drop = FALSE]
+    if (nrow(absent) > 0) {
+        na_rowid <- unique(out$rowid[is.na(count)])
+        sets <- lapply(absent$rowid %in% na_rowid, function(is_na) {
+            if (is_na) NA_character_ else character(0)
+        })
+        absent <- data.table::data.table(
+            rowid = absent$rowid,
+            response = absent[[response_name]],
+            pred.set = sets)
+        data.table::setnames(absent, "response", response_name)
+        keep <- rbind(keep, absent)
+    }
     data.table::setorder(keep, rowid)
     data.table::setDF(keep)
     class(keep) <- c("predictions", class(keep))
