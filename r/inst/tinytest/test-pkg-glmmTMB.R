@@ -406,3 +406,41 @@ cmp_hc0 <- avg_comparisons(m2, variables = "mined", type = "response", vcov = "H
 cmp_after <- avg_comparisons(m2, variables = "mined", type = "response", vcov = FALSE)
 expect_equivalent(cmp_hc0$estimate, cmp_before$estimate)
 expect_equivalent(cmp_after$estimate, cmp_before$estimate)
+
+# Issue #1759: ordinal family
+if (exists("ordinal", envir = asNamespace("glmmTMB"))) {
+    data(wine, package = "ordinal")
+    m_ord <- glmmTMB::glmmTMB(
+        rating ~ temp * contact + (1 | bottle),
+        data = wine,
+        family = glmmTMB::ordinal()
+    )
+    nd <- datagrid(model = m_ord, temp = c("cold", "warm"), contact = c("no", "yes"))
+    ref <- predict(m_ord, newdata = nd, type = "probs", re.form = NA, se.fit = TRUE)
+    ref <- data.frame(
+        rowid = rep(seq_len(nrow(nd)), ncol(ref$fit)),
+        group = rep(colnames(ref$fit), each = nrow(nd)),
+        fit = c(ref$fit),
+        se = c(ref$se.fit)
+    )
+
+    # default type is "probs", one row per outcome level
+    p <- predictions(m_ord, newdata = nd, re.form = NA)
+    expect_equal(nrow(p), 20)
+    expect_equal(levels(p$group), as.character(1:5))
+    p <- merge(as.data.frame(p)[, c("rowid", "group", "estimate", "std.error")], ref)
+    expect_equivalent(p$estimate, p$fit, tolerance = 1e-6)
+    expect_equivalent(p$std.error, p$se, tolerance = 1e-4)
+
+    # other types and functions
+    p <- predictions(m_ord, newdata = nd, type = "response", re.form = NA)
+    expect_equal(nrow(p), 4)
+    cmp <- avg_comparisons(m_ord, variables = "temp", re.form = NA)
+    expect_equal(nrow(cmp), 5)
+    expect_true(all(cmp$std.error > 0))
+    expect_slopes(m_ord, re.form = NA)
+    expect_hypotheses(m_ord)
+    h <- hypotheses(m_ord)
+    expect_equal(nrow(h), 7) # 3 fixed effects + 4 cutpoints
+    expect_true(all(h$std.error > 0))
+}

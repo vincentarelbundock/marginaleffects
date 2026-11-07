@@ -34,7 +34,12 @@ get_hypotheses_skeleton <- function(model_perturbed, hypothesis, hypothesis_is_f
         colnames(out)[1:2] <- c("term", "estimate")
 
         # glmmTMB
-        if (!is.null(newparams)) {
+        if (inherits(model_perturbed, "glmmTMB") && glmmTMB_is_ordinal(model_perturbed)) {
+            # coefficients include cutpoints, which `get_parameters()` omits
+            beta <- get_coef(model_perturbed)
+            if (!is.null(newparams)) beta[] <- newparams
+            out <- data.table::data.table(term = names(beta), estimate = unname(beta))
+        } else if (!is.null(newparams)) {
             out$estimate <- newparams
         }
     } else if (hypothesis_is_formula) {

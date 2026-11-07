@@ -18,7 +18,11 @@ get_predict.glmmTMB <- function(
 
     np <- model$fit$par
     if (!is.null(newparams)) {
-        np[seq_along(newparams)] <- newparams
+        if (glmmTMB_is_ordinal(model)) {
+            np[glmmTMB_ordinal_index(model)] <- newparams
+        } else {
+            np[seq_along(newparams)] <- newparams
+        }
     }
 
     out <- get_predict.default(
@@ -49,6 +53,29 @@ get_vcov.glmmTMB <- function(model, vcov, ...) {
             if (!is.null(last_par)) env$last.par <- last_par
             if (!is.null(last_par_best)) env$last.par.best <- last_par_best
         }, add = TRUE)
+    }
+
+    if (glmmTMB_is_ordinal(model)) {
+        # The fixed intercept triggers a spurious rank-deficiency warning.
+        out <- withCallingHandlers(
+            insight::get_varcov(model, vcov = vcov, component = "full"),
+            warning = function(w) {
+                if (grepl("rank deficient", conditionMessage(w), fixed = TRUE)) {
+                    invokeRestart("muffleWarning")
+                }
+            }
+        )
+        # The fixed intercept has an all-NA row; the remaining rows follow
+        # `model$fit$par`. Keep fixed effects and cutpoints, drop RE parameters.
+        keep <- !apply(is.na(out), 1, all)
+        out <- out[keep, keep, drop = FALSE]
+        if (nrow(out) != length(model$fit$par)) {
+            stop_sprintf("Unable to align the variance-covariance matrix with the parameters of this ordinal `glmmTMB` model.")
+        }
+        idx <- glmmTMB_ordinal_index(model)
+        out <- out[idx, idx, drop = FALSE]
+        dimnames(out) <- list(names(get_coef.glmmTMB(model)), names(get_coef.glmmTMB(model)))
+        return(out)
     }
 
     # Extract the full covariance matrix
@@ -90,6 +117,25 @@ get_vcov.glmmTMB <- function(model, vcov, ...) {
 #' @rdname get_coef
 #' @export
 get_coef.glmmTMB <- function(model, ...) {
+    if (glmmTMB_is_ordinal(model)) {
+        # The intercept is not identified in ordinal models: `fixef()` reports
+        # it as 0, but it is absent from `model$fit$par`. The cutpoints (`psi`)
+        # are absent from `fixef()`. Return the free fixed effects and cutpoints,
+        # in `model$fit$par` order.
+        lev <- get_group_names(model)
+        b <- setdiff(names(glmmTMB::fixef(model)$cond), "(Intercept)")
+        nam <- c(
+            paste0("cond~", b),
+            paste(lev[-length(lev)], lev[-1], sep = "|")
+        )
+        out <- model$fit$par[glmmTMB_ordinal_index(model)]
+        if (length(out) != length(nam)) {
+            stop_sprintf("Unable to extract the coefficients of this ordinal `glmmTMB` model.")
+        }
+        names(out) <- nam
+        return(out)
+    }
+
     # Extract the fixed-effect coefficients
     out <- unlist(glmmTMB::fixef(model))
 
@@ -128,4 +174,26 @@ sanitize_model_specific.glmmTMB <- function(model, vcov = TRUE, re.form, ...) {
     }
 
     return(model)
+}
+
+
+#' @include get_group_names.R
+#' @rdname get_group_names
+#' @export
+get_group_names.glmmTMB <- function(model, ...) {
+    if (glmmTMB_is_ordinal(model)) {
+        return(get_group_names.polr(model))
+    }
+    return(get_group_names.default(model))
+}
+
+
+glmmTMB_is_ordinal <- function(model) {
+    isTRUE(hush(stats::family(model)$family) == "ordinal")
+}
+
+
+# positions in `model$fit$par` of the fixed effects and cutpoints of an ordinal model
+glmmTMB_ordinal_index <- function(model) {
+    which(names(model$fit$par) %in% c("beta", "psi"))
 }

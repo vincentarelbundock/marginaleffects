@@ -4,6 +4,7 @@
 
 New features:
 
+* Support for ordinal models fitted with `glmmTMB::glmmTMB(family = glmmTMB::ordinal())`. The default `type = "probs"` returns one probability per outcome level, and uncertainty accounts for both the fixed effects and the cutpoints. Thanks to @strengejacke for report #1759.
 * `vcov = "unconditional"` supports `WeightIt::glm_weightit()` and `WeightIt::lm_weightit()` models. `multinom_weightit` and `ordinal_weightit` remain unsupported. Thanks to @ngreifer for report #1765.
 
 Performance:

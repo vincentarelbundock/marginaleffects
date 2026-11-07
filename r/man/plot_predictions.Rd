@@ -185,6 +185,7 @@ Some of the most common \code{type} values are:\tabular{ll}{
    glmgee \tab response, link \cr
    glmmPQL \tab response, link \cr
    glmmTMB \tab response, link, conditional, zprob, zlink, disp \cr
+   glmmTMB_ordinal \tab probs, response, link \cr
    glmrob \tab response, link \cr
    glmx \tab response \cr
    gnm \tab response, link \cr
