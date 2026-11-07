@@ -28,12 +28,12 @@ inferences(
 \item "rsample" package
 \item "simulation" from a multivariate normal distribution (Krinsky & Robb, 1986)
 \item "conformal_split": prediction intervals using split conformal prediction (see Angelopoulos & Bates, 2022)
-\item "conformal_cv+": prediction intervals using cross-validation+ conformal prediction (see Barber et al., 2020)
+\item "conformal_cv+": prediction intervals using CV+ conformal prediction (see Barber et al., 2021). Each of the \code{R} fold models predicts the test points, so intervals need not be symmetric around \code{estimate}. For classification with \code{conformal_score = "softmax"}, prediction sets follow Romano, Sesia & Candès (2020).
 \item "conformal_full": prediction intervals using full conformal prediction (see Lei et al., 2018). \strong{Warning}: This method is computationally expensive and typically much slower than split or CV+ methods.
 \item "conformal_quantile": prediction intervals using full conformal prediction (see Romano et al., 2020).
 }}
 
-\item{R}{Number of resamples, simulations, or cross-validation folds.}
+\item{R}{Number of resamples, simulations, or cross-validation folds. For \code{method = "conformal_cv+"}, \code{R} is the number of folds, between 2 and 25, with a default of 10.}
 
 \item{conf_type}{String: type of bootstrap interval to construct.
 \itemize{
@@ -100,9 +100,11 @@ King, Gary, Michael Tomz, and Jason Wittenberg. "Making the most of statistical 
 
 Dowd, Bryan E., William H. Greene, and Edward C. Norton. "Computation of standard errors." Health services research 49.2 (2014): 731-750.
 
-Angelopoulos, Anastasios N., and Stephen Bates. 2022. "A Gentle Introduction to Conformal Prediction and Distribution-Free Uncertainty Quantification." arXiv. https://doi.org/10.48550/arXiv.2107.07511.
+Barber, Rina Foygel, Emmanuel J. Candès, Aaditya Ramdas, and Ryan J. Tibshirani. 2021. "Predictive Inference with the Jackknife+." Annals of Statistics 49 (1): 486–507. https://doi.org/10.1214/20-AOS1965.
 
-Barber, Rina Foygel, Emmanuel J. Candes, Aaditya Ramdas, and Ryan J. Tibshirani. 2020. "Predictive Inference with the Jackknife+." arXiv. http://arxiv.org/abs/1905.02928.
+Romano, Yaniv, Matteo Sesia, and Emmanuel J. Candès. 2020. "Classification with Valid and Adaptive Coverage." Advances in Neural Information Processing Systems 33.
+
+Angelopoulos, Anastasios N., and Stephen Bates. 2022. "A Gentle Introduction to Conformal Prediction and Distribution-Free Uncertainty Quantification." arXiv. https://doi.org/10.48550/arXiv.2107.07511.
 
 Lei, Jing, Max G'Sell, Alessandro Rinaldo, Ryan J. Tibshirani, and Larry Wasserman. 2018. "Distribution-Free Predictive Inference for Regression." Journal of the American Statistical Association 113 (523): 1094–1111.
 

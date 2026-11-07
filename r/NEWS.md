@@ -4,6 +4,7 @@
 
 New features:
 
+* Support for ordinal models fitted with `glmmTMB::glmmTMB(family = glmmTMB::ordinal())`. The default `type = "probs"` returns one probability per outcome level, and uncertainty accounts for both the fixed effects and the cutpoints. Thanks to @strengejacke for report #1759.
 * `vcov = "unconditional"` supports `WeightIt::glm_weightit()` and `WeightIt::lm_weightit()` models. `multinom_weightit` and `ordinal_weightit` remain unsupported. Thanks to @ngreifer for report #1765.
 
 Performance:
@@ -12,6 +13,8 @@ Performance:
 
 Bug fixes:
 
+* `inferences(method = "conformal_cv+")` now implements CV+ (Barber, Candès, Ramdas & Tibshirani 2021). Each fold model predicts the test points, and the interval bounds are quantiles of these fold predictions shifted by the out-of-fold residuals, so intervals need not be symmetric around `estimate`. The previous implementation centred a single quantile of the pooled out-of-fold residuals on the full-data prediction, which carries no finite-sample coverage guarantee. Prediction sets for classification (`conformal_score = "softmax"`) use the same fold-model construction (Romano, Sesia & Candès 2020). Intervals and sets may change, and are usually slightly wider. Issue #1761.
+* `inferences(method = "conformal_cv+")` uses 10 folds by default. It previously used the bootstrap default `R = 1000`, which exceeded the 25-fold cap, so calls without `R` always failed. Issue #1761.
 * `print(x, "tinytable")` and Quarto/Rmarkdown rendering failed with "Input is not a list" when the table had no footnotes, for example `hypotheses(mod, hypothesis = 0.5)`.
 * Corrected the documented elasticity formulas and interpretations for `slopes()` and related functions. Thanks to @KWB4484 for report #1776.
 * `mlogit` data are converted to `data.table` as intended; the converted object was assigned to a discarded variable.
