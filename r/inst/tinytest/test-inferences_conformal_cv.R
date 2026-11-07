@@ -110,3 +110,13 @@ p <- predictions(mod, newdata = test) |>
 expect_equal(p$rowid, 1:3)
 expect_true(identical(p$pred.set[[2]], NA_character_))
 expect_true(length(p$pred.set[[1]]) > 0 && !anyNA(p$pred.set[[1]]))
+
+# an entirely unestimable test batch returns NA bounds instead of erroring
+mod <- lm(mpg ~ hp + wt, mtcars)
+test <- mtcars[1, ]
+test$hp <- NA_real_
+set.seed(48103)
+p <- predictions(mod, newdata = test) |>
+    inferences(method = "conformal_cv+", R = 5, data_train = mtcars)
+expect_equal(nrow(p), 1)
+expect_true(is.na(p$pred.low) && is.na(p$pred.high))

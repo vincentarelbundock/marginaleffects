@@ -164,7 +164,7 @@ conformal_cv_plus_intervals <- function(out, scores, preds_test, conf_level) {
     # test points with a missing fold prediction keep NA bounds
     valid <- which(colSums(is.na(P)) == 0)
     chunk <- max(1L, floor(1e7 / n))
-    for (start in seq(1L, length(valid), by = chunk)) {
+    for (start in seq_len(ceiling(length(valid) / chunk)) * chunk - chunk + 1L) {
         cols <- valid[start:min(length(valid), start + chunk - 1L)]
         mu <- P[fold, cols, drop = FALSE]
         if (k_hi > n) {
