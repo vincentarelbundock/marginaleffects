@@ -66,9 +66,7 @@ estimands = {
     "liftavgwts": lambda hi, lo, eps, x, y, w: prep(
         ((hi * w).sum() - (lo * w).sum()) / (lo * w).sum()
     ),
-    "expdydx": lambda hi, lo, eps, x, y, w: prep(
-        (np.exp(hi) - np.exp(lo)) / eps
-    ),
+    "expdydx": lambda hi, lo, eps, x, y, w: prep((np.exp(hi) - np.exp(lo)) / eps),
     "expdydxavg": lambda hi, lo, eps, x, y, w: prep(
         ((hi.exp() - lo.exp()) / eps).mean()
     ),
