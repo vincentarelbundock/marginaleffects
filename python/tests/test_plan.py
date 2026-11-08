@@ -3,8 +3,8 @@ import numpy as np
 from marginaleffects.estimands import estimands
 from marginaleffects.plan import (
     AggGroup,
-    CompGroup,
     ComparisonPlan,
+    CompGroup,
     Hyp,
     PredictionPlan,
     comparison_plan_apply,

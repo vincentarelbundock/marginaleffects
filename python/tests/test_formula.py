@@ -1,7 +1,8 @@
-import pandas as pd
 import numpy as np
-import statsmodels.formula.api as sm
+import pandas as pd
 import pytest
+import statsmodels.formula.api as sm
+
 from marginaleffects import *
 from marginaleffects import MarginaleffectsResult
 

@@ -1,8 +1,9 @@
 import numpy as np
 import polars as pl
 import statsmodels.formula.api as smf
-from marginaleffects import *
 from polars.testing import assert_series_equal
+
+from marginaleffects import *
 
 dat = (
     pl.read_csv("tests/data/penguins.csv", null_values="NA")

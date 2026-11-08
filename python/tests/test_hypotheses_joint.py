@@ -6,7 +6,6 @@ from polars.testing import assert_frame_equal
 from marginaleffects import *
 from tests.helpers import mtcars
 
-
 mod = smf.ols("am ~ hp + wt + disp", data=mtcars).fit()
 
 mod_without_intercept = smf.ols("am ~ 0 + hp + wt + disp", data=mtcars).fit()

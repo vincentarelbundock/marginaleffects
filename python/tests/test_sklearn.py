@@ -1,8 +1,9 @@
 import numpy as np
 import polars as pl
+from sklearn.linear_model import LinearRegression
+
 import marginaleffects as me
 from marginaleffects import MarginaleffectsResult
-from sklearn.linear_model import LinearRegression
 from tests.helpers import wage_panel_pd
 
 data = wage_panel_pd

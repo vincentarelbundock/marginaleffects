@@ -1,8 +1,8 @@
 import numpy as np
 import polars as pl
+from statsmodels.formula.api import logit, ols
 
 from marginaleffects import *
-from statsmodels.formula.api import logit, ols
 
 mtcars = get_dataset("mtcars", "datasets")
 

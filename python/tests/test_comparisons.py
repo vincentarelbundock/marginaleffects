@@ -2,14 +2,14 @@ import re
 
 import numpy as np
 import polars as pl
-import statsmodels.formula.api as smf
-import statsmodels.api as sm
-from polars.testing import assert_series_equal
 import pytest
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+from polars.testing import assert_series_equal
 
 from marginaleffects import *
 from marginaleffects.comparisons import estimands
-from tests.helpers import mtcars, guerry
+from tests.helpers import guerry, mtcars
 from tests.utilities import sort_categories_pandas
 
 hiv = get_dataset("thornton")
@@ -45,7 +45,7 @@ def test_difference():
 
 
 def test_comparison_simple():
-    est = [k for k in estimands.keys() if not re.search("x|wts", k)]
+    est = [k for k in estimands if not re.search("x|wts", k)]
     for e in est:
         cmp_py = comparisons(mod, comparison=e).sort("term")
         cmp_r = pl.read_csv(f"tests/r/test_comparisons_03_{e}.csv").sort("term")

@@ -1,11 +1,12 @@
 import os
 import re
 import sys
+import warnings
+
+import pandas as pd
+import polars as pl
 from matplotlib.testing.compare import compare_images
 from plotnine import ggsave
-import warnings
-import polars as pl
-import pandas as pd
 
 
 def sort_categories_pandas(df_pd):

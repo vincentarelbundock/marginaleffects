@@ -2,12 +2,13 @@
 Test new datagrid features to ensure R feature parity.
 """
 
-import pytest
 import numpy as np
 import polars as pl
-from marginaleffects import datagrid, get_dataset
-from marginaleffects.datagrid import _detect_variable_type, _TYPE_TO_FUN_KEY
+import pytest
+
 import marginaleffects.utils as ut
+from marginaleffects import datagrid, get_dataset
+from marginaleffects.datagrid import _TYPE_TO_FUN_KEY, _detect_variable_type
 
 
 class TestVariableTypeDetection:
@@ -364,7 +365,8 @@ class TestNewDatagridFeatures:
     def test_counterfactual_with_model_retains_non_model_columns(self):
         """Test that counterfactual grid retains non-model columns when model is passed (#1175)."""
         import statsmodels.formula.api as smf
-        from marginaleffects import predictions, get_dataset
+
+        from marginaleffects import get_dataset, predictions
 
         # Use mtcars dataset
         mtcars = get_dataset("mtcars")

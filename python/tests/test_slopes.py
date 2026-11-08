@@ -5,7 +5,6 @@ from marginaleffects import *
 from tests.helpers import mtcars
 from tests.utilities import *
 
-
 mod_py = smf.ols("mpg ~ wt * hp", mtcars).fit()
 
 

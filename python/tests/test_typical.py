@@ -1,4 +1,5 @@
 import polars as pl
+
 from marginaleffects import *
 from tests.helpers import mtcars
 
@@ -8,7 +9,7 @@ def test_datagrid_NA():
     nd = datagrid(newdata=mtcars, mpg=pl.Null(), hp=range(1, 5))
     # nd <- datagrid(newdata = mtcars, mpg = NA, hp = 1:4)
     assert nd.shape[0] == 4
-    assert all([e == pl.Null() for e in nd["mpg"]])
+    assert all(e == pl.Null() for e in nd["mpg"])
 
 
 #    assert all(nd['mpg'].is_null()) # all false, Polars bug?

@@ -1,11 +1,16 @@
 import numpy as np
 import polars as pl
+import pytest
 import statsmodels.formula.api as smf
+
 from marginaleffects import *
 from marginaleffects import MarginaleffectsResult
+from tests.helpers import (  # noqa
+    impartiality_df,
+    impartiality_model,
+    sort_categories_pandas,
+)
 from tests.utilities import *
-import pytest
-from tests.helpers import impartiality_model, impartiality_df, sort_categories_pandas  # noqa
 
 
 def assert_is_result(obj):

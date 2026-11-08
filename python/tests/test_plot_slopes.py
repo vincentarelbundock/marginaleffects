@@ -1,8 +1,9 @@
 import pytest
+
 from marginaleffects import *
 from marginaleffects.plot.slopes import *
-from tests.utilities import *
 from tests.helpers import *
+from tests.utilities import *
 
 pytestmark = plot_snapshot_skipif()
 

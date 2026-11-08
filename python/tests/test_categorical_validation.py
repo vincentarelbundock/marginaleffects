@@ -6,6 +6,7 @@ Ensures String columns are rejected with clear error messages.
 import polars as pl
 import pytest
 import statsmodels.formula.api as smf
+
 from marginaleffects import predictions
 
 

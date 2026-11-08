@@ -48,6 +48,7 @@ print("ok")
         [sys.executable, "-c", script],
         capture_output=True,
         text=True,
+        check=False,
     )
     assert completed.returncode == 0, completed.stderr
     assert "ok" in completed.stdout
