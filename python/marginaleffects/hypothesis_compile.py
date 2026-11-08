@@ -198,7 +198,13 @@ def lincom_multiply(x, lincom):
     return pl.DataFrame({"estimate": multiplied_results})
 
 
-def get_hypothesis_row_labels(x, by=None):
+def get_hypothesis_row_labels(x, by=None, hypothesis_by=None):
+    """Row labels for hypothesis output, mirroring R's ``get_labels()``.
+
+    ``hypothesis_by`` lists the ``| group`` columns of a formula hypothesis.
+    They identify the group, not the row within it, so they are left out of
+    the labels as in R.
+    """
     pattern = re.compile(r"^(term|by|group|value|contrast|contrast_)$")
     lab = [col for col in x.columns if pattern.match(col)]
 
@@ -207,7 +213,11 @@ def get_hypothesis_row_labels(x, by=None):
     if by is not None and isinstance(by, bool) is False:
         if isinstance(by, str):
             by = [by]
-        lab = [e for e in list(set(lab) | set(by)) if e != "group"]
+        # dict.fromkeys: ordered union, so label columns keep a stable order
+        lab = [e for e in dict.fromkeys(lab + list(by)) if e != "group"]
+
+    if hypothesis_by:
+        lab = [e for e in lab if e not in hypothesis_by]
 
     if len(lab) == 0:
         return [f"{i}" for i in range(len(x))]
@@ -276,8 +286,11 @@ def hypothesis_compile(x: pl.DataFrame, hypothesis, by=None):
         return out, hyp
 
     if isinstance(hypothesis, str) and "~" in hypothesis:
-        from .test.formula import eval_hypothesis_formula
+        from .test.formula import eval_hypothesis_formula, parse_hypothesis_formula
 
+        _, _, hypothesis_by = parse_hypothesis_formula(hypothesis)
+        if hypothesis_by:
+            lab = get_hypothesis_row_labels(x, by=by, hypothesis_by=hypothesis_by)
         hyp = _compile_formula_hypothesis(x, hypothesis, lab)
         out = eval_hypothesis_formula(x, hypothesis, lab=lab)
         return out, hyp

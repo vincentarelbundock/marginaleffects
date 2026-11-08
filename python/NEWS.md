@@ -10,6 +10,21 @@ New features:
   Jacobians when the hypothesis is linear. Ex: `hypothesis="~ poly"`,
   `hypothesis="ratio ~ meandev | am"`.
 
+Bug fixes:
+
+* `pairwise` and `revpairwise` formula hypotheses dropped every difference
+  that was exactly zero (e.g. two equal estimates), so estimates and labels
+  no longer lined up.
+* `pairwise` and `revpairwise` now return rows in the same order as R. The
+  order differed with four or more estimates; values and labels were already
+  the same.
+* Grouped formula hypotheses (`~ ... | group`) no longer include the grouping
+  columns in their row labels, matching R: `~ reference | am` gives
+  `(4) - (3)` rather than also listing the `am` value. Groups are returned in a fixed order, which the exact
+  Jacobian for these hypotheses relies on.
+* Row labels built from several columns now list those columns in a stable
+  order.
+
 # 0.6.2
 
 Bug fixes:

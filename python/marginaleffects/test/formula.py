@@ -76,56 +76,46 @@ def revsequential_difference_label(x):
     return [f"({shifted_xi}) - ({xi})" for xi, shifted_xi in zip(x[1:], shifted_x[1:])]
 
 
-def pairwise_ratio_comparison(x):
-    x = x.to_numpy()
-    out = np.tril(np.divide.outer(x, x), -1)
-    return out[out != 0]
+def _pair_index(n, reverse):
+    """Index pairs ``(i, j)`` for the pairwise hypotheses, in R's order.
 
-
-def pairwise_ratio_label(x):
-    labels = [
-        f"({xi}) / ({xj})" for i, xi in enumerate(x) for j, xj in enumerate(x) if i > j
+    R takes ``outer(x, x, op)`` and keeps its lower triangle (``pairwise``,
+    ``i > j``) or upper triangle (``revpairwise``, ``i < j``) in column-major
+    order: ``j`` is the outer loop and ``i`` the inner one.
+    """
+    pairs = [
+        (i, j) for j in range(n) for i in (range(j) if reverse else range(j + 1, n))
     ]
-    return labels
+    idx = np.array(pairs, dtype=int).reshape(-1, 2)
+    return idx[:, 0], idx[:, 1]
 
 
-def pairwise_difference_comparison(x):
-    x = x.to_numpy()
-    out = np.tril(np.subtract.outer(x, x), -1)
-    return out[out != 0]
+def _pairwise_comparison(op, reverse):
+    def comparison(x):
+        x = np.asarray(x, dtype=float)
+        i, j = _pair_index(len(x), reverse)
+        return op(x[i], x[j])
+
+    return comparison
 
 
-def pairwise_difference_label(x):
-    labels = [
-        f"({xi}) - ({xj})" for i, xi in enumerate(x) for j, xj in enumerate(x) if i > j
-    ]
-    return labels
+def _pairwise_label(symbol, reverse):
+    def label(x):
+        x = list(x)
+        i, j = _pair_index(len(x), reverse)
+        return [f"({x[a]}) {symbol} ({x[b]})" for a, b in zip(i, j)]
+
+    return label
 
 
-def revpairwise_ratio_comparison(x):
-    x = x.to_numpy()
-    out = np.triu(np.divide.outer(x, x), 1)
-    return out[out != 0]
-
-
-def revpairwise_ratio_label(x):
-    labels = [
-        f"({xi}) / ({xj})" for i, xi in enumerate(x) for j, xj in enumerate(x) if i < j
-    ]
-    return labels
-
-
-def revpairwise_difference_comparison(x):
-    x = x.to_numpy()
-    out = np.triu(np.subtract.outer(x, x), 1)
-    return out[out != 0]
-
-
-def revpairwise_difference_label(x):
-    labels = [
-        f"({xi}) - ({xj})" for i, xi in enumerate(x) for j, xj in enumerate(x) if i < j
-    ]
-    return labels
+pairwise_ratio_comparison = _pairwise_comparison(np.divide, reverse=False)
+pairwise_ratio_label = _pairwise_label("/", reverse=False)
+pairwise_difference_comparison = _pairwise_comparison(np.subtract, reverse=False)
+pairwise_difference_label = _pairwise_label("-", reverse=False)
+revpairwise_ratio_comparison = _pairwise_comparison(np.divide, reverse=True)
+revpairwise_ratio_label = _pairwise_label("/", reverse=True)
+revpairwise_difference_comparison = _pairwise_comparison(np.subtract, reverse=True)
+revpairwise_difference_label = _pairwise_label("-", reverse=True)
 
 
 # The shortcuts below mirror `hypothesis_formula_list` in the R package
@@ -317,7 +307,9 @@ def eval_hypothesis_formula(x, hypothesis, lab):
         )
     else:
         x = x.with_columns(pl.Series(lab).alias("term"))
-        out = x.group_by(*by_hypothesis).agg(
+        # maintain_order: groups come out in a fixed order, which the exact
+        # Jacobian relies on (it re-evaluates this function and stacks results)
+        out = x.group_by(*by_hypothesis, maintain_order=True).agg(
             pl.col("estimate").map_batches(hyp_fun),
             pl.col("term").map_batches(lambda x: pl.Series(lab_fun(x))),
         )

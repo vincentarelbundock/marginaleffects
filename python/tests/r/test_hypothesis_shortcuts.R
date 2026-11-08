@@ -14,14 +14,20 @@ ungrouped <- c(
     "ratio ~ meanotherdev",
     "~ poly",
     "dotproduct ~ poly",
-    "~ helmert"
+    "~ helmert",
+    # pairwise order: lower/upper triangle in column-major order
+    "~ pairwise",
+    "ratio ~ revpairwise"
 )
 grouped <- c(
     "~ trt_vs_ctrl | am",
     "~ meandev | am",
     "~ meanotherdev | am",
     "~ poly | am",
-    "~ helmert | am"
+    "~ helmert | am",
+    # Grouped labels for the original shortcuts, which share the label code
+    "~ reference | am",
+    "ratio ~ pairwise | am"
 )
 
 run <- function(spec, by) {
