@@ -8,7 +8,7 @@ package, `__getattr__` then never fires for that name, and every later
 function. Keep the two namespaces disjoint.
 """
 
-from importlib import import_module
+from .._lazy import lazy_exports
 
 _EXPORTS = {
     "handle_deprecated_hypotheses_argument": (
@@ -34,16 +34,4 @@ _EXPORTS = {
 __all__ = list(_EXPORTS)
 
 
-def __getattr__(name):
-    if name not in _EXPORTS:
-        raise AttributeError(
-            f"module 'marginaleffects.sanitize' has no attribute {name!r}"
-        )
-    module_name, attribute = _EXPORTS[name]
-    value = getattr(import_module(module_name, __name__), attribute)
-    globals()[name] = value
-    return value
-
-
-def __dir__():
-    return sorted(set(globals()) | set(__all__))
+__getattr__, __dir__ = lazy_exports(__name__, _EXPORTS)

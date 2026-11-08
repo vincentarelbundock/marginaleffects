@@ -93,22 +93,21 @@ def condition_numeric(modeldata, key, value, first):
     return out
 
 
+_SHORTCUT_LABELS = {
+    "threenum": ["-SD", "Mean", "+SD"],
+    "fivenum": ["Min", "Q1", "Q2", "Q3", "Max"],
+    "minmax": ["Min", "Max"],
+}
+
+
 def plot_labels(model, dt, condition):
     if not isinstance(condition, dict):
         return dt
 
     for k, v in condition.items():
         if model.get_variable_type(k) in ["numeric", "integer"]:
-            # upgrade this to use match-case when python 3.9 reaches end-of-life
-            if v == "threenum":
-                lab = ["-SD", "Mean", "+SD"]
-                dt = ordered_cat(dt, k, lab)
-            elif v == "fivenum":
-                lab = ["Min", "Q1", "Q2", "Q3", "Max"]
-                dt = ordered_cat(dt, k, lab)
-            elif v == "minmax":
-                lab = ["Min", "Max"]
-                dt = ordered_cat(dt, k, lab)
+            if isinstance(v, str) and v in _SHORTCUT_LABELS:
+                dt = ordered_cat(dt, k, _SHORTCUT_LABELS[v])
             elif v is None:
                 dt = dt.with_columns(pl.col(k).round_sig_figs(3).alias(k))
     return dt
@@ -158,6 +157,50 @@ def extract_var_list(condition, by):
         )
 
     return var_list
+
+
+def plot_estimates(
+    model,
+    condition,
+    by,
+    newdata,
+    wts,
+    draw,
+    estimate,
+    y_label,
+    gray=False,
+    points=0,
+    facet_contrast=False,
+):
+    """Shared driver for ``plot_predictions/comparisons/slopes``.
+
+    ``estimate(newdata)`` computes the estimates on the (possibly condition-
+    derived) grid. When ``facet_contrast`` is true, multiple contrasts are
+    shown as an extra facet.
+    """
+    validate_plot_args(condition, by, newdata, wts)
+
+    # before dt_on_condition, which modifies in-place
+    condition_input = copy.deepcopy(condition)
+
+    if condition is not None:
+        newdata = dt_on_condition(model, condition)
+
+    dt = plot_labels(model, estimate(newdata), condition_input)
+
+    if not draw:
+        return dt
+
+    var_list = extract_var_list(condition, by)
+
+    if (
+        facet_contrast
+        and "contrast" in dt.columns
+        and dt["contrast"].unique().len() > 1
+    ):
+        var_list = var_list + ["contrast"]
+
+    return plot_common(model, dt, y_label, var_list, gray=gray, points=points)
 
 
 def plot_common(model, dt, y_label, var_list, gray=False, points=0):
