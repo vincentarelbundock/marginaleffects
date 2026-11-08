@@ -82,7 +82,7 @@ comparison_gradient_exact <- function(fun_key, hi, lo, args) {
     if (grepl("wts$", fun_key)) {
       w <- args[["w"]]
       if (
-        !is.numeric(w) || length(w) != n || any(!is.finite(w)) || sum(w) == 0
+        !is.numeric(w) || length(w) != n || !all(is.finite(w)) || sum(w) == 0
       ) {
         return(NULL)
       }
@@ -103,7 +103,7 @@ comparison_gradient_exact <- function(fun_key, hi, lo, args) {
     eps <- args[["eps"]]
     if (
       !is.numeric(eps) || !length(eps) %in% c(1L, n) ||
-        any(!is.finite(eps)) || any(eps == 0)
+        !all(is.finite(eps)) || any(eps == 0)
     ) {
       return(NULL)
     }

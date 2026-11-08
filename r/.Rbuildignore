@@ -32,3 +32,4 @@ CLAUDE.md
 ^inst/tinytest$
 ^tests$
 ^\.Rbuildignore\.runners-backup$
+^jarl\.toml$

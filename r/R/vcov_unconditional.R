@@ -526,7 +526,7 @@ get_unconditional_known_scalar_comparison_phi <- function(
     rid <- rowid[idx]
     weighted <- endsWith(key, "wts")
     w <- if (weighted) group$args$w else rep(1, length(idx))
-    if (length(w) != length(idx) || anyNA(w) || any(!is.finite(w)) || sum(w) == 0) {
+    if (length(w) != length(idx) || anyNA(w) || !all(is.finite(w)) || sum(w) == 0) {
         return(NULL)
     }
 
@@ -931,7 +931,7 @@ update_unconditional_vcov_transform <- function(mfx, estimate, transform) {
     }
 
     estimate <- as.numeric(estimate)
-    if (anyNA(estimate) || any(!is.finite(estimate))) {
+    if (anyNA(estimate) || !all(is.finite(estimate))) {
         msg <- paste0(
             "`vcov = \"unconditional\"` cannot transform the saved covariance ",
             "matrix when pre-transform estimates are non-finite."
@@ -958,7 +958,7 @@ update_unconditional_vcov_transform <- function(mfx, estimate, transform) {
             )
         }
     )
-    if (!identical(dim(H), c(length(estimate), length(estimate))) || anyNA(H) || any(!is.finite(H))) {
+    if (!identical(dim(H), c(length(estimate), length(estimate))) || anyNA(H) || !all(is.finite(H))) {
         stop_sprintf(
             "`vcov = \"unconditional\"` could not compute a finite transform Jacobian."
         )

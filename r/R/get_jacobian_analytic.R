@@ -179,12 +179,12 @@ jacobian_analytic_aggregate_weights <- function(agg, n_rows) {
       w <- block$w
       if (
         !is.numeric(w) || !identical(dim(w), dim(idx)) ||
-          any(!is.finite(w))
+          !all(is.finite(w))
       ) {
         return(NULL)
       }
       denominator <- colSums(w)
-      if (any(!is.finite(denominator)) || any(denominator == 0)) {
+      if (!all(is.finite(denominator)) || any(denominator == 0)) {
         return(NULL)
       }
       # `idx` is column-major, so each group's entries are contiguous and the
@@ -488,7 +488,7 @@ compute_analytic_plan_jacobian <- function(
       beta <- get_coef(model)
       beta_names <- names(beta)
       if (
-        !is.numeric(beta) || any(!is.finite(beta)) || is.null(beta_names) ||
+        !is.numeric(beta) || !all(is.finite(beta)) || is.null(beta_names) ||
           anyDuplicated(beta_names) > 0L
       ) {
         return(NULL)

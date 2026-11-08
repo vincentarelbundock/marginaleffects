@@ -170,7 +170,7 @@ merge_original_data <- function(
     if (isTRUE(deduplicate)) {
         idx <- duplicated(tmp, by = bycols)
         tmp <- tmp[!idx]
-    } else if (any(duplicated(tmp, by = bycols))) {
+    } else if (anyDuplicated(tmp, by = bycols) > 0) {
         if ("rowid" %in% bycols && nrow(tmp) != nrow(out)) {
             tmp <- tmp[rowid %in% out[["rowid"]]]
         }

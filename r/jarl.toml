@@ -1,0 +1,4 @@
+[lint]
+# `<<-` is used deliberately to capture conditions inside handlers
+# leading-zero style is not enforced in this codebase
+ignore = ["undesirable_operator", "numeric_leading_zero"]

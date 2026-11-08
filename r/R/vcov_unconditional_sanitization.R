@@ -370,7 +370,7 @@ match_unconditional_source_modeldata <- function(source, modeldata, common) {
     }
 
     model_keys <- data.table::copy(modeldata[, common, with = FALSE])
-    if (any(duplicated(model_keys, by = common))) {
+    if (anyDuplicated(model_keys, by = common) > 0) {
         return(NULL)
     }
     model_keys[, ".marginaleffects_unconditional_rowid" := seq_len(.N)]
