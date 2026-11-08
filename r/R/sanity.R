@@ -25,3 +25,13 @@ sanity_predict_numeric <- function(pred, model, newdata, type) {
         stop(msg, call. = FALSE)
     }
 }
+
+
+# Validate a vector of predictions and wrap it in the standard
+# `get_predict()` output: a data.table with `estimate` and `rowid`.
+predict_vector_to_dt <- function(pred, model, newdata, type) {
+    sanity_predict_vector(pred = pred, model = model, newdata = newdata, type = type)
+    sanity_predict_numeric(pred = pred, model = model, newdata = newdata, type = type)
+    out <- data.table(estimate = pred)
+    add_rowid(out, newdata)
+}

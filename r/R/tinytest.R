@@ -67,57 +67,16 @@ expect_slopes <- function(
 #' @keywords internal
 expect_predictions <- function(object, se = TRUE, n_row = NULL, n_col = NULL, ...) {
     insight::check_if_installed("tinytest")
+    call <- sys.call(sys.parent(1))
     object <- hush(predictions(object, ...))
-
-    diff <- ""
-
-    # class
-    fail_class <- !isTRUE(checkmate::check_class(object, "predictions"))
-    if (fail_class) {
-        msg <- sprintf("Wrong class: `%s`.", class(object)[1])
-        diff <- c(diff, msg)
-    }
-
-    # std.error
-    if (isTRUE(se) && !"std.error" %in% colnames(object)) {
-        msg <- "No standard error."
-        diff <- c(diff, msg)
-        fail_se <- TRUE
-    } else {
-        fail_se <- FALSE
-    }
-
-    # rows and cols
-    if (isTRUE(n_row > nrow(object))) {
-        msg <- sprintf("Number of rows: %s", nrow(object))
-        diff <- c(diff, msg)
-        fail_row <- TRUE
-    } else {
-        fail_row <- FALSE
-    }
-
-    if (isTRUE(n_col > ncol(object))) {
-        msg <- sprintf("Number of columns: %s", ncol(object))
-        diff <- c(diff, msg)
-        fail_col <- TRUE
-    } else {
-        fail_col <- FALSE
-    }
-
-    # diff message
-    diff <- paste(diff, collapse = "\n")
-
-    # pass/fail
-    fail <- fail_class || fail_se || fail_row || fail_col
-
-    # tinytest object
-    out <- tinytest::tinytest(
-        result = !fail,
-        call = sys.call(sys.parent(1)),
-        diff = diff
+    expect_marginaleffects_object(
+        object,
+        class = "predictions",
+        se = se,
+        n_row = n_row,
+        n_col = n_col,
+        call = call
     )
-
-    return(out)
 }
 
 
@@ -210,57 +169,16 @@ expect_margins <- function(
 #' @keywords internal
 expect_hypotheses <- function(object, se = TRUE, n_row = NULL, n_col = NULL, ...) {
     insight::check_if_installed("tinytest")
+    call <- sys.call(sys.parent(1))
     object <- hush(hypotheses(object, ...))
-
-    diff <- ""
-
-    # class
-    fail_class <- !isTRUE(checkmate::check_class(object, "hypotheses"))
-    if (fail_class) {
-        msg <- sprintf("Wrong class: `%s`.", class(object)[1])
-        diff <- c(diff, msg)
-    }
-
-    # std.error
-    if (isTRUE(se) && !"std.error" %in% colnames(object)) {
-        msg <- "No standard error."
-        diff <- c(diff, msg)
-        fail_se <- TRUE
-    } else {
-        fail_se <- FALSE
-    }
-
-    # rows and cols
-    if (isTRUE(n_row > nrow(object))) {
-        msg <- sprintf("Number of rows: %s", nrow(object))
-        diff <- c(diff, msg)
-        fail_row <- TRUE
-    } else {
-        fail_row <- FALSE
-    }
-
-    if (isTRUE(n_col > ncol(object))) {
-        msg <- sprintf("Number of columns: %s", ncol(object))
-        diff <- c(diff, msg)
-        fail_col <- TRUE
-    } else {
-        fail_col <- FALSE
-    }
-
-    # diff message
-    diff <- paste(diff, collapse = "\n")
-
-    # pass/fail
-    fail <- fail_class || fail_se || fail_row || fail_col
-
-    # tinytest object
-    out <- tinytest::tinytest(
-        result = !fail,
-        call = sys.call(sys.parent(1)),
-        diff = diff
+    expect_marginaleffects_object(
+        object,
+        class = "hypotheses",
+        se = se,
+        n_row = n_row,
+        n_col = n_col,
+        call = call
     )
-
-    return(out)
 }
 
 
@@ -270,55 +188,51 @@ expect_hypotheses <- function(object, se = TRUE, n_row = NULL, n_col = NULL, ...
 #' @keywords internal
 expect_comparisons <- function(object, se = TRUE, n_row = NULL, n_col = NULL, ...) {
     insight::check_if_installed("tinytest")
+    call <- sys.call(sys.parent(1))
     object <- hush(comparisons(object, ...))
+    expect_marginaleffects_object(
+        object,
+        class = "comparisons",
+        se = se,
+        n_row = n_row,
+        n_col = n_col,
+        call = call
+    )
+}
 
+
+# Shared checks for `expect_predictions()`, `expect_comparisons()`, and
+# `expect_hypotheses()`. `call` is captured by the caller so the tinytest
+# object reports the user's call.
+expect_marginaleffects_object <- function(object, class, se, n_row, n_col, call) {
     diff <- ""
 
     # class
-    fail_class <- !isTRUE(checkmate::check_class(object, "comparisons"))
+    fail_class <- !isTRUE(checkmate::check_class(object, class))
     if (fail_class) {
-        msg <- sprintf("Wrong class: `%s`.", class(object)[1])
-        diff <- c(diff, msg)
+        diff <- c(diff, sprintf("Wrong class: `%s`.", class(object)[1]))
     }
 
     # std.error
-    if (isTRUE(se) && !"std.error" %in% colnames(object)) {
-        msg <- "No standard error."
-        diff <- c(diff, msg)
-        fail_se <- TRUE
-    } else {
-        fail_se <- FALSE
+    fail_se <- isTRUE(se) && !"std.error" %in% colnames(object)
+    if (fail_se) {
+        diff <- c(diff, "No standard error.")
     }
 
     # rows and cols
-    if (isTRUE(n_row > nrow(object))) {
-        msg <- sprintf("Number of rows: %s", nrow(object))
-        diff <- c(diff, msg)
-        fail_row <- TRUE
-    } else {
-        fail_row <- FALSE
+    fail_row <- isTRUE(n_row > nrow(object))
+    if (fail_row) {
+        diff <- c(diff, sprintf("Number of rows: %s", nrow(object)))
+    }
+    fail_col <- isTRUE(n_col > ncol(object))
+    if (fail_col) {
+        diff <- c(diff, sprintf("Number of columns: %s", ncol(object)))
     }
 
-    if (isTRUE(n_col > ncol(object))) {
-        msg <- sprintf("Number of columns: %s", ncol(object))
-        diff <- c(diff, msg)
-        fail_col <- TRUE
-    } else {
-        fail_col <- FALSE
-    }
-
-    # diff message
-    diff <- paste(diff, collapse = "\n")
-
-    # pass/fail
     fail <- fail_class || fail_se || fail_row || fail_col
-
-    # tinytest object
-    out <- tinytest::tinytest(
+    tinytest::tinytest(
         result = !fail,
-        call = sys.call(sys.parent(1)),
-        diff = diff
+        call = call,
+        diff = paste(diff, collapse = "\n")
     )
-
-    return(out)
 }

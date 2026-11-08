@@ -25,21 +25,7 @@ set_coef.crch <- function(model, coefs, ...) {
 #' @export
 get_predict.crch <- function(model, newdata = NULL, type = "location", ...) {
     pred <- stats::predict(model, newdata = newdata, type = type)
-    sanity_predict_vector(
-        pred = pred,
-        model = model,
-        newdata = newdata,
-        type = type
-    )
-    sanity_predict_numeric(
-        pred = pred,
-        model = model,
-        newdata = newdata,
-        type = type
-    )
-    out <- data.table(estimate = pred)
-    out <- add_rowid(out, newdata)
-    return(out)
+    predict_vector_to_dt(pred, model = model, newdata = newdata, type = type)
 }
 
 

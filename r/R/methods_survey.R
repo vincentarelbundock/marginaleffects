@@ -33,13 +33,7 @@ set_coef.svyolr <- function(model, coefs, ...) {
 #' @rdname get_group_names
 #' @export
 get_group_names.svyolr <- function(model, ...) {
-    resp <- insight::get_response(model)
-    if (is.factor(resp)) {
-        out <- levels(resp)
-    } else {
-        out <- unique(resp)
-    }
-    return(out)
+    get_group_names.polr(model, ...)
 }
 
 #' @include get_predict.R

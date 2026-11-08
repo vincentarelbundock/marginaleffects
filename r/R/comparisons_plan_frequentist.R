@@ -197,16 +197,7 @@ comparison_plan_apply_stages <- function(plan, hi, lo, y = NULL) {
 
     est <- numeric(plan$n_comp)
     for (g in plan$groups) {
-        args <- g$args
-        args$hi <- hi[g$idx]
-        args$lo <- lo[g$idx]
-        if (isTRUE(g$uses_y)) {
-            args$y <- y[g$idx]
-        }
-        con <- do_call(g$fun, args)
-        if (length(con) != length(g$out_idx)) {
-            stop_sprintf("Internal error: comparison plan group changed shape.")
-        }
+        con <- comparison_plan_group_eval(g, hi = hi, lo = lo, y = y)
         est[g$out_idx] <- con
     }
     if (!is.null(plan$est_keep)) {
@@ -241,4 +232,21 @@ comparison_plan_predict <- function(.plan, model_perturbed, ...) {
         lo = pred_lo[["estimate"]],
         or = pred_or
     )
+}
+
+
+# Apply one comparison-plan group's function to its slice of `hi`, `lo`, and
+# (optionally) `y`, checking that the output has the planned length.
+comparison_plan_group_eval <- function(g, hi, lo, y) {
+    args <- g$args
+    args$hi <- hi[g$idx]
+    args$lo <- lo[g$idx]
+    if (isTRUE(g$uses_y)) {
+        args$y <- y[g$idx]
+    }
+    con <- do_call(g$fun, args)
+    if (length(con) != length(g$out_idx)) {
+        stop_sprintf("Internal error: comparison plan group changed shape.")
+    }
+    con
 }

@@ -49,11 +49,7 @@ get_vcov.aft <- get_vcov.stpm2
 get_predict.stpm2 <- function(model, newdata = NULL, ...) {
     insight::check_if_installed("rstpm2")
     pred <- rstpm2::predict(model, newdata = newdata, ...)
-    sanity_predict_vector(pred = pred, model = model, newdata = newdata)
-    sanity_predict_numeric(pred = pred, model = model, newdata = newdata)
-    out <- data.table(estimate = pred)
-    out <- add_rowid(out, newdata)
-    return(out)
+    predict_vector_to_dt(pred, model = model, newdata = newdata)
 }
 
 #' @rdname get_predict

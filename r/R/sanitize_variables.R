@@ -127,21 +127,29 @@ numeric_shortcut_values <- function(value, x) {
     }
 }
 
+# Replace a numeric string shortcut (e.g., "iqr") by its values, or error on an
+# unknown string. Non-string values are returned unchanged.
+apply_numeric_shortcut <- function(value, x, name) {
+    tmp <- numeric_shortcut_values(value, x)
+    if (!is.null(tmp)) {
+        return(tmp)
+    }
+    if (is.character(value)) {
+        msg <- sprintf(
+            '%s is a numeric variable. The summary shortcuts supported by the variables argument are: "iqr", "minmax", "sd", "2sd", "threenum", "fivenum".',
+            name
+        )
+        stop_sprintf(msg)
+    }
+    value
+}
+
 add_numeric_shortcuts <- function(predictors, mfx) {
     # string shortcuts for predictions only
     modeldata <- mfx@modeldata
     for (v in names(predictors)) {
         if (check_variable_class(mfx, v, "numeric") || check_variable_class(mfx, v, "integer")) {
-            tmp <- numeric_shortcut_values(predictors[[v]], modeldata[[v]])
-            if (!is.null(tmp)) {
-                predictors[[v]] <- tmp
-            } else if (is.character(predictors[[v]])) {
-                msg <- sprintf(
-                    '%s is a numeric variable. The summary shortcuts supported by the variables argument are: "iqr", "minmax", "sd", "2sd", "threenum", "fivenum".',
-                    v
-                )
-                stop_sprintf(msg)
-            }
+            predictors[v] <- list(apply_numeric_shortcut(predictors[[v]], modeldata[[v]], v))
         }
     }
     predictors
@@ -239,16 +247,7 @@ sanitize_predictor_specs <- function(predictors, mfx) {
                 }
             } else if (calling_function == "predictions") {
                 # string shortcuts
-                tmp <- numeric_shortcut_values(predictors[[v]], modeldata[[v]])
-                if (!is.null(tmp)) {
-                    predictors[[v]] <- tmp
-                } else if (is.character(predictors[[v]])) {
-                    msg <- sprintf(
-                        '%s is a numeric variable. The summary shortcuts supported by the variables argument are: "iqr", "minmax", "sd", "2sd", "threenum", "fivenum".',
-                        v
-                    )
-                    stop_sprintf(msg)
-                }
+                predictors[v] <- list(apply_numeric_shortcut(predictors[[v]], modeldata[[v]], v))
             }
         } else {
             if (calling_function == "comparisons") {

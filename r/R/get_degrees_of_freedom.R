@@ -40,26 +40,18 @@ add_degrees_of_freedom <- function(mfx, df = Inf, by = NULL, hypothesis = NULL, 
         )
     }
 
-    if (isTRUE(checkmate::check_choice(df, c("satterthwaite", "kenward-roger")))) {
-        checkmate::assert_data_frame(newdata)
-        # predict.lmerTest requires the DV
-        if (inherits(model, "lmerMod")) {
-            dv <- mfx@variable_names_response
-            if (!dv %in% colnames(newdata)) {
-                newdata[[dv]] <- mean(insight::get_response(model))
+    if (isTRUE(checkmate::check_choice(df, c("residual", "satterthwaite", "kenward-roger")))) {
+        if (df != "residual") {
+            checkmate::assert_data_frame(newdata)
+            # predict.lmerTest requires the DV
+            if (inherits(model, "lmerMod")) {
+                dv <- mfx@variable_names_response
+                if (!dv %in% colnames(newdata)) {
+                    newdata[[dv]] <- mean(insight::get_response(model))
+                }
             }
         }
 
-        tmp <- try(
-            insight::get_df(x = model, data = newdata, type = df, df_per_obs = TRUE),
-            silent = TRUE
-        )
-        if (inherits(tmp, "try-error")) {
-            msg <- "Unable to extract degrees of freedom of type `%s` for model of class `%s`."
-            stop_sprintf(msg, df, class(model)[1])
-        }
-        df <- tmp
-    } else if (isTRUE(checkmate::check_choice(df, "residual"))) {
         tmp <- try(
             insight::get_df(x = model, data = newdata, type = df, df_per_obs = TRUE),
             silent = TRUE
