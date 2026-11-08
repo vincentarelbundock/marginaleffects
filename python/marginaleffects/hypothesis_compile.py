@@ -237,7 +237,9 @@ def _compile_formula_hypothesis(x, hypothesis, lab) -> Hyp:
     from .test.formula import parse_hypothesis_formula
 
     lhs, _, _ = parse_hypothesis_formula(hypothesis)
-    if lhs == "difference":
+    # Differences and contrast-weight dot products are linear in the
+    # estimates, so they can be compiled to an exact matrix stage.
+    if lhs in ("difference", "dotproduct"):
         estimate = x["estimate"].to_numpy()
         base = apply(estimate)
         columns = []

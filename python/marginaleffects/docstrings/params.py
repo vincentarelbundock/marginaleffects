@@ -32,6 +32,15 @@ Specifies a hypothesis test or custom contrast.
     - Two-sided formula like "ratio ~ reference":
         - Left-hand side: "ratio", "difference"
         - Right-hand side: "reference", "sequential", "pairwise", "revreference", "revsequential", "revpairwise"
+        - Right-hand side shortcuts:
+            - "meandev": each estimate compared to the mean of all estimates.
+            - "meanotherdev": each estimate compared to the mean of all other estimates.
+            - "trt_vs_ctrl": the mean of all estimates after the first, compared to the first.
+        - Contrast-weight shortcuts, with left-hand side "dotproduct" or empty:
+            - "poly": orthogonal polynomial contrasts (linear, quadratic, ... up to quintic), as in R's `contr.poly()`.
+            - "helmert": Helmert contrasts, each estimate after the first contrasted with the mean of the estimates before it (unnormalized weights, as in R's `contr.helmert()`).
+        - The left-hand side can be omitted: "~ reference" is "difference ~ reference", and "~ poly" is "dotproduct ~ poly".
+        - Group the hypothesis by a column with `|`, e.g. "~ meandev | am".
 - list of strings:
     - Multiple hypotheses evaluated in sequence, each processed as if passed individually. The resulting rows are stacked in the order supplied. Ex: `["b1 - b0 = 0", "b2 = 1"]`.
 - numpy.ndarray:

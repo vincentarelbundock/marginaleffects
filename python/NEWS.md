@@ -1,3 +1,15 @@
+# Development
+
+New features:
+
+* Formula hypotheses support the `meandev`, `meanotherdev`, `trt_vs_ctrl`,
+  `poly` and `helmert` shortcuts on the right-hand side, matching the R
+  package. `poly` and `helmert` take a `dotproduct` (or empty) left-hand side
+  and use the same contrast weights as R's `contr.poly()` and
+  `contr.helmert()`. All shortcuts work with `| group` and use exact
+  Jacobians when the hypothesis is linear. Ex: `hypothesis="~ poly"`,
+  `hypothesis="ratio ~ meandev | am"`.
+
 # 0.6.2
 
 Bug fixes:

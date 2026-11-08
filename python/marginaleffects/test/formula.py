@@ -128,45 +128,176 @@ def revpairwise_difference_label(x):
     return labels
 
 
+# The shortcuts below mirror `hypothesis_formula_list` in the R package
+# (r/R/hypothesis_formula.R); keep the two in sync.
+
+
+def trt_vs_ctrl_ratio_comparison(x):
+    x = np.asarray(x, dtype=float)
+    return np.atleast_1d(np.mean(x[1:] / x[0]))
+
+
+def trt_vs_ctrl_ratio_label(x):
+    return ["Mean(Trt) / Ctrl"]
+
+
+def trt_vs_ctrl_difference_comparison(x):
+    x = np.asarray(x, dtype=float)
+    return np.atleast_1d(np.mean(x[1:] - x[0]))
+
+
+def trt_vs_ctrl_difference_label(x):
+    return ["Mean(Trt) - Ctrl"]
+
+
+def meandev_ratio_comparison(x):
+    x = np.asarray(x, dtype=float)
+    return x / np.mean(x)
+
+
+def meandev_ratio_label(x):
+    return [f"({xi}) / Mean" for xi in x]
+
+
+def meandev_difference_comparison(x):
+    x = np.asarray(x, dtype=float)
+    return x - np.mean(x)
+
+
+def meandev_difference_label(x):
+    return [f"({xi}) - Mean" for xi in x]
+
+
+def _mean_other(x):
+    """Mean of every other element: (sum(x) - x_i) / (n - 1)."""
+    return (np.sum(x) - x) / (len(x) - 1)
+
+
+def meanotherdev_ratio_comparison(x):
+    x = np.asarray(x, dtype=float)
+    return x / _mean_other(x)
+
+
+def meanotherdev_ratio_label(x):
+    return [f"({xi}) / Mean (other)" for xi in x]
+
+
+def meanotherdev_difference_comparison(x):
+    x = np.asarray(x, dtype=float)
+    return x - _mean_other(x)
+
+
+def meanotherdev_difference_label(x):
+    return [f"({xi}) - Mean (other)" for xi in x]
+
+
+def contr_poly(n):
+    """Orthogonal polynomial contrasts, equivalent to R's ``stats::contr.poly(n)``.
+
+    Returns an ``n x (n - 1)`` matrix with orthonormal columns for the linear,
+    quadratic, ... trends over equally spaced scores. As in R, column ``j`` is
+    the QR basis vector times the sign of ``R[j, j]``, which makes the sign
+    convention independent of the QR implementation.
+    """
+    if n < 2:
+        raise ValueError("Polynomial contrasts require at least 2 estimates.")
+    scores = np.arange(1, n + 1, dtype=float)
+    X = (scores - scores.mean())[:, None] ** np.arange(n)
+    Q, R = np.linalg.qr(X)
+    return (Q * np.sign(np.diag(R)))[:, 1:]
+
+
+def contr_helmert(n):
+    """Helmert contrasts, equivalent to R's ``stats::contr.helmert(n)``.
+
+    Column ``j`` (1-based) contrasts level ``j + 1`` with the first ``j`` levels:
+    ``-1`` in rows ``1..j``, ``j`` in row ``j + 1``, and ``0`` below.
+    """
+    if n < 2:
+        raise ValueError("Helmert contrasts require at least 2 estimates.")
+    H = np.zeros((n, n - 1))
+    for j in range(1, n):
+        H[:j, j - 1] = -1.0
+        H[j, j - 1] = j
+    return H
+
+
+_POLY_LABELS = ["Linear", "Quadratic", "Cubic", "Quartic", "Quintic"]
+
+
+def poly_dotproduct_comparison(x):
+    x = np.asarray(x, dtype=float)
+    w = contr_poly(len(x))[:, : len(_POLY_LABELS)]
+    return w.T @ x
+
+
+def poly_dotproduct_label(x):
+    return _POLY_LABELS[: min(len(_POLY_LABELS), len(x) - 1)]
+
+
+def helmert_dotproduct_comparison(x):
+    x = np.asarray(x, dtype=float)
+    return x @ contr_helmert(len(x))
+
+
+def helmert_dotproduct_label(x):
+    return [f"Helmert {i}" for i in range(1, len(x))]
+
+
+_RHS_DIFFERENCE_OR_RATIO = [
+    "reference",
+    "revreference",
+    "sequential",
+    "revsequential",
+    "pairwise",
+    "revpairwise",
+    "meandev",
+    "meanotherdev",
+    "trt_vs_ctrl",
+]
+_RHS_DOTPRODUCT = ["poly", "helmert"]
+
+
 def parse_hypothesis_formula(hypothesis):
     # Sanity checks
     assert isinstance(hypothesis, str), "Input must be a string."
     assert "~" in hypothesis, "Input must contain a '~' symbol."
 
     hypothesis = hypothesis.strip()
-    if hypothesis.startswith("~"):
+    # An empty left-hand side defaults to `difference`, or to `dotproduct` for
+    # the contrast-weight shortcuts (decided once the right-hand side is known).
+    lhs_empty = hypothesis.startswith("~")
+    if lhs_empty:
         hypothesis = "difference" + hypothesis
-
-    rhs_ok = [
-        "pairwise",
-        "reference",
-        "sequential",
-        "revpairwise",
-        "revreference",
-        "revsequential",
-    ]
-    lhs_ok = ["ratio", "difference"]
 
     # Parse the formula using formulaic
     formula = Formula(hypothesis)
 
+    # right-hand side. The shortcut name is read from the string because
+    # formulaic treats some names (e.g. `poly`) as built-in transforms.
+    rhs = hypothesis.split("~", 1)[1].split("|", 1)[0].strip()
+    if isinstance(formula.rhs, formulaic.formula.SimpleFormula):
+        by = None
+    elif isinstance(formula.rhs, tuple):
+        by = list(formula.rhs[1].required_variables)
+
+    rhs_ok = _RHS_DIFFERENCE_OR_RATIO + _RHS_DOTPRODUCT
+    msg = f"The right-hand side of the `hypothesis` formula must be element of: {', '.join(rhs_ok)}."
+    assert rhs in rhs_ok, msg
+
     # left-hand side
     lhs = list(formula.lhs.required_variables)
-    msg = f"The left-hand side of the `hypothesis` formula must contain one of: {', '.join(lhs_ok)}."
+    if rhs in _RHS_DOTPRODUCT:
+        lhs_ok = ["dotproduct"]
+        msg = "The left-hand side of the `hypothesis` formula must be empty or `dotproduct`."
+        if lhs_empty:
+            lhs = ["dotproduct"]
+    else:
+        lhs_ok = ["ratio", "difference"]
+        msg = "The left-hand side of the `hypothesis` formula must be empty, `difference`, or `ratio`."
     assert len(lhs) == 1, msg
     lhs = lhs[0]
     assert lhs in lhs_ok, msg
-
-    # right-hand side
-    if isinstance(formula.rhs, formulaic.formula.SimpleFormula):
-        rhs = next(iter(formula.rhs.required_variables))
-        by = None
-    elif isinstance(formula.rhs, tuple):
-        rhs = next(iter(formula.rhs[0].required_variables))
-        by = list(formula.rhs[1].required_variables)
-
-    msg = f"The right-hand side of the `hypothesis` formula must be element of: {', '.join(rhs_ok)}."
-    assert rhs in rhs_ok, msg
 
     return lhs, rhs, by
 
