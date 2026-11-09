@@ -244,12 +244,35 @@ hypotheses <- function(
         mfx@vcov_type <- "matrix"
     }
 
-    b <- get_hypotheses(
-        model_perturbed = model,
+    # Compile the hypothesis once; the delta method then re-extracts the
+    # estimates for each perturbation and applies the compiled stage.
+    compiled <- get_hypotheses_compile(
+        model = model,
         hypothesis = mfx@hypothesis,
         hypothesis_is_formula = hypothesis_is_formula,
         ...
     )
+    if (is.null(compiled)) {
+        b <- get_hypotheses(
+            model_perturbed = model,
+            hypothesis = mfx@hypothesis,
+            hypothesis_is_formula = hypothesis_is_formula,
+            ...
+        )
+        FUN <- get_hypotheses
+    } else {
+        b <- get_hypotheses_label(compiled$cmp)
+        FUN <- function(model_perturbed, hypothesis, hypothesis_is_formula, newparams = NULL, ...) {
+            get_hypotheses(
+                model_perturbed = model_perturbed,
+                hypothesis = hypothesis,
+                hypothesis_is_formula = hypothesis_is_formula,
+                newparams = newparams,
+                compiled = compiled$hyp,
+                ...
+            )
+        }
+    }
 
     # Store hypothesis group-by variables in S4 slot
     hypothesis_by_vars <- attr(b, "hypothesis_function_by")
@@ -270,7 +293,7 @@ hypotheses <- function(
             model_perturbed = model,
             vcov = vcov,
             hypothesis = mfx@hypothesis,
-            FUN = get_hypotheses,
+            FUN = FUN,
             hypothesis_is_formula = hypothesis_is_formula
         )
         if (...length() > 0) {
@@ -279,8 +302,9 @@ hypotheses <- function(
         J <- hypotheses_exact_jacobian(
             mfx = mfx,
             model = model,
+            hyp = compiled$hyp,
+            estimate_pre = compiled$estimate_pre,
             n_post = length(b),
-            hypothesis_is_formula = hypothesis_is_formula,
             ...
         )
         if (is.null(J)) {
@@ -357,22 +381,23 @@ hypotheses <- function(
 
 
 # Post-hoc `hypotheses()` differentiates the composition of two maps: the
-# parameters to the estimates the hypothesis reads, and the hypothesis itself.
-# Finite-differencing the composition is wrong whenever the hypothesis is
-# affine with a large constant, because the probe subtracts two nearly equal
-# large numbers and reports a standard error of exactly zero. An affine
-# hypothesis has an exact contrast matrix whose constant has zero derivative,
-# so the first map is differentiated alone and pulled back through the compiled
-# stage.
+# parameters to the estimates the hypothesis reads (`estimate_pre`), and the
+# hypothesis itself. Whenever the compiled stage has an exact derivative (a
+# contrast matrix `H`, or a structured pullback), the second map is never
+# differentiated numerically: finite-differencing an affine hypothesis with a
+# large constant subtracts two nearly equal large numbers and reports a
+# standard error of zero.
 #
-# Returns NULL -- differentiate the whole map numerically, exactly as before --
-# whenever anything cannot be proven eligible.
-hypotheses_exact_jacobian <- function(mfx, model, n_post, hypothesis_is_formula, ...) {
-    hypothesis <- mfx@hypothesis
-    if (isTRUE(hypothesis_is_formula) || !isTRUE(checkmate::check_character(hypothesis))) {
-        return(NULL)
-    }
-    if (!isTRUE(getOption("marginaleffects_hypothesis_promote", default = TRUE))) {
+# The first map is usually the identity: for raw models the estimates are the
+# coefficients, and for marginaleffects objects `get_coef()` returns the
+# estimates themselves. When that is verified element-wise, the Jacobian is
+# exactly t(H), with no model evaluation at all. Otherwise the first map is
+# differentiated numerically; it involves no hypothesis constant.
+#
+# Returns NULL -- differentiate the whole map numerically -- whenever anything
+# cannot be proven eligible.
+hypotheses_exact_jacobian <- function(mfx, model, hyp, n_post, estimate_pre = NULL, ...) {
+    if (is.null(hyp) || !hypothesis_stage_exact(hyp, n_post = n_post)) {
         return(NULL)
     }
     # A user-supplied jacobian function receives the `hypothesis` argument, so
@@ -381,33 +406,16 @@ hypotheses_exact_jacobian <- function(mfx, model, n_post, hypothesis_is_formula,
     if (!is.null(settings_get("jacobian_function"))) {
         return(NULL)
     }
-
-    skeleton <- tryCatch(
-        get_hypotheses_skeleton(
-            model_perturbed = model,
-            hypothesis = hypothesis,
-            hypothesis_is_formula = FALSE,
-            ...
-        ),
-        error = function(e) NULL
-    )
-    if (!inherits(skeleton, "data.frame") || !is.numeric(skeleton[["estimate"]])) {
-        return(NULL)
-    }
-    skeleton <- data.table::copy(skeleton)
-
-    compiled <- tryCatch(
-        hypothesis_compile_string(hypothesis, skeleton),
-        error = function(e) NULL
-    )
-    if (is.null(compiled) || !hypothesis_stage_exact(compiled$hyp, n_post = n_post)) {
+    # The delta method does not apply to these models.
+    if (inherits(model, c("brmsfit", "stanreg", "bart"))) {
         return(NULL)
     }
 
-    # The derivative of the pre-hypothesis estimates with respect to the
-    # parameters. Those estimates are the object's own estimates or the model
-    # parameters, depending on the input kind, and involve no hypothesis
-    # constant, so numerical differentiation is safe here.
+    J <- hypotheses_identity_jacobian(model, hyp, estimate_pre, ...)
+    if (!is.null(J)) {
+        return(J)
+    }
+
     jac <- tryCatch(
         get_delta_jacobian(
             model_perturbed = model,
@@ -423,15 +431,49 @@ hypotheses_exact_jacobian <- function(mfx, model, n_post, hypothesis_is_formula,
         return(NULL)
     }
     J <- jac$jacobian
-    if (!isTRUE(checkmate::check_matrix(J, mode = "numeric")) || nrow(J) != nrow(skeleton)) {
+    if (!isTRUE(checkmate::check_matrix(J, mode = "numeric")) || nrow(J) != length(estimate_pre)) {
         return(NULL)
     }
 
-    pulled <- hypothesis_stage_pullback(compiled$hyp, J)
+    pulled <- hypothesis_stage_pullback(hyp, J)
     if (is.null(pulled) || !isTRUE(nrow(pulled$jacobian) == n_post)) {
         return(NULL)
     }
     out <- pulled$jacobian
     colnames(out) <- colnames(J)
+    out
+}
+
+
+# Exact Jacobian when the estimates the hypothesis reads are the model
+# coefficients themselves, verified element-wise, in the same order and
+# length. Returns NULL when that cannot be verified (e.g. cutpoints or
+# multi-component parameters that `get_coef()` orders differently).
+hypotheses_identity_jacobian <- function(model, hyp, estimate_pre, ...) {
+    if (!is.numeric(estimate_pre) || anyNA(estimate_pre)) {
+        return(NULL)
+    }
+    coefs <- tryCatch(get_coef(model, ...), error = function(e) NULL)
+    if (
+        !is.numeric(coefs) ||
+            length(coefs) != length(estimate_pre) ||
+            is.null(names(coefs)) ||
+            anyDuplicated(names(coefs)) > 0 ||
+            !isTRUE(all(as.vector(coefs) == as.vector(estimate_pre)))
+    ) {
+        return(NULL)
+    }
+    n <- length(coefs)
+    if (identical(hyp$kind, "matrix") && !is.null(hyp$H)) {
+        out <- t(as.matrix(hyp$H))
+    } else if (is.function(hyp$pullback) && n <= 2000L) {
+        out <- tryCatch(as.matrix(hyp$pullback(diag(n))), error = function(e) NULL)
+    } else {
+        return(NULL)
+    }
+    if (!isTRUE(checkmate::check_matrix(out, mode = "numeric", ncols = n))) {
+        return(NULL)
+    }
+    dimnames(out) <- list(NULL, names(coefs))
     out
 }

@@ -28,21 +28,34 @@ cmp_skeleton <- data.table::data.table(
     estimate = c(1, 2, 4, 8)
 )
 
+# Reference implementations of the formula shortcuts, written directly in
+# base R, independently of the package's compiled stages.
+shortcut_reference <- function(rhs, x) {
+    n <- length(x)
+    pairs <- function(tri) {
+        ij <- which(tri(matrix(FALSE, n, n)), arr.ind = TRUE)
+        x[ij[, 1]] - x[ij[, 2]]
+    }
+    switch(rhs,
+        reference = (x - x[1])[-1],
+        revreference = (x[1] - x)[-1],
+        sequential = diff(x),
+        pairwise = pairs(lower.tri),
+        revpairwise = pairs(upper.tri),
+        meandev = x - mean(x),
+        meanotherdev = x - (sum(x) - x) / (n - 1),
+        trt_vs_ctrl = mean(x[-1]) - x[1],
+        poly = as.vector(crossprod(stats::contr.poly(n)[, seq_len(min(5, n - 1)), drop = FALSE], x)),
+        helmert = as.vector(x %*% stats::contr.helmert(n))
+    )
+}
+
 form <- marginaleffects:::hypothesis_compile(~pairwise, cmp_skeleton)
 expect_equal(form$hyp$kind, "matrix")
 expect_inherits(form$hyp$H, "sparseMatrix")
 expect_equivalent(
     form$hyp$apply(c(2, 4, 8, 16)),
-    marginaleffects:::hypothesis_formula(
-        data.table::data.table(
-            term = "term",
-            group = letters[1:4],
-            estimate = c(2, 4, 8, 16)
-        ),
-        hypothesis = ~pairwise,
-        newdata = cmp_skeleton,
-        by = NULL
-    )$estimate
+    shortcut_reference("pairwise", c(2, 4, 8, 16))
 )
 
 linear_forms <- list(
@@ -68,34 +81,26 @@ for (hypothesis in linear_forms) {
         cmp_skeleton,
         newdata = cmp_skeleton
     )
-    if (as.character(hypothesis)[2] %in% pullback_forms) {
+    rhs <- all.vars(hypothesis[[length(hypothesis)]])[1]
+    if (rhs %in% pullback_forms) {
         expect_equal(form$hyp$kind, "formula")
         expect_true(is.function(form$hyp$pullback))
     } else {
         expect_equal(form$hyp$kind, "matrix")
         expect_inherits(form$hyp$H, "sparseMatrix")
     }
-    expected <- marginaleffects:::hypothesis_formula(
-        data.table::copy(cmp_skeleton),
-        hypothesis = hypothesis,
-        newdata = cmp_skeleton,
-        by = NULL
-    )
+    reference <- function(est) {
+        if (length(hypothesis) == 3) {
+            unlist(lapply(split(est, cmp_skeleton$segment), shortcut_reference, rhs = rhs), use.names = FALSE)
+        } else {
+            shortcut_reference(rhs, est)
+        }
+    }
     expect_equivalent(
         form$hyp$apply(cmp_skeleton$estimate * 2),
-        marginaleffects:::hypothesis_formula(
-            data.table::data.table(
-                term = cmp_skeleton$term,
-                group = cmp_skeleton$group,
-                segment = cmp_skeleton$segment,
-                estimate = cmp_skeleton$estimate * 2
-            ),
-            hypothesis = hypothesis,
-            newdata = cmp_skeleton,
-            by = NULL
-        )$estimate
+        reference(cmp_skeleton$estimate * 2)
     )
-    expect_equivalent(form$cmp$estimate, expected$estimate)
+    expect_equivalent(form$cmp$estimate, reference(cmp_skeleton$estimate))
 }
 
 cmp_missing <- data.table::data.table(
@@ -108,13 +113,7 @@ form <- marginaleffects:::hypothesis_compile(
     cmp_missing,
     newdata = cmp_missing
 )
-expected <- marginaleffects:::hypothesis_formula(
-    data.table::copy(cmp_missing),
-    hypothesis = difference ~ reference | segment,
-    newdata = cmp_missing,
-    by = NULL
-)
-expect_equivalent(form$hyp$apply(cmp_missing$estimate), expected$estimate)
+expect_equivalent(form$hyp$apply(cmp_missing$estimate), c(NA, 2, 1, 2))
 
 cmp_interleaved <- data.table::data.table(
     term = "term",
@@ -126,31 +125,13 @@ form <- marginaleffects:::hypothesis_compile(
     cmp_interleaved,
     newdata = cmp_interleaved
 )
-expected <- marginaleffects:::hypothesis_formula(
-    data.table::copy(cmp_interleaved),
-    hypothesis = difference ~ pairwise | segment,
-    newdata = cmp_interleaved,
-    by = NULL
-)
 expect_equal(form$hyp$kind, "matrix")
-expect_equivalent(form$hyp$apply(cmp_interleaved$estimate), expected$estimate)
+# groups are sorted by key: x = (2, 4), then y = (1, 3, 5)
+expect_equivalent(form$hyp$apply(cmp_interleaved$estimate), c(2, 2, 4, 2))
 
 form <- marginaleffects:::hypothesis_compile(ratio ~ sequential | segment, cmp_skeleton, newdata = cmp_skeleton)
 expect_equal(form$hyp$kind, "formula")
-expect_equivalent(
-    form$hyp$apply(c(2, 4, 8, 16)),
-    marginaleffects:::hypothesis_formula(
-        data.table::data.table(
-            term = "term",
-            group = letters[1:4],
-            segment = c("x", "x", "y", "y"),
-            estimate = c(2, 4, 8, 16)
-        ),
-        hypothesis = ratio ~ sequential | segment,
-        newdata = cmp_skeleton,
-        by = NULL
-    )$estimate
-)
+expect_equivalent(form$hyp$apply(c(2, 4, 8, 16)), c(4 / 2, 16 / 8))
 
 # A custom formula function stays a closure even when it happens to be
 # linear: probing cannot prove linearity of arbitrary code, so promotion is
@@ -159,20 +140,7 @@ expect_equivalent(
 custom_formula_fun <- function(x) c(first = x[1], total = sum(x))
 form <- marginaleffects:::hypothesis_compile(~ I(custom_formula_fun(x)) | segment, cmp_skeleton, newdata = cmp_skeleton)
 expect_equal(form$hyp$kind, "formula")
-expect_equivalent(
-    form$hyp$apply(c(2, 4, 8, 16)),
-    marginaleffects:::hypothesis_formula(
-        data.table::data.table(
-            term = "term",
-            group = letters[1:4],
-            segment = c("x", "x", "y", "y"),
-            estimate = c(2, 4, 8, 16)
-        ),
-        hypothesis = ~ I(custom_formula_fun(x)) | segment,
-        newdata = cmp_skeleton,
-        by = NULL
-    )$estimate
-)
+expect_equivalent(form$hyp$apply(c(2, 4, 8, 16)), c(2, 6, 8, 24))
 
 local({
     assign("prediction_plan_string_helper", function(x) x + 1, envir = .GlobalEnv)
