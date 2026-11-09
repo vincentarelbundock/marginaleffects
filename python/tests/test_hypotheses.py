@@ -67,4 +67,4 @@ def test_coef():
     assert isinstance(h, MarginaleffectsResult)
     assert isinstance(h.data, pl.DataFrame)
     assert h.shape[0] == 1
-    assert h["term"][0] == "Pop1831=Desertion"
+    assert h["hypothesis"][0] == "Pop1831=Desertion"

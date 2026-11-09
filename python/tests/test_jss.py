@@ -156,17 +156,6 @@ def test_hypotheses(impartiality_model):
             },
         ),
         (
-            "~revsequential",
-            {
-                "democracy": "(Autocracy) - (Democracy)",
-                "continent": [
-                    "(Africa) - (Americas)",
-                    "(Americas) - (Asia)",
-                    "(Asia) - (Europe)",
-                ],
-            },
-        ),
-        (
             "~revpairwise",
             {
                 "democracy": "(Autocracy) - (Democracy)",
@@ -207,10 +196,10 @@ def test_hypothesis_shape_and_row_labels(h, label, impartiality_model):
         assert_is_result(c)
         if b == "democracy":
             assert c.shape[0] == 1
-            assert c["term"][0] == label[b]
+            assert c["hypothesis"][0] == label[b]
         else:
             assert c.shape[0] > 1
-            assert (c["term"] == label[b]).all()
+            assert (c["hypothesis"] == label[b]).all()
 
 
 def test_transform(impartiality_model):

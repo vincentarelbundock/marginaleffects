@@ -1,13 +1,14 @@
 from __future__ import annotations
 
 import ast
+import inspect
 import re
-from itertools import compress
 
 import numpy as np
 import polars as pl
 
 from .planning import Hyp
+from .utils import ingest
 
 
 def _linear_ast(expr, vectors):
@@ -61,7 +62,7 @@ def _linear_ast(expr, vectors):
         return None
 
 
-def _linear_hypothesis_matrix(expr, rowlabels, groups, n_est):
+def _linear_hypothesis_matrix(expr, rowlabels, n_est):
     """Return ``(H, offset)`` for a provably affine expression, else None.
 
     The estimates are ``estimate @ H + offset``; the derivative is H alone,
@@ -69,13 +70,7 @@ def _linear_hypothesis_matrix(expr, rowlabels, groups, n_est):
     instead is catastrophic: a large offset cancels the probe step and
     incorrectly reports a constant result instead of preserving the derivative.
     """
-    vectors = {}
-    if groups is None:
-        groups = [[i] for i in range(n_est)]
-    for label, idx in zip(rowlabels, groups):
-        vector = np.zeros(n_est)
-        vector[np.asarray(idx, dtype=int)] = 1 / len(idx)
-        vectors[label] = vector
+    vectors = {label: row for label, row in zip(rowlabels, np.eye(n_est))}
     compiled = _linear_ast(expr, vectors)
     if compiled is None:
         return None
@@ -85,17 +80,24 @@ def _linear_hypothesis_matrix(expr, rowlabels, groups, n_est):
     return weights.reshape(-1, 1), float(constant)
 
 
-def _group_term_indices(terms):
-    groups_by_term = {}
-    has_duplicates = False
-    for i, term in enumerate(terms):
-        idx = groups_by_term.setdefault(term, [])
-        if idx:
-            has_duplicates = True
-        idx.append(i)
-    if not has_duplicates:
-        return terms, None
-    return list(groups_by_term), list(groups_by_term.values())
+# Math functions usable without the `np.` prefix, as in R expressions.
+_MATH_FUNCTIONS = (
+    "exp",
+    "log",
+    "log10",
+    "log2",
+    "log1p",
+    "expm1",
+    "sqrt",
+    "abs",
+    "sin",
+    "cos",
+    "tan",
+    "arcsin",
+    "arccos",
+    "arctan",
+    "pi",
+)
 
 
 def _eval_string_function(vec, hypothesis, rowlabels):
@@ -114,7 +116,8 @@ def _eval_string_function(vec, hypothesis, rowlabels):
             raise ValueError(msg)
         return term_values[name]
 
-    env = dict(term_values)
+    env = {name: getattr(numpy, name) for name in _MATH_FUNCTIONS}
+    env.update(term_values)
     env["Q"] = Q
     env["numpy"] = numpy
     env["scipy"] = scipy
@@ -124,17 +127,15 @@ def _eval_string_function(vec, hypothesis, rowlabels):
 
 
 def _compile_string_hypothesis(x: pl.DataFrame, hypothesis: str, lab: str) -> Hyp:
-    expr = re.sub("=", "-(", hypothesis) + ")"
+    # R syntax: `^` is a power (in Python it would be a bitwise xor).
+    expr = re.sub("=", "-(", hypothesis.replace("^", "**")) + ")"
 
     if re.search(r"\bb\d+\b", expr):
-        bmax = max(
-            [
-                int(re.sub("b", "", match.group()))
-                for match in re.finditer(r"\bb\d+\b", lab)
-            ],
-            default=0,
-        )
-        if bmax > x.shape[0]:
+        # Positional indices are 0-based in Python: b0 is the first estimate.
+        # (R starts at b1; this is a deliberate language convention.)
+        indices = [int(m.group()[1:]) for m in re.finditer(r"\bb\d+\b", expr)]
+        bmax = max(indices)
+        if bmax >= x.shape[0]:
             msg = (
                 f"b{bmax} cannot be used in `hypothesis` because the call produced "
                 f"just {x.shape[0]} estimate(s). Try executing the exact same "
@@ -144,34 +145,28 @@ def _compile_string_hypothesis(x: pl.DataFrame, hypothesis: str, lab: str) -> Hy
             raise ValueError(msg)
 
         for i in range(x.shape[0]):
-            tmp = f"marginaleffects__{i}"
-            expr = re.sub(rf"\bb{i}\b", tmp, expr)
-
+            expr = re.sub(rf"\bb{i}\b", f"marginaleffects__{i}", expr)
         rowlabels = [f"marginaleffects__{i}" for i in range(x.shape[0])]
-        groups = None
     else:
-        if "term" not in x.columns:
+        terms = x["term"].to_list() if "term" in x.columns else []
+        if not terms or len(set(terms)) < len(terms):
             msg = (
                 "To use term names in a `hypothesis` string, the same function "
                 "call without `hypothesis` argument must produce a `term` column "
                 "with unique row identifiers. You can use `b0`, `b1`, etc. "
                 "indices instead of term names in the `hypotheses` string Ex: "
                 '"b0 + b1 = 0" Alternatively, you can use the `newdata`, '
-                "`variables`, or `by` arguments:"
+                "`variables`, or `by` arguments."
             )
             raise ValueError(msg)
-
-        terms = x["term"].to_list()
-        rowlabels, groups = _group_term_indices(terms)
+        rowlabels = terms
 
     def apply(est):
         est = np.asarray(est, dtype=float).reshape(-1)
-        if groups is not None:
-            est = np.asarray([np.mean(est[idx]) for idx in groups], dtype=float)
         out = _eval_string_function(est, hypothesis=expr, rowlabels=rowlabels)
         return np.atleast_1d(np.asarray(out, dtype=float))
 
-    compiled_affine = _linear_hypothesis_matrix(expr, rowlabels, groups, x.height)
+    compiled_affine = _linear_hypothesis_matrix(expr, rowlabels, x.height)
     if compiled_affine is not None:
         H, offset = compiled_affine
         estimate = x["estimate"].to_numpy()
@@ -186,7 +181,7 @@ def _compile_string_hypothesis(x: pl.DataFrame, hypothesis: str, lab: str) -> Hy
 def eval_string_hypothesis(x: pl.DataFrame, hypothesis: str, lab: str) -> pl.DataFrame:
     hyp = _compile_string_hypothesis(x, hypothesis, lab)
     out = hyp.apply(x["estimate"].to_numpy())
-    return pl.DataFrame({"term": [re.sub(r"\s+", "", lab)], "estimate": out})
+    return pl.DataFrame({"hypothesis": [re.sub(r"\s+", "", lab)], "estimate": out})
 
 
 def lincom_multiply(x, lincom):
@@ -198,40 +193,61 @@ def lincom_multiply(x, lincom):
     return pl.DataFrame({"estimate": multiplied_results})
 
 
+def _r_character(series: pl.Series) -> list[str]:
+    """Format values the way R's ``as.character()`` does in ``paste()``."""
+
+    def fmt(v):
+        if v is None:
+            return "NA"
+        if isinstance(v, bool):
+            return "TRUE" if v else "FALSE"
+        if isinstance(v, float):
+            if np.isnan(v):
+                return "NaN"
+            return format(v, ".15g")
+        return str(v)
+
+    return [fmt(v) for v in series.to_list()]
+
+
 def get_hypothesis_row_labels(x, by=None, hypothesis_by=None):
-    """Row labels for hypothesis output, mirroring R's ``get_labels()``.
+    """Row labels for formula hypotheses, mirroring R's ``get_labels()``.
 
-    ``hypothesis_by`` lists the ``| group`` columns of a formula hypothesis.
-    They identify the group, not the row within it, so they are left out of
-    the labels as in R.
+    Label columns are ``term``, ``group``, ``contrast``, ``contrast_*``,
+    ``value`` and ``by``, plus the ``by`` columns, minus the ``| group``
+    columns (``hypothesis_by``), keeping only columns that vary. Values are
+    pasted with a space. Without such columns, or (ungrouped) when labels are
+    duplicated, rows are labelled ``b0``, ``b1``, ...
     """
-    pattern = re.compile(r"^(term|by|group|value|contrast|contrast_)$")
-    lab = [col for col in x.columns if pattern.match(col)]
+    pattern = re.compile(r"^(term|group|contrast|contrast_.*|value|by)$")
+    cols = [col for col in x.columns if pattern.match(col)]
+    if isinstance(by, str):
+        by = [by]
+    if isinstance(by, (list, tuple)):
+        cols = list(dict.fromkeys(cols + [b for b in by if b in x.columns]))
+    cols = [c for c in cols if c not in (hypothesis_by or [])]
+    cols = [c for c in cols if x[c].n_unique() > 1]
 
-    lab = [col for col in lab if len(x[col].unique()) > 1]
+    # b0, b1, ...: R uses b1, b2, ..., matching its 1-based positional indices;
+    # Python's are 0-based, so the fallback labels follow them.
+    fallback = [f"b{i}" for i in range(x.height)]
+    if not cols:
+        return fallback
+    pieces = [_r_character(x[c]) for c in cols]
+    labels = [" ".join(parts) for parts in zip(*pieces)]
+    # As in R, the duplicate check only applies without `| group`: within a
+    # grouped hypothesis, labels repeat across groups by design.
+    if not hypothesis_by and len(set(labels)) < len(labels):
+        return fallback
+    return labels
 
-    if by is not None and isinstance(by, bool) is False:
-        if isinstance(by, str):
-            by = [by]
-        # dict.fromkeys: ordered union, so label columns keep a stable order
-        lab = [e for e in dict.fromkeys(lab + list(by)) if e != "group"]
 
-    if hypothesis_by:
-        lab = [e for e in lab if e not in hypothesis_by]
-
-    if len(lab) == 0:
-        return [f"{i}" for i in range(len(x))]
-
-    lab_df = x[lab]
-    idx = [x[col].n_unique() > 1 for col in lab_df.columns]
-
-    if any(idx):
-        lab_df = lab_df.select(list(compress(lab_df.columns, idx)))
-    lab = lab_df.select(
-        pl.concat_str(lab_df.columns, separator=", ").alias("concatenated")
-    )["concatenated"].to_list()
-
-    return [f"({label})" if "-" in label else label for label in lab]
+def _label_columns(by, newdata, x):
+    """The `by` columns used for labels; R falls back to datagrid() names."""
+    if isinstance(by, (str, list, tuple)) and not isinstance(by, bool):
+        return by
+    names = getattr(newdata, "datagrid_explicit", None) or []
+    return [n for n in names if n in x.columns] or None
 
 
 def _compile_formula_hypothesis(x, hypothesis, lab) -> Hyp:
@@ -264,76 +280,218 @@ def _compile_formula_hypothesis(x, hypothesis, lab) -> Hyp:
     return Hyp(kind="formula", apply=apply)
 
 
-def hypothesis_compile(x: pl.DataFrame, hypothesis, by=None):
-    msg = "Invalid `hypothesis` argument"
+# Bare strings R rejects; the formula interface replaces them.
+_DEPRECATED_STRINGS = {
+    "pairwise",
+    "revpairwise",
+    "sequential",
+    "revsequential",
+    "reference",
+    "meandev",
+    "meanotherdev",
+    "revreference",
+}
 
-    lab = get_hypothesis_row_labels(x, by=by)
+
+def _combine(results) -> tuple[pl.DataFrame, Hyp]:
+    """Stack several compiled hypotheses (a list, or an expanded ``b*``)."""
+    frames = [out for out, _ in results]
+    hyps = [hyp for _, hyp in results]
+
+    def apply(est):
+        return np.concatenate([hyp.apply(est) for hyp in hyps])
+
+    out = pl.concat(frames, how="vertical")
+    if all(hyp.kind == "matrix" for hyp in hyps):
+        H = np.column_stack([hyp.H for hyp in hyps])
+        offset = np.concatenate(
+            [
+                np.broadcast_to(np.atleast_1d(hyp.offset), (hyp.H.shape[1],))
+                for hyp in hyps
+            ]
+        )
+        return out, Hyp(kind="matrix", apply=apply, H=H, offset=offset)
+    return out, Hyp(kind="list", apply=apply)
+
+
+# `b*` as a standalone token: not the tail of a name (`carb*2`), not a power
+# (`b**2`), and not followed by an operand (`b*2`, `b*x`, `b*(x)`), which
+# would be a multiplication involving a term named `b`.
+_WILDCARD = re.compile(r"\bb\*(?!\*)(?!\s*[\w.(])")
+
+
+def _as_polars_frame(obj) -> pl.DataFrame:
+    """A user-supplied data frame as polars, without a pandas index column."""
+    if isinstance(obj, pl.DataFrame):
+        return obj
+    if type(obj).__module__.startswith("pandas"):
+        return pl.from_pandas(obj, include_index=False)
+    return pl.DataFrame(ingest(obj))
+
+
+def _expand_wildcard(hypothesis: str, n: int) -> list[str] | None:
+    """``"b* = 0"`` -> ``["b0 = 0", ..., "b{n-1} = 0"]``, as R's expand_wildcard().
+
+    Indices are 0-based, like Python's positional indices.
+    """
+    count = len(_WILDCARD.findall(hypothesis))
+    if count == 0:
+        return None
+    if count > 1:
+        raise ValueError("More than one 'b*' substring found.")
+    return [_WILDCARD.sub(f"b{i}", hypothesis) for i in range(n)]
+
+
+def _weights_hypothesis(x: pl.DataFrame, hypothesis) -> tuple[pl.DataFrame, Hyp]:
+    """Numeric vector, matrix or data frame of weights, as R's hypothesis_matrix().
+
+    Each column is a vector of weights. Columns are labelled by their names
+    when the weights come as a data frame, else ``"custom"`` as in R.
+    """
+    if isinstance(hypothesis, (np.ndarray, list, tuple)):
+        H, labels = np.asarray(hypothesis, dtype=float), None
+    else:
+        frame = _as_polars_frame(hypothesis)
+        H, labels = frame.to_numpy().astype(float), frame.columns
+    if H.ndim == 1:
+        H = H.reshape(-1, 1)
+    if H.ndim != 2 or H.shape[0] != x.height:
+        raise ValueError(
+            f"The `hypothesis` weights must have {x.height} rows, one per "
+            f"estimate. Got shape {H.shape}."
+        )
+    if labels is None:
+        labels = ["custom"] * H.shape[1]
+
+    def apply(est):
+        return np.asarray(np.asarray(est, dtype=float).reshape(-1) @ H).reshape(-1)
+
+    hyp = Hyp(kind="matrix", apply=apply, H=H)
+    out = pl.DataFrame(
+        {"term": labels, "estimate": hyp.apply(x["estimate"].to_numpy())}
+    )
+    return out, hyp
+
+
+def _function_output(out, x: pl.DataFrame) -> pl.DataFrame:
+    """Validate a hypothesis function's result, as R's hypothesis_function()."""
+    msg = (
+        "The `hypothesis` argument function must return a data frame with "
+        "`term` (or `hypothesis`) and `estimate` columns."
+    )
+    if out is None or (hasattr(out, "__len__") and len(out) == 0):
+        raise ValueError("The `hypothesis` function returned an empty result.")
+    # Data frames have columns; Series and arrays are numeric results.
+    if hasattr(out, "columns") and hasattr(out, "__arrow_c_stream__"):
+        out = _as_polars_frame(out)
+        if "estimate" not in out.columns or not (
+            "term" in out.columns or "hypothesis" in out.columns
+        ):
+            raise ValueError(msg)
+        return out
+    try:
+        est = np.asarray(out, dtype=float).reshape(-1)
+    except (TypeError, ValueError) as exc:
+        raise ValueError(msg) from exc
+    if "term" in x.columns and x.height == est.size:
+        return pl.DataFrame({"term": x["term"], "estimate": est})
+    return pl.DataFrame({"term": list(range(1, est.size + 1)), "estimate": est})
+
+
+def _function_hypothesis(x, fun, by, newdata) -> tuple[pl.DataFrame, Hyp]:
+    """Callable hypothesis, as R's hypothesis_function().
+
+    ``fun`` must accept ``x`` (the estimates as a data frame) and may accept
+    ``newdata`` and ``by``. It returns a data frame with ``term`` (or
+    ``hypothesis``) and ``estimate`` columns, or a numeric vector.
+    """
+    params = inspect.signature(fun).parameters
+    if "x" not in params:
+        raise ValueError("The `hypothesis` function must accept an `x` argument.")
+    if not set(params) <= {"x", "newdata", "by"}:
+        raise ValueError(
+            "The allowable arguments for the `hypothesis` function are: `x`, "
+            "`newdata`, and `by`."
+        )
+    template = x.clone()
+
+    def run(est):
+        tmp = template.with_columns(pl.Series("estimate", np.asarray(est)))
+        kwargs = {"x": tmp, "newdata": newdata, "by": by}
+        return _function_output(fun(**{k: kwargs[k] for k in params}), tmp)
+
+    out = run(x["estimate"].to_numpy())
+    n_out = out.height
+
+    def apply(est):
+        value = run(est)["estimate"].to_numpy()
+        if value.size != n_out:
+            raise ValueError(
+                "The `hypothesis` function must return the same number of "
+                "estimates every time it is called."
+            )
+        return value
+
+    return out, Hyp(kind="function", apply=apply)
+
+
+def hypothesis_compile(x: pl.DataFrame, hypothesis, by=None, newdata=None):
+    """Apply ``hypothesis`` to the estimates in ``x``, as R's get_hypothesis().
+
+    Returns the hypothesis frame and its compiled stage (``None`` when the
+    hypothesis is absent or a scalar null value).
+    """
     if hypothesis is None or isinstance(hypothesis, (int, float)):
         return x, None
 
-    if isinstance(hypothesis, np.ndarray):
-        H = np.asarray(hypothesis, dtype=float)
-        if H.ndim == 1:
-            H = H.reshape(-1, 1)
+    if isinstance(hypothesis, str) and hypothesis.strip() in _DEPRECATED_STRINGS:
+        raise ValueError(
+            "This string is deprecated for use in the `hypothesis` argument. "
+            'Use the formula interface instead. Ex: `hypothesis="~reference"`'
+        )
 
-        def apply(est):
-            return np.asarray(np.asarray(est, dtype=float).reshape(-1) @ H).reshape(-1)
+    if callable(hypothesis):
+        return _function_hypothesis(x, hypothesis, by=by, newdata=newdata)
 
-        hyp = Hyp(kind="matrix", apply=apply, H=H)
-        out = pl.DataFrame({"estimate": hyp.apply(x["estimate"].to_numpy())})
-        labels = [f"H{i + 1}" for i in range(out.shape[0])]
-        out = out.with_columns(pl.Series(labels).alias("term"))
-        return out, hyp
+    if isinstance(hypothesis, np.ndarray) or hasattr(hypothesis, "__arrow_c_stream__"):
+        return _weights_hypothesis(x, hypothesis)
+    if isinstance(hypothesis, (list, tuple)) and all(
+        isinstance(h, (int, float)) and not isinstance(h, bool) for h in hypothesis
+    ):
+        return _weights_hypothesis(x, hypothesis)
 
     if isinstance(hypothesis, str) and "~" in hypothesis:
         from .test.formula import eval_hypothesis_formula, parse_hypothesis_formula
 
         _, _, hypothesis_by = parse_hypothesis_formula(hypothesis)
-        if hypothesis_by:
-            lab = get_hypothesis_row_labels(x, by=by, hypothesis_by=hypothesis_by)
+        lab = get_hypothesis_row_labels(
+            x, by=_label_columns(by, newdata, x), hypothesis_by=hypothesis_by
+        )
         hyp = _compile_formula_hypothesis(x, hypothesis, lab)
         out = eval_hypothesis_formula(x, hypothesis, lab=lab)
         return out, hyp
 
-    if isinstance(hypothesis, str) and "=" in hypothesis:
+    if isinstance(hypothesis, str):
+        expanded = _expand_wildcard(hypothesis, x.height)
+        if expanded is not None:
+            return _combine([hypothesis_compile(x, h) for h in expanded])
         hyp = _compile_string_hypothesis(x, hypothesis, lab=hypothesis)
         out = pl.DataFrame(
             {
-                "term": [re.sub(r"\s+", "", hypothesis)],
+                "hypothesis": [re.sub(r"\s+", "", hypothesis)],
                 "estimate": hyp.apply(x["estimate"].to_numpy()),
             }
         )
         return out, hyp
 
-    if isinstance(hypothesis, (list, tuple)):
-        if len(hypothesis) == 0:
-            raise ValueError(msg)
-        frames = []
-        hyps = []
-        for item in hypothesis:
-            if not isinstance(item, str):
-                raise TypeError(
-                    "When `hypothesis` is a sequence, every element must be a string."
-                )
-            out, hyp = hypothesis_compile(x, item, by=by)
-            frames.append(out)
-            hyps.append(hyp)
-
-        def apply(est):
-            pieces = [hyp.apply(est) for hyp in hyps if hyp is not None]
-            return np.concatenate(pieces) if pieces else np.asarray(est, dtype=float)
-
-        if all(hyp is not None and hyp.kind == "matrix" for hyp in hyps):
-            H = np.column_stack([hyp.H for hyp in hyps])
-            offset = np.concatenate(
-                [
-                    np.broadcast_to(np.atleast_1d(hyp.offset), (hyp.H.shape[1],))
-                    for hyp in hyps
-                ]
+    if isinstance(hypothesis, (list, tuple)) and len(hypothesis) > 0:
+        if not all(isinstance(item, str) for item in hypothesis):
+            raise TypeError(
+                "When `hypothesis` is a sequence, every element must be a string "
+                "(or every element a number, for a vector of weights)."
             )
-            return pl.concat(frames, how="vertical"), Hyp(
-                kind="matrix", apply=apply, H=H, offset=offset
-            )
-        return pl.concat(frames, how="vertical"), Hyp(kind="list", apply=apply)
+        return _combine(
+            [hypothesis_compile(x, h, by=by, newdata=newdata) for h in hypothesis]
+        )
 
-    raise ValueError(msg)
+    raise ValueError("Invalid `hypothesis` argument")

@@ -144,23 +144,20 @@ def test_bare_minimum():
         comparisons(fit, variables=["Pop1831", "Desertion"], by=True),
         MarginaleffectsResult,
     )
-    assert isinstance(
+    # Term names need unique terms; unit-level comparisons repeat them (as in R).
+    with pytest.raises(ValueError, match="unique row identifiers"):
         comparisons(
             fit,
             variables=["Pop1831", "Desertion"],
             comparison="ratio",
             hypothesis="Pop1831 = Desertion",
-        ),
-        MarginaleffectsResult,
-    )
+        )
     assert isinstance(
         comparisons(fit, comparison="difference", hypothesis=None),
         MarginaleffectsResult,
     )
-    assert isinstance(
-        comparisons(fit, comparison="difference", hypothesis="Pop1831 = 0"),
-        MarginaleffectsResult,
-    )
+    with pytest.raises(ValueError, match="unique row identifiers"):
+        comparisons(fit, comparison="difference", hypothesis="Pop1831 = 0")
 
 
 def test_variables_function():
