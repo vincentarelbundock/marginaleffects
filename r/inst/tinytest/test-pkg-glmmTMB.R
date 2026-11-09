@@ -484,3 +484,10 @@ expect_equal(rownames(get_vcov(m_zi, vcov = TRUE)), names(get_coef(m_zi)))
 m_reml <- glmmTMB(mpg ~ wt + (1 | cyl), data = mtcars, REML = TRUE)
 expect_error(predictions(m_reml, re.form = NA), pattern = "REML")
 expect_false(anyNA(predictions(m_reml, re.form = NA, vcov = FALSE)$estimate))
+
+# Family parameters are on glmmTMB's internal scale, so their labels are neutral
+if (exists("ordinal", envir = asNamespace("glmmTMB"))) {
+    expect_equal(names(get_coef(m_int)), paste0("psi~", 1:4))
+}
+m_tw <- glmmTMB(count ~ mined + (1 | site), family = tweedie, data = Salamanders)
+expect_true("psi~1" %in% names(get_coef(m_tw)))

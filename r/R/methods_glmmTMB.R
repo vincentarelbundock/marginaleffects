@@ -79,6 +79,10 @@ get_coef.glmmTMB <- function(model, ...) {
     out <- model$fit$par[idx]
     nam <- nam[idx]
     nam <- ifelse(names(out) == "beta", paste0("cond~", nam), nam)
+    # Family parameters are on glmmTMB's internal scale, so labels like "1|2"
+    # or "Tweedie power" would suggest the wrong quantity.
+    psi <- names(out) == "psi"
+    nam[psi] <- paste0("psi~", seq_len(sum(psi)))
     names(out) <- nam
     return(out)
 }
