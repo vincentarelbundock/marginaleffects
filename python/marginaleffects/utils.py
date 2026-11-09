@@ -2,7 +2,6 @@ from collections.abc import Callable
 from typing import Protocol, runtime_checkable
 
 import narwhals as nw
-import numpy as np
 import polars as pl
 
 
@@ -71,34 +70,18 @@ def sort_columns(df, by=None, newdata=None):
     if isinstance(newdata, pl.DataFrame) and hasattr(newdata, "datagrid_explicit"):
         cols = newdata.datagrid_explicit + cols
 
-    cols = [x for x in cols if x in df.columns]
-    cols_unique = []
-    for item in cols:
-        if item not in cols_unique:
-            cols_unique.append(item)
-    out = df.select(cols_unique)
+    # dict.fromkeys de-duplicates while keeping the first occurrence's position
+    out = df.select(list(dict.fromkeys(x for x in cols if x in df.columns)))
     if "marginaleffects_comparison" in out.columns:
         out = out.drop("marginaleffects_comparison")
     return out
 
 
-def pad_array(arr, n):
-    if len(arr) == 1:
-        out = np.repeat(arr[0], n)
-    elif len(arr) < n:
-        out = np.concatenate([np.repeat(arr[0], n - len(arr)), arr])
-    else:
-        out = arr
-    return pl.Series(out)
-
-
 def get_pad(df, colname, uniqs):
     if uniqs is None:
         return None
-    first = [df.slice(0, 1)] * len(uniqs)
-    first = pl.concat(first)
-    first = first.with_columns(uniqs.alias(colname))
-    return first
+    first = pl.concat([df.slice(0, 1)] * len(uniqs))
+    return first.with_columns(uniqs.alias(colname))
 
 
 def upcast(df, reference):
@@ -196,12 +179,8 @@ def get_mode(series: pl.Series) -> str | int | float | bool:
         # This is a fallback case
         return series.dtype.base_type() if hasattr(series.dtype, "base_type") else None
 
-    mode_result = non_null.mode()
-    if len(mode_result) > 0:
-        return mode_result[0]
-    else:
-        # Fallback to first non-null value if mode fails
-        return non_null[0] if len(non_null) > 0 else None
+    # A non-empty series always has at least one mode.
+    return non_null.mode()[0]
 
 
 def mean_i(series: pl.Series) -> int:

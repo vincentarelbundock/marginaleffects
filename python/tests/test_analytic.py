@@ -1,12 +1,11 @@
 import numpy as np
 import polars as pl
-import statsmodels.formula.api as smf
 import statsmodels.api as sm
-from scipy.stats import logistic
+import statsmodels.formula.api as smf
 from polars.testing import assert_series_equal
+from scipy.stats import logistic
 
 from marginaleffects import *
-
 
 # Translated from https://github.com/vincentarelbundock/marginaleffects/blob/main/inst/tinytest/test-analytic.R
 

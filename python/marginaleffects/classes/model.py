@@ -33,6 +33,34 @@ class ModelVault:
     multiindex: list[str] | None = None
 
 
+def predictions_to_frame(p, group_names=None, sort_groups=False) -> pl.DataFrame:
+    """Convert a 1-D or 2-D prediction array into the long ``get_predict`` frame.
+
+    A 1-D array yields columns ``rowid`` and ``estimate``. A 2-D array (one
+    column per outcome level) yields ``rowid``, ``group`` and ``estimate``;
+    ``group_names`` labels the columns (default: ``"0"``, ``"1"``, ...).
+    """
+    if p.ndim == 1:
+        out = pl.DataFrame({"rowid": range(p.shape[0]), "estimate": p})
+    elif p.ndim == 2:
+        if group_names is None:
+            group_names = [str(i) for i in range(p.shape[1])]
+        colnames = {f"column_{i}": v for i, v in enumerate(group_names)}
+        out = (
+            pl.DataFrame(p)
+            .rename(colnames)
+            .with_columns(pl.Series(range(p.shape[0]), dtype=pl.Int32).alias("rowid"))
+            .unpivot(index="rowid", variable_name="group", value_name="estimate")
+        )
+        if sort_groups:
+            out = out.sort("group", "rowid")
+    else:
+        raise ValueError(
+            "The `predict()` method must return an array with 1 or 2 dimensions."
+        )
+    return out.with_columns(pl.col("rowid").cast(pl.Int32))
+
+
 @runtime_checkable
 class ModelAdapter(Protocol):
     """Explicit contract consumed by marginaleffects estimation code."""

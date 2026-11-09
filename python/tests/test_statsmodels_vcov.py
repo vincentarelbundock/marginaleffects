@@ -1,8 +1,8 @@
 import numpy as np
 import polars as pl
 import statsmodels.formula.api as smf
-from marginaleffects import *
 
+from marginaleffects import *
 
 # Read the same vendored CSV as tests/r/test_statsmodels_vcov.R so the R fixtures and the Python
 # results are computed from identical bytes.

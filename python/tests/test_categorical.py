@@ -1,12 +1,12 @@
-import marginaleffects
-from marginaleffects import *
 import polars as pl
-import statsmodels.formula.api as smf
-from polars.testing import assert_series_equal
 
 # mtcars is redefined below, so no import needed
 import pytest
+import statsmodels.formula.api as smf
+from polars.testing import assert_series_equal
 
+import marginaleffects
+from marginaleffects import *
 
 hiv = get_dataset("thornton").to_pandas()
 mtcars = (

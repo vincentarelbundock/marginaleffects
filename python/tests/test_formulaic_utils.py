@@ -1,4 +1,5 @@
 import pytest
+
 from marginaleffects.formula import parse_variables_categorical
 
 

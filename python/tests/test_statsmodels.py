@@ -1,4 +1,5 @@
 import statsmodels.api as sm
+
 from marginaleffects import *
 
 data = get_dataset("thornton")

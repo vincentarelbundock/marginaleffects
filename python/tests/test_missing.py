@@ -1,6 +1,7 @@
-from marginaleffects import get_dataset, avg_comparisons, avg_predictions
-from statsmodels.formula.api import logit
 import pytest
+from statsmodels.formula.api import logit
+
+from marginaleffects import avg_comparisons, avg_predictions, get_dataset
 
 dat = get_dataset("thornton")
 mod = logit("outcome ~ incentive", dat.to_pandas()).fit()

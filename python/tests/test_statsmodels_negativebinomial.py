@@ -1,8 +1,9 @@
 import polars as pl
 import statsmodels.formula.api as smf
 from pytest import approx
-from tests.helpers import quine
+
 from marginaleffects import *
+from tests.helpers import quine
 from tests.utilities import sort_categories_pandas
 
 dat = quine

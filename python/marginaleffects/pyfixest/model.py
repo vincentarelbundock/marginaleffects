@@ -4,6 +4,7 @@ import numpy as np
 import polars as pl
 
 from ..classes import ModelAbstract, ModelVault
+from ..classes.model import predictions_to_frame
 from ..utils import ingest
 
 
@@ -102,21 +103,4 @@ class ModelPyfixest(ModelAbstract):
             p = m.predict(newdata=newdata)
         finally:
             m._beta_hat = original_params
-        if p.ndim == 1:
-            p = pl.DataFrame({"rowid": range(newdata.shape[0]), "estimate": p})
-        elif p.ndim == 2:
-            colnames = {f"column_{i}": str(i) for i in range(p.shape[1])}
-            p = (
-                pl.DataFrame(p)
-                .rename(colnames)
-                .with_columns(
-                    pl.Series(range(p.shape[0]), dtype=pl.Int32).alias("rowid")
-                )
-                .melt(id_vars="rowid", variable_name="group", value_name="estimate")
-            )
-        else:
-            raise ValueError(
-                "The `predict()` method must return an array with 1 or 2 dimensions."
-            )
-        p = p.with_columns(pl.col("rowid").cast(pl.Int32))
-        return p
+        return predictions_to_frame(p)
