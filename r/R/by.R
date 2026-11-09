@@ -13,10 +13,10 @@ harmonize_by_types <- function(estimates, by) {
 # Resolve the `by` argument against a table of estimates: merge grouping
 # columns which live only in `newdata`, join a `by` data frame of labels,
 # warn about and drop rows a partial `by` data frame does not cover, and
-# return the grouping column names. Shared by the display aggregation
-# (get_by) and the replay recording (record_plan_aggregation) so the two can
-# never disagree about what a group is.
-resolve_by_rows <- function(estimates, newdata, by, verbose = TRUE, draws = NULL) {
+# return the grouping column names. Used by record_plan_aggregation(), which
+# records the aggregation stage once for point estimates, posterior draws,
+# and every replay.
+resolve_by_rows <- function(estimates, newdata, by, verbose = TRUE) {
     missing <- setdiff(setdiff(colnames(by), "by"), colnames(estimates))
     if (length(missing) > 0) {
         estimates <- merge_original_data(
@@ -47,69 +47,9 @@ resolve_by_rows <- function(estimates, newdata, by, verbose = TRUE, draws = NULL
         )
         if (isTRUE(verbose)) warning(msg, call. = FALSE)
         tmp <- !is.na(estimates[["by"]])
-        if (!is.null(draws)) {
-            draws <- draws[tmp, , drop = FALSE]
-        }
         estimates <- estimates[tmp, drop = FALSE]
     }
 
     bycols <- intersect(unique(c("term", bycols)), colnames(estimates))
-    list(estimates = estimates, draws = draws, bycols = bycols)
-}
-
-
-get_by <- function(
-    estimates,
-    draws,
-    newdata,
-    by,
-    verbose = TRUE,
-    ...) {
-    if (is.null(by) || isFALSE(by) || nrow(estimates) <= 1) {
-        out <- estimates
-        attr(out, "posterior_draws") <- draws
-        return(out)
-    }
-
-    resolved <- resolve_by_rows(
-        estimates,
-        newdata,
-        by,
-        verbose = verbose,
-        draws = draws
-    )
-    estimates <- resolved$estimates
-    draws <- resolved$draws
-    bycols <- resolved$bycols
-
-    # bayesian
-    if (!is.null(draws)) {
-        estimates <- average_draws(
-            data = estimates,
-            index = bycols,
-            draws = draws
-        )
-
-        # frequentist
-    } else {
-        if ("marginaleffects_wts_internal" %in% colnames(newdata)) {
-            estimates <- estimates[,
-                .(
-                    estimate = stats::weighted.mean(
-                        estimate,
-                        marginaleffects_wts_internal,
-                        na.rm = TRUE
-                    )
-                ),
-                keyby = bycols
-            ]
-        } else {
-            estimates <- estimates[,
-                .(estimate = mean(estimate, na.rm = TRUE)),
-                keyby = bycols
-            ]
-        }
-    }
-
-    return(estimates)
+    list(estimates = estimates, bycols = bycols)
 }

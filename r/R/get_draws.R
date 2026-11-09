@@ -81,51 +81,6 @@ get_draws <- function(x, shape = "long") {
 }
 
 
-average_draws <- function(data, index, draws) {
-    insight::check_if_installed("collapse", minimum_version = "2.0.18")
-
-    w <- data[["marginaleffects_wts_internal"]]
-    if (all(is.na(w))) {
-        w <- NULL
-    }
-
-    if (is.null(index)) {
-        index <- intersect(colnames(data), "type")
-    }
-
-    if (length(index) > 0) {
-        if ("term" %in% colnames(data)) {
-            Encoding(data[["term"]]) <- "UTF-8"
-        }
-        g <- collapse::GRP(data, by = index)
-
-        draws <- collapse::fmean(
-            draws,
-            g = g,
-            w = w,
-            drop = FALSE
-        )
-        out <- data.table(
-            g[["groups"]],
-            average = collapse::dapply(draws, MARGIN = 1, FUN = collapse::fmedian)
-        )
-    } else {
-        draws <- collapse::fmean(
-            draws,
-            w = w,
-            drop = FALSE
-        )
-        out <- data.table(
-            average = collapse::dapply(draws, MARGIN = 1, FUN = collapse::fmedian)
-        )
-    }
-
-    setnames(out, old = "average", new = "estimate")
-    attr(out, "posterior_draws") <- draws
-    return(out)
-}
-
-
 #' alias to `get_draws()` keep forever for backward compatibility with JSS
 #'
 #' @inherit posterior_draws

@@ -125,18 +125,31 @@ inferences_simulation <- function(x, R = 1000, conf_level = 0.95, conf_type = "p
     # do not use simulation mean as point estimate
     # https://doi.org/10.1017/psrm.2023.8
     draws <- matrix(NA_real_, nrow = nrow(out), ncol = nrow(coefmat))
-    for (i in seq_len(nrow(coefmat))) {
-        mod_tmp <- set_coef(model, coefmat[i, ])
-        if (is.null(replay)) {
-            call_mfx[["model"]] <- mod_tmp
+    if (is.null(replay)) {
+        for (i in seq_len(nrow(coefmat))) {
+            call_mfx[["model"]] <- set_coef(model, coefmat[i, ])
             estimate <- eval.parent(call_mfx)$estimate
-        } else {
-            estimate <- simulation_replay_evaluate(replay, mod_tmp)
+            if (length(estimate) != nrow(draws)) {
+                stop_sprintf("Simulation draw changed the number of estimates.")
+            }
+            draws[, i] <- estimate
         }
-        if (length(estimate) != nrow(draws)) {
-            stop_sprintf("Simulation draw changed the number of estimates.")
+    } else {
+        # One model evaluation per draw; the recorded plan is then applied
+        # to n_pred x R matrices of predictions, in chunks of draws which keep
+        # those matrices to a bounded size.
+        chunk <- max(1L, floor(1e7 / max(1L, replay$plan$n_pred)))
+        chunks <- split(seq_len(nrow(coefmat)), ceiling(seq_len(nrow(coefmat)) / chunk))
+        for (idx in chunks) {
+            preds <- lapply(idx, function(i) {
+                simulation_replay_predict(replay, set_coef(model, coefmat[i, ]))
+            })
+            estimate <- simulation_replay_apply(replay, simulation_replay_stack(preds))
+            if (!identical(dim(estimate), c(nrow(draws), length(idx)))) {
+                stop_sprintf("Simulation draw changed the number of estimates.")
+            }
+            draws[, idx] <- estimate
         }
-        draws[, i] <- estimate
     }
 
     # Compute standard errors and confidence intervals
