@@ -1,9 +1,7 @@
 hypothesis_function <- function(x, newdata, hypothesis, by) {
-    draws <- attr(x, "posterior_draws")
-    if (!is.null(draws)) {
-        msg <- "The `hypothesis` argument does not support function for models with draws. You can use `get_draws()` to extract draws and manipulate them directly instead."
-        stop_sprintf(msg)
-    }
+    # Posterior draws never reach this point: the plan rejects function
+    # hypotheses for models with draws (see `plan_draws_check_hypothesis()`).
+    draws <- NULL
 
     if ("rowid" %in% colnames(x) && "rowid" %in% colnames(newdata)) {
         x <- merge(

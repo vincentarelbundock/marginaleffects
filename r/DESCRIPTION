@@ -243,7 +243,6 @@ Collate:
     'hush.R'
     'hypotheses.R'
     'hypotheses_joint.R'
-    'hypothesis.R'
     'hypothesis_compile.R'
     'hypothesis_formula.R'
     'hypothesis_function.R'

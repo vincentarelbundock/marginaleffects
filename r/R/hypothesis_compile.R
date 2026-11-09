@@ -178,15 +178,14 @@ hypothesis_expression_coefficients <- function(expr, labels, idx, n_estimates) {
 #
 # The displayed estimates are `apply()` of the estimates the stage was
 # compiled against (see `hypothesis_frame()`), the plan replay calls the same
-# `apply()` to differentiate, and the Bayesian path calls it on the draws
-# matrix. There is no second implementation for the results to drift from.
+# `apply()` to differentiate, and the plan applies the same stage to
+# posterior draws (see `apply_plan_hypothesis()`). There is no second implementation for the results to drift from.
 hypothesis_compile <- function(
     hypothesis,
     cmp_skeleton,
     by = NULL,
     newdata = NULL,
-    mfx = NULL,
-    draws = NULL) {
+    mfx = NULL) {
     hypothesis_check_deprecated(hypothesis)
 
     if (is.null(hypothesis)) {
@@ -200,7 +199,7 @@ hypothesis_compile <- function(
     if (isTRUE(checkmate::check_formula(hypothesis))) {
         hyp <- hypothesis_compile_formula(hypothesis, cmp_skeleton, by = by, newdata = newdata, mfx = mfx)
     } else if (isTRUE(checkmate::check_function(hypothesis))) {
-        hyp <- hypothesis_compile_function(hypothesis, cmp_skeleton, by = by, newdata = newdata, draws = draws)
+        hyp <- hypothesis_compile_function(hypothesis, cmp_skeleton, by = by, newdata = newdata)
     } else if (vec || mat) {
         hyp <- hypothesis_compile_matrix(hypothesis, cmp_skeleton)
     } else if (is.character(hypothesis)) {
@@ -247,24 +246,6 @@ hypothesis_check_deprecated <- function(hypothesis) {
 hypothesis_frame <- function(hyp, estimate) {
     out <- data.table::copy(hyp$template)
     out[["estimate"]] <- estimate
-    out
-}
-
-
-# Push posterior draws (one row per pre-hypothesis estimate, one column per
-# draw) through a compiled stage and attach them to the output frame.
-hypothesis_frame_draws <- function(hyp, out, draws) {
-    if (identical(hyp$source, "function")) {
-        msg <- "The `hypothesis` argument does not support function for models with draws. You can use `get_draws()` to extract draws and manipulate them directly instead."
-        stop_sprintf(msg)
-    }
-    draws <- as.matrix(hyp$apply(draws))
-    if (hyp$source %in% c("matrix", "string")) {
-        out[["estimate"]] <- posterior_draws_center(draws, stats::median)
-    } else if ("hypothesis" %in% colnames(out) && nrow(draws) == nrow(out)) {
-        row.names(draws) <- out[["hypothesis"]]
-    }
-    attr(out, "posterior_draws") <- draws
     out
 }
 
@@ -681,11 +662,8 @@ hypothesis_compile_formula <- function(hypothesis, cmp_skeleton, by = NULL, newd
 # User-supplied function hypotheses are arbitrary code: they produce their
 # own labels, so the stage re-runs the function on substituted estimates.
 # Never promoted, because linearity of arbitrary code cannot be proven.
-hypothesis_compile_function <- function(hypothesis, cmp_skeleton, by = NULL, newdata = NULL, draws = NULL) {
+hypothesis_compile_function <- function(hypothesis, cmp_skeleton, by = NULL, newdata = NULL) {
     skeleton <- data.table::copy(cmp_skeleton)
-    if (!is.null(draws)) {
-        attr(skeleton, "posterior_draws") <- draws
-    }
     run <- function(est) {
         x <- data.table::copy(skeleton)
         x[["estimate"]] <- est
