@@ -132,21 +132,21 @@ def _nonrobust_vcov(model):
     Hessian (with `scale == 1`) for discrete MLE models such as Logit.
     """
     fitted = model.get_fitted_model()
-    cov_type = getattr(fitted, "cov_type", "nonrobust")
-    if cov_type == "nonrobust":
-        V0 = model.get_vcov(True)
-    else:
-        normalized = getattr(fitted, "normalized_cov_params", None)
-        scale = getattr(fitted, "scale", None)
-        if normalized is None or scale is None:
-            raise ValueError(
-                "`vcov=vcovUnconditional()` needs the model's non-robust "
-                f'covariance, but this model was fit with `cov_type="{cov_type}"` '
-                "and does not expose it. Refit the model with the default "
-                "covariance; `vcovUnconditional()` computes its own robust "
-                "variance."
-            )
-        V0 = np.asarray(normalized, dtype=float) * float(scale)
+    normalized = getattr(fitted, "normalized_cov_params", None)
+    scale = getattr(fitted, "scale", None)
+    if normalized is not None and scale is not None:
+        return np.asarray(normalized, dtype=float) * float(scale)
+    # Without the model-based matrix, `get_vcov(True)` is safe only when the
+    # fit is known to be non-robust.
+    cov_type = getattr(fitted, "cov_type", None)
+    if cov_type != "nonrobust":
+        raise ValueError(
+            "`vcov=vcovUnconditional()` needs the model's non-robust "
+            "covariance, which this model does not expose. Refit the model "
+            "with the default covariance; `vcovUnconditional()` computes its "
+            "own robust variance."
+        )
+    V0 = model.get_vcov(True)
     if V0 is None:
         raise ValueError(
             "`vcov=vcovUnconditional()` requires a model covariance matrix."

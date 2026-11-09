@@ -45,7 +45,7 @@
 #' 2. Use the `R` sets of coefficients to compute `R` sets of estimands: predictions, comparisons, slopes, or hypotheses.
 #' 3. Take quantiles of the resulting distribution of estimands to obtain a confidence interval (when `conf_type = "perc"`) and the standard deviation of simulated estimates to estimate the standard error (which is used for a Z-test and Wald confidence intervals when `conf_type = "wald"`).
 #'
-#' When `method = "fwb"`, drawn weights are supplied to the model fitting function's `weights` argument; if the model doesn't accept non-integer weights, this method should not be used. If weights were included in the original model fit, they are extracted by [weights()] and multiplied by the drawn weights. When the estimates are computed over the data used to fit the model, the drawn weights are also supplied to the `wts` argument of the estimation function (e.g., `comparisons()`), multiplied by the user's `wts` if any. When `newdata` holds other rows, the model is refit with the drawn weights, but the averaging over `newdata` uses the user's `wts` only, and is treated as fixed.
+#' When `method = "fwb"`, drawn weights are supplied to the model fitting function's `weights` argument; if the model doesn't accept non-integer weights, this method should not be used. If weights were included in the original model fit, they are extracted by [weights()] and multiplied by the drawn weights. When `newdata` holds rows of the data used to fit the model (the model data itself in any order, a subset of its rows, or a counterfactual grid), each row also gets its drawn weight when estimates are averaged: the drawn weights are supplied to the `wts` argument of the estimation function (e.g., `comparisons()`), multiplied by the user's `wts` if any. The model weights enter that averaging only when the user requests them with `wts`, as in the point estimate. When `newdata` holds other rows (e.g., a `datagrid()` of representative values), the model is refit with the drawn weights, but the averaging over `newdata` uses the user's `wts` only, and is treated as fixed. Model weights and `wts` are treated as fixed and known: they are not re-estimated in each bootstrap draw. When the weights were themselves estimated from the data (e.g., propensity score or matching weights), the intervals do not account for that estimation step.
 #'
 #' Warning: custom model classes are not supported by `inferences()` because they are not guaranteed to come with an appropriate `update()` method.
 #'
@@ -214,9 +214,6 @@ inferences <- function(
         stop_unconditional("inferences")
     }
 
-    # Did the user supply `newdata`? Record before the call is overwritten below.
-    newdata_supplied <- !is.null(call_mfx) && !is.null(call_mfx[["newdata"]])
-
     # Update call with pre-evaluated newdata if available
     if (!is.null(call_mfx)) {
         nd <- mfx@newdata
@@ -251,7 +248,6 @@ inferences <- function(
             conf_level = conf_level,
             conf_type = conf_type,
             mfx = mfx,
-            newdata_supplied = newdata_supplied,
             ...)
     } else if (method == "rsample") {
         out <- inferences_rsample(x,
