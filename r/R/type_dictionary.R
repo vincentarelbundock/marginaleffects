@@ -103,6 +103,9 @@ glmmTMB,conditional
 glmmTMB,zprob
 glmmTMB,zlink
 glmmTMB,disp
+glmmTMB_ordinal,probs
+glmmTMB_ordinal,response
+glmmTMB_ordinal,link
 glmmPQL,response
 glmmPQL,link
 glmx,response

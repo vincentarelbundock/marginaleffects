@@ -171,10 +171,9 @@ expect_error(
     predictions(mod, newdata = datagrid(), vcov = "HC3", re.form = NA),
     pattern = "vcov"
 )
-expect_error(
-    predictions(mod, newdata = datagrid(), vcov = NULL, re.form = NA),
-    pattern = "vcov"
-)
+# `NULL` is the default vcov, as in other models
+p <- predictions(mod, newdata = datagrid(), vcov = NULL, re.form = NA)
+expect_false(anyNA(p$std.error))
 expect_error(
     predictions(
         mod,
@@ -406,3 +405,118 @@ cmp_hc0 <- avg_comparisons(m2, variables = "mined", type = "response", vcov = "H
 cmp_after <- avg_comparisons(m2, variables = "mined", type = "response", vcov = FALSE)
 expect_equivalent(cmp_hc0$estimate, cmp_before$estimate)
 expect_equivalent(cmp_after$estimate, cmp_before$estimate)
+
+# Issue #1759: ordinal family
+if (exists("ordinal", envir = asNamespace("glmmTMB"))) {
+    data(wine, package = "ordinal")
+    m_ord <- glmmTMB::glmmTMB(
+        rating ~ temp * contact + (1 | bottle),
+        data = wine,
+        family = glmmTMB::ordinal()
+    )
+    nd <- datagrid(model = m_ord, temp = c("cold", "warm"), contact = c("no", "yes"))
+    ref <- predict(m_ord, newdata = nd, type = "probs", re.form = NA, se.fit = TRUE)
+    ref <- data.frame(
+        rowid = rep(seq_len(nrow(nd)), ncol(ref$fit)),
+        group = rep(colnames(ref$fit), each = nrow(nd)),
+        fit = c(ref$fit),
+        se = c(ref$se.fit)
+    )
+
+    # default type is "probs", one row per outcome level
+    p <- predictions(m_ord, newdata = nd, re.form = NA)
+    expect_equal(nrow(p), 20)
+    expect_equal(levels(p$group), as.character(1:5))
+    p <- merge(as.data.frame(p)[, c("rowid", "group", "estimate", "std.error")], ref)
+    expect_equivalent(p$estimate, p$fit, tolerance = 1e-6)
+    expect_equivalent(p$std.error, p$se, tolerance = 1e-4)
+
+    # other types and functions
+    p <- predictions(m_ord, newdata = nd, type = "response", re.form = NA)
+    expect_equal(nrow(p), 4)
+    cmp <- avg_comparisons(m_ord, variables = "temp", re.form = NA)
+    expect_equal(nrow(cmp), 5)
+    expect_true(all(cmp$std.error > 0))
+    expect_slopes(m_ord, re.form = NA)
+    expect_hypotheses(m_ord)
+    h <- hypotheses(m_ord)
+    expect_equal(nrow(h), 7) # 3 fixed effects + 4 cutpoints
+    expect_true(all(h$std.error > 0))
+
+    # intercept-only: no free fixed effects, only cutpoints (roborev job 1118)
+    m_int <- glmmTMB::glmmTMB(rating ~ 1 + (1 | bottle), data = wine, family = glmmTMB::ordinal())
+    expect_equal(length(get_coef(m_int)), 4)
+    nd1 <- datagrid(model = m_int)
+    ref1 <- predict(m_int, newdata = nd1, type = "probs", re.form = NA, se.fit = TRUE)
+    p1 <- predictions(m_int, newdata = nd1, re.form = NA)
+    expect_equivalent(p1$estimate, c(ref1$fit), tolerance = 1e-6)
+    expect_equivalent(p1$std.error, c(ref1$se.fit), tolerance = 1e-4)
+}
+
+# plot_*() pass `vcov = NULL`, which sanitize_model_specific.glmmTMB() rejected
+p <- plot_predictions(mod_simple, by = "am", draw = FALSE)
+expect_inherits(p, "data.frame")
+expect_true(all(!is.na(p$std.error)))
+p <- plot_comparisons(mod_simple, variables = "wt", by = "am", draw = FALSE)
+expect_inherits(p, "data.frame")
+p <- plot_slopes(mod_simple, variables = "wt", condition = "am", draw = FALSE)
+expect_inherits(p, "data.frame")
+
+# Coefficients are aligned with `fit$par`: columns dropped for rank deficiency
+# used to shift every later parameter and produce NA standard errors
+dat_rd <- transform(mtcars, wt2 = 2 * wt)
+m_rd <- suppressMessages(glmmTMB(mpg ~ wt + wt2 + hp + (1 | cyl), data = dat_rd))
+p <- suppressMessages(predictions(m_rd, newdata = head(dat_rd), re.form = NA))
+ref <- suppressMessages(predict(m_rd, newdata = head(dat_rd), re.form = NA, se.fit = TRUE))
+expect_equivalent(p$estimate, ref$fit)
+expect_equivalent(p$std.error, ref$se.fit, tolerance = 1e-6)
+expect_false("cond~wt2" %in% names(get_coef(m_rd)))
+
+# Coefficient and vcov names agree for zero-inflation and dispersion components
+m_zi <- glmmTMB(count ~ mined + (1 | site), zi = ~mined, family = nbinom2, data = Salamanders)
+expect_equal(
+    names(get_coef(m_zi)),
+    c("cond~(Intercept)", "cond~minedno", "zi~(Intercept)", "zi~minedno", "disp~(Intercept)")
+)
+expect_equal(rownames(get_vcov(m_zi, vcov = TRUE)), names(get_coef(m_zi)))
+
+# REML integrates the fixed effects out of `fit$par`: no standard errors
+m_reml <- glmmTMB(mpg ~ wt + (1 | cyl), data = mtcars, REML = TRUE)
+expect_error(predictions(m_reml, re.form = NA), pattern = "REML")
+expect_false(anyNA(predictions(m_reml, re.form = NA, vcov = FALSE)$estimate))
+
+# Family parameters are on glmmTMB's internal scale, so their labels are neutral
+if (exists("ordinal", envir = asNamespace("glmmTMB"))) {
+    expect_equal(names(get_coef(m_int)), paste0("psi~", 1:4))
+}
+m_tw <- glmmTMB(count ~ mined + (1 | site), family = tweedie, data = Salamanders)
+expect_true("psi~1" %in% names(get_coef(m_tw)))
+
+# Golden standard errors against `predict(se.fit = TRUE)` for families whose
+# uncertainty involves zero-inflation, dispersion, or family parameters
+expect_predict_se <- function(model, newdata, type) {
+    p <- predictions(model, newdata = newdata, type = type, re.form = NA)
+    ref <- predict(model, newdata = newdata, type = type, re.form = NA, se.fit = TRUE)
+    expect_equivalent(p$estimate, ref$fit)
+    expect_equivalent(p$std.error, ref$se.fit, tolerance = 1e-6)
+}
+nd_sal <- head(Salamanders, 6)
+m_zinb <- glmmTMB(count ~ mined + cover + (1 | site), zi = ~mined, family = nbinom2, data = Salamanders)
+expect_predict_se(m_zinb, nd_sal, "response")
+expect_predict_se(m_zinb, nd_sal, "conditional")
+expect_predict_se(m_zinb, nd_sal, "zprob")
+m_disp <- glmmTMB(count ~ mined + (1 | site), dispformula = ~mined, family = nbinom2, data = Salamanders)
+expect_predict_se(m_disp, nd_sal, "response")
+expect_predict_se(m_disp, nd_sal, "disp")
+m_hurdle <- glmmTMB(count ~ mined + (1 | site), zi = ~mined, family = truncated_poisson, data = Salamanders)
+expect_predict_se(m_hurdle, nd_sal, "response")
+expect_predict_se(m_tw, nd_sal, "response") # the mean does not depend on the power parameter
+
+# Golden HC0 standard errors: delta method by hand with glmmTMB's sandwich vcov
+m_hc0 <- glmmTMB(count ~ mined + cover + (1 | site), family = poisson, data = Salamanders)
+p <- predictions(m_hc0, newdata = nd_sal, type = "link", vcov = "HC0", re.form = NA)
+V <- vcov(m_hc0, full = TRUE, sandwich = TRUE)
+b <- names(m_hc0$fit$par) == "beta"
+X <- model.matrix(~ mined + cover, data = nd_sal)
+expect_equivalent(p$estimate, drop(X %*% m_hc0$fit$par[b]))
+expect_equivalent(p$std.error, sqrt(diag(X %*% V[b, b] %*% t(X))), tolerance = 1e-6)

@@ -20,6 +20,11 @@ sanitize_type <- function(model, type, by = FALSE, hypothesis = NULL, calling_fu
         cl <- class(model)[1]
     }
 
+    # ordinal glmmTMB models return one probability per outcome level by default
+    if (inherits(model, "glmmTMB") && glmmTMB_is_ordinal(model)) {
+        cl <- "glmmTMB_ordinal"
+    }
+
     # if (!cl %in% type_dictionary$class) {
     #     cl <- "other"
     # }
