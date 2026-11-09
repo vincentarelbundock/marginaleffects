@@ -39,8 +39,11 @@ hypothesis_expression_coefficients <- function(expr, labels, idx, n_estimates) {
             return(list(const = as.numeric(e), coef = numeric(n_estimates)))
         }
         if (is.symbol(e)) {
-            pos <- position[[as.character(e)]]
-            if (is.null(pos) || is.na(pos)) {
+            # Single-bracket lookup: an unknown symbol (e.g. a constant
+            # defined in the user's environment) yields NA and declines
+            # promotion, instead of throwing like `[[` does.
+            pos <- unname(position[as.character(e)])
+            if (length(pos) != 1L || is.na(pos)) {
                 return(NULL)
             }
             coef <- numeric(n_estimates)
@@ -465,11 +468,14 @@ hypothesis_compile_string <- function(hypothesis, cmp_skeleton) {
     # column by column, and the additive constant. Any expression outside the
     # affine fragment (a product of estimates, a function call) yields NULL
     # and leaves the hypothesis as a closure. Missing estimates keep the
-    # closure too, so their standard errors stay missing.
+    # closure too: a missing output keeps a missing standard error, and a
+    # missing input would leak into every column through 0 * NA = NA, even
+    # where the hypothesis does not use it.
     if (
         isTRUE(getOption("marginaleffects_hypothesis_promote", default = TRUE)) &&
             all(lengths(values) == 1L) &&
-            !anyNA(unlist(values))
+            !anyNA(unlist(values)) &&
+            !anyNA(est0)
     ) {
         n_estimates <- nrow(cmp_skeleton)
         columns <- lapply(compiled, function(cc) {
@@ -619,7 +625,12 @@ hypothesis_compile_formula <- function(hypothesis, cmp_skeleton, by = NULL, newd
     # standard errors stay missing. Ratios and custom functions have no
     # proven linear structure and stay closures.
     H <- hypothesis_compile_formula_matrix(form, groups)
-    if (!is.null(H) && ncol(H) == sum(lens) && !anyNA(unlist(values))) {
+    # Missing inputs are excluded for the same reason as in the string
+    # compiler: 0 * NA = NA would contaminate groups which never use them.
+    if (
+        !is.null(H) && ncol(H) == sum(lens) && !anyNA(unlist(values)) &&
+            !anyNA(cmp_skeleton[["estimate"]])
+    ) {
         hyp$kind <- "matrix"
         hyp$H <- H
         hyp$apply <- function(est) {
