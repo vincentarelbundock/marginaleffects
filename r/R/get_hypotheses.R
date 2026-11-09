@@ -23,6 +23,13 @@ get_hypotheses_skeleton <- function(model_perturbed, hypothesis, hypothesis_is_f
             stop_sprintf(msg)
         }
 
+        # glmmTMB
+    } else if (!is.function(hypothesis) && inherits(model_perturbed, "glmmTMB")) {
+        # `newparams` replaces the coefficients during delta-method perturbation
+        beta <- get_coef(model_perturbed)
+        if (!is.null(newparams)) beta[] <- newparams
+        out <- data.table::data.table(term = names(beta), estimate = unname(beta))
+
         # unknown model
     } else if (!is.function(hypothesis)) {
         out <- insight::get_parameters(model_perturbed, ...)
@@ -32,11 +39,6 @@ get_hypotheses_skeleton <- function(model_perturbed, hypothesis, hypothesis_is_f
             out$Parameter <- sprintf("%s_%s", out$Response, out$Parameter)
         }
         colnames(out)[1:2] <- c("term", "estimate")
-
-        # glmmTMB
-        if (!is.null(newparams)) {
-            out$estimate <- newparams
-        }
     } else if (hypothesis_is_formula) {
         beta <- get_coef(model_perturbed)
         out <- data.table::data.table(estimate = beta, term = names(beta))

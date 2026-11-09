@@ -116,7 +116,7 @@ def _predictions_build(model, exog, newdata, by, wts, hypothesis):
     if by_is_frame(by):
         # The frame has done its work; downstream only sees the label column.
         by = ["by"]
-    out, hyp = hypothesis_compile(out, hypothesis=hypothesis, by=by)
+    out, hyp = hypothesis_compile(out, hypothesis=hypothesis, by=by, newdata=newdata)
     plan = PredictionPlan(
         n_pred=n_pred,
         exog=exog,

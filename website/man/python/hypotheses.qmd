@@ -14,29 +14,38 @@ To learn more, visit the package website: <https://marginaleffects.com/>
 
 - `model`: (object) Model object estimated by statsmodels.
 
-#### `hypothesis`: (str, int, float, list of str, numpy array) {.unnumbered}
+#### `hypothesis`: (str, int, float, list, numpy array, data frame, callable) {.unnumbered}
 
 Specifies a hypothesis test or custom contrast.
 
 - int, float:
     - The null hypothesis used in the computation of Z and p-values (before applying transform).
-- string:
-    - Equation specifying linear or non-linear hypothesis tests. Use the names of the model variables, or use `b0`, `b1` to identify the position of each parameter. The `b*` wildcard can be used to test hypotheses on all estimates. Ex:
+- string equation:
+    - Linear or non-linear hypothesis test. Use the values of the `term` column, or `b0`, `b1`, ... to identify estimates by position, starting at `b0` for the first estimate (R starts at `b1`). Term names must be unique: use positions when the `term` column repeats. The `b*` wildcard tests the same hypothesis on every estimate. `^` is a power, and `exp`, `log`, `sqrt` and other common math functions can be used without a prefix. Ex:
         - `hp = drat`
         - `hp + drat = 12`
         - `b0 + b1 + b2 = 0`
         - `b* / b0 = 1`
-    - One of the following hypothesis test strings:
-        - `pairwise` and `revpairwise`: pairwise differences between estimates in each row.
-        - `reference` and `revreference`: differences between the estimates in each row and the estimate in the first row.
-        - `sequential` and `revsequential`: differences between an estimate and the estimate in the next row.
-    - Two-sided formula like "ratio ~ reference":
-        - Left-hand side: "ratio", "difference"
-        - Right-hand side: "reference", "sequential", "pairwise", "revreference", "revsequential", "revpairwise"
+        - `exp(b1) = 1`
+- string formula like "ratio ~ reference":
+    - Left-hand side: "difference" (default when empty), "ratio", or "dotproduct" (for "poly" and "helmert").
+    - Right-hand side:
+        - "reference", "revreference": each estimate compared to the first (or the reverse).
+        - "sequential": each estimate compared to the previous one.
+        - "pairwise", "revpairwise": every pair of estimates.
+        - "meandev": each estimate compared to the mean of all estimates.
+        - "meanotherdev": each estimate compared to the mean of all other estimates.
+        - "trt_vs_ctrl": the mean of all estimates after the first, compared to the first.
+        - "poly": orthogonal polynomial contrasts (linear, quadratic, ... up to quintic), as in R's `contr.poly()`.
+        - "helmert": Helmert contrasts, each estimate after the first contrasted with the mean of the estimates before it (unnormalized weights, as in R's `contr.helmert()`).
+    - Group the hypothesis by a column with `|`, e.g. "~ meandev | am".
+    - The output has a `hypothesis` column of labels built from the `term`, `contrast` and `by` columns (or the `datagrid()` variables), or `b0`, `b1`, ... when those do not identify the rows.
 - list of strings:
     - Multiple hypotheses evaluated in sequence, each processed as if passed individually. The resulting rows are stacked in the order supplied. Ex: `["b1 - b0 = 0", "b2 = 1"]`.
-- numpy.ndarray:
-    - Each column is a vector of weights. The output is the dot product between these vectors of weights and the vectors of estimates. e.g. `hypothesis=np.array([[1, 1, 2], [2, 2, 3]]).T`docs
+- list of numbers, numpy array, or data frame of weights:
+    - Each column is a vector of weights, with one row per estimate. The output is the dot product between these vectors of weights and the vector of estimates. Columns are labelled by their names when the weights are a data frame, and "custom" otherwise. Ex: `hypothesis=np.array([[1, 1, 2], [2, 2, 3]]).T`
+- callable:
+    - A function that accepts `x` (the estimates as a polars DataFrame) and optionally `newdata` and `by`, and returns a data frame with `term` (or `hypothesis`) and `estimate` columns, or a vector of estimates. Ex: `hypothesis=lambda x: pl.DataFrame({"hypothesis": ["range"], "estimate": [x["estimate"].max() - x["estimate"].min()]})`
 - See the Examples section and the vignette: https://marginaleffects.com/chapters/hypothesis.html
 
 #### `conf_level`: (float, default=0.95) {.unnumbered}

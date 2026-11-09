@@ -26,6 +26,9 @@ get_group_names(model, ...)
 ## S3 method for class 'brmsfit'
 get_group_names(model, ...)
 
+## S3 method for class 'glmmTMB'
+get_group_names(model, ...)
+
 ## S3 method for class 'mblogit'
 get_group_names(model, type, ...)
 

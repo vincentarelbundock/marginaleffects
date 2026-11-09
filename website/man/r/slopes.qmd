@@ -1015,6 +1015,10 @@ Some of the most common <code>type</code> values are:
 </tr>
 <tr>
  <td style="text-align: left;">
+   glmmTMB_ordinal </td><td style="text-align: left;"> probs, response, link </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
    glmrob </td><td style="text-align: left;"> response, link </td>
 </tr>
 <tr>
