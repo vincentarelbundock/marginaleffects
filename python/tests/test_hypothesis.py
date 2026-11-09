@@ -127,7 +127,7 @@ def numpy_formula():
     dat = get_dataset("thornton")
     dat.head(6)
     mod = ols("outcome ~ agecat - 1", data=dat.to_pandas()).fit()
-    h = hypotheses(mod, hypothesis="b2**2 * np.exp(b1) = 0")
+    h = hypotheses(mod, hypothesis="b1**2 * np.exp(b0) = 0")
     assert h.height == 1
 
 
@@ -150,7 +150,7 @@ def test_trash_example_matches_r_output():
     )
     mod = smf.ols("mpg ~ C(cyl)", data=sort_categories_pandas(mtcars.to_pandas())).fit()
 
-    hypotheses = ["b2 - b1 = 0", "b3 - b1 = 0"]
+    hypotheses = ["b1 - b0 = 0", "b2 - b0 = 0"]
     out = avg_predictions(mod, by="cyl", hypothesis=hypotheses)
 
     r_estimate = pl.Series([-6.92077922077923, -11.5636363636364])

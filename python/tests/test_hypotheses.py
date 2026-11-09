@@ -35,7 +35,7 @@ def test_hypothesis_2d_array():
 
 
 def test_comparisons():
-    hyp_py = comparisons(mod, by=True, hypothesis="b1 = b2")
+    hyp_py = comparisons(mod, by=True, hypothesis="b0 = b1")
     hyp_r = pl.read_csv("tests/r/test_hypotheses_comparisons.csv")
     # absolute because the order of rows is different in R and Python `comparisons()` output
     assert_series_equal(hyp_r["estimate"].abs(), hyp_py["estimate"].abs())

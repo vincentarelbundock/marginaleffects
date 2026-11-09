@@ -41,14 +41,14 @@ def test_affine_hypothesis_promotes_with_offset():
     """An affine map compiles to H plus an offset; the derivative is H alone.
 
     Differentiating the constant numerically cancels the probe step when the
-    offset dwarfs the estimates: "b1 + 1e16 = 0" reported SE = 0.
+    offset dwarfs the estimates: "b0 + 1e16 = 0" reported SE = 0.
     """
     import statsmodels.formula.api as smf
 
     from marginaleffects import avg_predictions, get_dataset
 
     base = pl.DataFrame({"term": ["a", "b"], "estimate": [1.0, 2.0]})
-    _, hyp = hypothesis_compile(base, "b1 + 1e16 = 0")
+    _, hyp = hypothesis_compile(base, "b0 + 1e16 = 0")
     assert hyp.kind == "matrix"
     np.testing.assert_allclose(np.asarray(hyp.H).reshape(-1), [1.0, 0.0])
     assert float(np.atleast_1d(hyp.offset)[0]) == 1e16
@@ -56,7 +56,7 @@ def test_affine_hypothesis_promotes_with_offset():
     mtcars = get_dataset("mtcars", "datasets").to_pandas()
     mod = smf.ols("mpg ~ hp + wt", data=mtcars).fit()
     ref = avg_predictions(mod).data
-    for hstring in ["b1 + 1e16 = 0", "b1 + 1e8 = 0", "b1 = 5"]:
+    for hstring in ["b0 + 1e16 = 0", "b0 + 1e8 = 0", "b0 = 5"]:
         aff = avg_predictions(mod, hypothesis=hstring).data
         np.testing.assert_allclose(
             aff["std_error"].to_numpy(),

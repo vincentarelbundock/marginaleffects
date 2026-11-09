@@ -131,15 +131,11 @@ def _compile_string_hypothesis(x: pl.DataFrame, hypothesis: str, lab: str) -> Hy
     expr = re.sub("=", "-(", hypothesis.replace("^", "**")) + ")"
 
     if re.search(r"\bb\d+\b", expr):
-        # Positional indices are 1-based, as in R: b1 is the first estimate.
+        # Positional indices are 0-based in Python: b0 is the first estimate.
+        # (R starts at b1; this is a deliberate language convention.)
         indices = [int(m.group()[1:]) for m in re.finditer(r"\bb\d+\b", expr)]
-        if 0 in indices:
-            raise ValueError(
-                "Positional indices in `hypothesis` start at b1 (the first "
-                "estimate), as in R. b0 is not valid."
-            )
         bmax = max(indices)
-        if bmax > x.shape[0]:
+        if bmax >= x.shape[0]:
             msg = (
                 f"b{bmax} cannot be used in `hypothesis` because the call produced "
                 f"just {x.shape[0]} estimate(s). Try executing the exact same "
@@ -148,18 +144,18 @@ def _compile_string_hypothesis(x: pl.DataFrame, hypothesis: str, lab: str) -> Hy
             )
             raise ValueError(msg)
 
-        for i in range(1, x.shape[0] + 1):
+        for i in range(x.shape[0]):
             expr = re.sub(rf"\bb{i}\b", f"marginaleffects__{i}", expr)
-        rowlabels = [f"marginaleffects__{i}" for i in range(1, x.shape[0] + 1)]
+        rowlabels = [f"marginaleffects__{i}" for i in range(x.shape[0])]
     else:
         terms = x["term"].to_list() if "term" in x.columns else []
         if not terms or len(set(terms)) < len(terms):
             msg = (
                 "To use term names in a `hypothesis` string, the same function "
                 "call without `hypothesis` argument must produce a `term` column "
-                "with unique row identifiers. You can use `b1`, `b2`, etc. "
+                "with unique row identifiers. You can use `b0`, `b1`, etc. "
                 "indices instead of term names in the `hypotheses` string Ex: "
-                '"b1 + b2 = 0" Alternatively, you can use the `newdata`, '
+                '"b0 + b1 = 0" Alternatively, you can use the `newdata`, '
                 "`variables`, or `by` arguments."
             )
             raise ValueError(msg)
@@ -221,7 +217,7 @@ def get_hypothesis_row_labels(x, by=None, hypothesis_by=None):
     ``value`` and ``by``, plus the ``by`` columns, minus the ``| group``
     columns (``hypothesis_by``), keeping only columns that vary. Values are
     pasted with a space. Without such columns, or (ungrouped) when labels are
-    duplicated, rows are labelled ``b1``, ``b2``, ...
+    duplicated, rows are labelled ``b0``, ``b1``, ...
     """
     pattern = re.compile(r"^(term|group|contrast|contrast_.*|value|by)$")
     cols = [col for col in x.columns if pattern.match(col)]
@@ -232,7 +228,9 @@ def get_hypothesis_row_labels(x, by=None, hypothesis_by=None):
     cols = [c for c in cols if c not in (hypothesis_by or [])]
     cols = [c for c in cols if x[c].n_unique() > 1]
 
-    fallback = [f"b{i + 1}" for i in range(x.height)]
+    # b0, b1, ...: R uses b1, b2, ..., matching its 1-based positional indices;
+    # Python's are 0-based, so the fallback labels follow them.
+    fallback = [f"b{i}" for i in range(x.height)]
     if not cols:
         return fallback
     pieces = [_r_character(x[c]) for c in cols]
@@ -317,13 +315,16 @@ def _combine(results) -> tuple[pl.DataFrame, Hyp]:
 
 
 def _expand_wildcard(hypothesis: str, n: int) -> list[str] | None:
-    """``"b* = 0"`` -> ``["b1 = 0", ..., "bn = 0"]``, as R's expand_wildcard()."""
+    """``"b* = 0"`` -> ``["b0 = 0", ..., "b{n-1} = 0"]``, as R's expand_wildcard().
+
+    Indices are 0-based, like Python's positional indices.
+    """
     count = hypothesis.count("b*")
     if count == 0:
         return None
     if count > 1:
         raise ValueError("More than one 'b*' substring found.")
-    return [hypothesis.replace("b*", f"b{i}") for i in range(1, n + 1)]
+    return [hypothesis.replace("b*", f"b{i}") for i in range(n)]
 
 
 def _weights_hypothesis(x: pl.DataFrame, hypothesis) -> tuple[pl.DataFrame, Hyp]:

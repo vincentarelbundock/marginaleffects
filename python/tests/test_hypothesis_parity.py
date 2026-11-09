@@ -4,7 +4,14 @@ Each case ID below matches one in the R script, which runs the same call on
 the same vendored CSV. For each case we compare whether it errors, the output
 columns (Python's snake_case statistics are a deliberate convention), the
 labels, the `| am` groups, the estimates and the standard errors.
+
+Positional indices are the one deliberate difference: R's start at b1, Python's
+at b0. The positional cases call Python with every index one lower than in R
+(R "b2 - b3 = 0" is Python "b1 - b2 = 0"), and their labels, which echo the
+equation, are compared after the same shift.
 """
+
+import re
 
 import numpy as np
 import polars as pl
@@ -66,14 +73,14 @@ CASES["L/slopes_pairwise"] = lambda: avg_slopes(
 )
 CASES["L/bare_string"] = lambda: avg_predictions(m1, by="carb", hypothesis="pairwise")
 CASES["S/terms"] = lambda: hypotheses(m1, hypothesis="hp = wt")
-CASES["S/positional"] = lambda: hypotheses(m1, hypothesis="b2 - b3 = 0")
-CASES["S/nonlinear"] = lambda: hypotheses(m1, hypothesis="exp(b2) = 1")
+CASES["S/positional"] = lambda: hypotheses(m1, hypothesis="b1 - b2 = 0")
+CASES["S/nonlinear"] = lambda: hypotheses(m1, hypothesis="exp(b1) = 1")
 CASES["S/wildcard"] = lambda: hypotheses(m1, hypothesis="b* = 0")
-CASES["S/multiple"] = lambda: hypotheses(m1, hypothesis=["b2 = 0", "b3 = b4"])
+CASES["S/multiple"] = lambda: hypotheses(m1, hypothesis=["b1 = 0", "b2 = b3"])
 CASES["S/preds_positional"] = lambda: avg_predictions(
-    m1, by="carb", hypothesis="b1 = b2"
+    m1, by="carb", hypothesis="b0 = b1"
 )
-CASES["S/glm"] = lambda: avg_comparisons(m2, variables="hp", hypothesis="b1 = 0")
+CASES["S/glm"] = lambda: avg_comparisons(m2, variables="hp", hypothesis="b0 = 0")
 CASES["M/vector"] = lambda: hypotheses(m1, hypothesis=np.array([0, 1, -1, 0]))
 CASES["M/matrix_nonames"] = lambda: avg_predictions(
     m1, by="gear", hypothesis=np.column_stack([[1, -1, 0], [1, 0, -1]])
@@ -92,6 +99,23 @@ CASES["X/function"] = lambda: avg_predictions(
         }
     ),
 )
+
+# Cases whose labels contain positional indices (0-based here, 1-based in R).
+POSITIONAL = {
+    "S/positional",
+    "S/nonlinear",
+    "S/wildcard",
+    "S/multiple",
+    "S/preds_positional",
+    "S/glm",
+}
+
+
+def r_label(case, label):
+    if case not in POSITIONAL:
+        return label
+    return re.sub(r"\bb(\d+)\b", lambda m: f"b{int(m.group(1)) - 1}", label)
+
 
 R_META = pl.read_csv("tests/r/test_hypothesis_parity_meta.csv")
 R_ROWS = pl.read_csv("tests/r/test_hypothesis_parity_rows.csv", infer_schema_length=0)
@@ -125,7 +149,9 @@ def test_hypothesis_matches_r(case):
 
     labcol = next((c for c in ("hypothesis", "term") if c in py.columns), None)
     if labcol is not None:
-        assert [str(v) for v in py[labcol]] == r["label"].to_list()
+        assert [str(v) for v in py[labcol]] == [
+            r_label(case, lab) for lab in r["label"].to_list()
+        ]
     if "am" in py.columns:
         assert [str(v) for v in py["am"]] == r["group"].to_list()
 
@@ -143,9 +169,20 @@ def test_hypothesis_matches_r(case):
     np.testing.assert_allclose(se_py, se_r, rtol=1e-5, atol=1e-8, equal_nan=True)
 
 
-def test_positional_index_zero_is_rejected():
-    with pytest.raises(ValueError, match="start at b1"):
-        hypotheses(m1, hypothesis="b0 = 0")
+def test_positional_indices_are_zero_based():
+    # b0 is the first estimate (Intercept), b3 the last of four.
+    out = hypotheses(m1, hypothesis="b0 = 0")
+    np.testing.assert_allclose(out["estimate"], m1.params.iloc[0])
+    with pytest.raises(ValueError, match="b4 cannot be used"):
+        hypotheses(m1, hypothesis="b4 = 0")
+
+
+def test_fallback_labels_are_zero_based():
+    # No column identifies the rows, so they are labelled b0, b1, ...
+    nd = datagrid(m1, hp=[100, 150, 200])
+    nd.datagrid_explicit = []
+    out = comparisons(m1, variables="wt", newdata=nd, hypothesis="~reference")
+    assert out["hypothesis"].to_list() == ["(b1) - (b0)", "(b2) - (b0)"]
 
 
 def test_function_hypothesis_numeric_return_and_errors():

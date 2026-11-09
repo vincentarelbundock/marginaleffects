@@ -68,21 +68,21 @@ def test_predictions_plot(impartiality_model):
 def test_hypotheses(impartiality_model):
     # hypotheses(m, hypothesis = "continentAsia = continentAmericas")
 
-    h = hypotheses(impartiality_model, hypothesis="b5 = b4")
+    h = hypotheses(impartiality_model, hypothesis="b4 = b3")
 
     assert_is_result(h)
     assert h.shape[0] == 1
 
     avg_predictions(impartiality_model, by="democracy", hypothesis="~revpairwise")
 
-    p = predictions(impartiality_model, by="democracy", hypothesis="b2 = b1 * 2")
+    p = predictions(impartiality_model, by="democracy", hypothesis="b1 = b0 * 2")
     assert_is_result(p)
     assert p.shape[0] == 1
 
     p = predictions(
         impartiality_model,
         by="democracy",
-        hypothesis="b2 = b1 * 2",
+        hypothesis="b1 = b0 * 2",
         equivalence=[-0.2, 0.2],
     )
     assert_is_result(p)
@@ -301,7 +301,7 @@ def test_titanic():
     assert c.shape[0] == 3
 
     c = avg_comparisons(
-        mod_tit, variables="Woman", by="Passenger_Class", hypothesis="b1 - b3 = 0"
+        mod_tit, variables="Woman", by="Passenger_Class", hypothesis="b0 - b2 = 0"
     )
     assert_is_result(c)
     assert c.shape[0] == 1

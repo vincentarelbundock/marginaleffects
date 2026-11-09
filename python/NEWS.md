@@ -2,20 +2,19 @@
 
 Breaking changes:
 
-The `hypothesis` argument now behaves like the R package in every case, as
-checked by a new R-reference test covering each kind of hypothesis.
+The `hypothesis` argument now behaves like the R package, as checked by a new
+R-reference test covering each kind of hypothesis. The one deliberate
+difference is that positional indices stay 0-based in Python (`b0` is the
+first estimate; R starts at `b1`).
 
-* Positional indices start at `b1`, as in R: `b1` is the first estimate.
-  Previously `b0` was the first. `b0` now raises an error. Existing code must
-  add 1 to each index: `"b0 = b1"` becomes `"b1 = b2"`.
 * Formula and equation hypotheses return their labels in a `hypothesis`
   column, placed first, instead of `term`. Weights (vector, matrix or data
   frame) still return a `term` column, as in R.
 * Formula labels follow R: values are pasted with a space (`(0 4) - (0 3)`,
   not `(0, 4) - (0, 3)`) and formatted as R does (`2`, not `2.0`). Without a
   `by` argument, the `datagrid()` variables label the rows. When no column
-  identifies the rows, or labels repeat, rows are labelled `b1`, `b2`, ...
-  instead of `0`, `1`, ...
+  identifies the rows, or labels repeat, rows are labelled `b0`, `b1`, ...
+  (0-based, like positional indices) instead of `0`, `1`, ...
 * Weight columns without names are labelled `custom` instead of `H1`, `H2`.
 * Term names in an equation must be unique. Previously, rows sharing a term
   (e.g. unit-level comparisons) were silently averaged; this now raises an
@@ -57,6 +56,9 @@ Bug fixes:
   in a fixed order, which the exact Jacobian for these hypotheses relies on.
 * Row labels built from several columns now list those columns in a stable
   order.
+* A positional index one past the last estimate (e.g. `b4` with four
+  estimates) raised a `NameError`; it now raises the informative
+  "cannot be used" error.
 
 # 0.6.2
 

@@ -75,12 +75,12 @@ Specifies a hypothesis test or custom contrast.
 - int, float:
     - The null hypothesis used in the computation of Z and p-values (before applying transform).
 - string equation:
-    - Linear or non-linear hypothesis test. Use the values of the `term` column, or `b1`, `b2`, ... to identify estimates by position, starting at `b1` for the first estimate. Term names must be unique: use positions when the `term` column repeats. The `b*` wildcard tests the same hypothesis on every estimate. `^` is a power, and `exp`, `log`, `sqrt` and other common math functions can be used without a prefix. Ex:
+    - Linear or non-linear hypothesis test. Use the values of the `term` column, or `b0`, `b1`, ... to identify estimates by position, starting at `b0` for the first estimate (R starts at `b1`). Term names must be unique: use positions when the `term` column repeats. The `b*` wildcard tests the same hypothesis on every estimate. `^` is a power, and `exp`, `log`, `sqrt` and other common math functions can be used without a prefix. Ex:
         - `hp = drat`
         - `hp + drat = 12`
-        - `b1 + b2 + b3 = 0`
-        - `b* / b1 = 1`
-        - `exp(b2) = 1`
+        - `b0 + b1 + b2 = 0`
+        - `b* / b0 = 1`
+        - `exp(b1) = 1`
 - string formula like "ratio ~ reference":
     - Left-hand side: "difference" (default when empty), "ratio", or "dotproduct" (for "poly" and "helmert").
     - Right-hand side:
@@ -93,9 +93,9 @@ Specifies a hypothesis test or custom contrast.
         - "poly": orthogonal polynomial contrasts (linear, quadratic, ... up to quintic), as in R's `contr.poly()`.
         - "helmert": Helmert contrasts, each estimate after the first contrasted with the mean of the estimates before it (unnormalized weights, as in R's `contr.helmert()`).
     - Group the hypothesis by a column with `|`, e.g. "~ meandev | am".
-    - The output has a `hypothesis` column of labels built from the `term`, `contrast` and `by` columns (or the `datagrid()` variables), or `b1`, `b2`, ... when those do not identify the rows.
+    - The output has a `hypothesis` column of labels built from the `term`, `contrast` and `by` columns (or the `datagrid()` variables), or `b0`, `b1`, ... when those do not identify the rows.
 - list of strings:
-    - Multiple hypotheses evaluated in sequence, each processed as if passed individually. The resulting rows are stacked in the order supplied. Ex: `["b2 - b1 = 0", "b3 = 1"]`.
+    - Multiple hypotheses evaluated in sequence, each processed as if passed individually. The resulting rows are stacked in the order supplied. Ex: `["b1 - b0 = 0", "b2 = 1"]`.
 - list of numbers, numpy array, or data frame of weights:
     - Each column is a vector of weights, with one row per estimate. The output is the dot product between these vectors of weights and the vector of estimates. Columns are labelled by their names when the weights are a data frame, and "custom" otherwise. Ex: `hypothesis=np.array([[1, 1, 2], [2, 2, 3]]).T`
 - callable:
