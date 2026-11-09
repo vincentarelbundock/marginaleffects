@@ -314,9 +314,10 @@ def _combine(results) -> tuple[pl.DataFrame, Hyp]:
     return out, Hyp(kind="list", apply=apply)
 
 
-# `b*` as a standalone token: not the tail of a name (`carb*2`) and not a
-# power (`b**2`, where `b` would be a term name).
-_WILDCARD = re.compile(r"\bb\*(?!\*)")
+# `b*` as a standalone token: not the tail of a name (`carb*2`), not a power
+# (`b**2`), and not followed by an operand (`b*2`, `b*x`, `b*(x)`), which
+# would be a multiplication involving a term named `b`.
+_WILDCARD = re.compile(r"\bb\*(?!\*)(?!\s*[\w.(])")
 
 
 def _as_polars_frame(obj) -> pl.DataFrame:

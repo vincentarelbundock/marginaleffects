@@ -239,3 +239,16 @@ def test_wildcard_does_not_match_inside_names(expr):
     expected = {"carb*2 = 0": carb * 2, "carb**2 = 0": carb**2, "2*carb = 0": 2 * carb}
     assert out.shape[0] == 1
     np.testing.assert_allclose(out["estimate"], expected[expr])
+
+
+def test_wildcard_versus_multiplication_by_a_term_named_b():
+    frame = pl.DataFrame({"b": [1.0, 2.0, 3.0], "mpg": [2.0, 4.0, 7.0]})
+    m = smf.ols("mpg ~ b", data=frame.to_pandas()).fit()
+    b = m.params["b"]
+    for expr, expected in [("b*2 = 0", 2 * b), ("b* 2 = 0", 2 * b), ("b*b = 0", b * b)]:
+        out = hypotheses(m, hypothesis=expr)
+        assert out.shape[0] == 1, expr
+        np.testing.assert_allclose(out["estimate"], expected)
+    # Followed by an operator, a bracket or the end, `b*` is the wildcard.
+    for expr in ["b* = 0", "b* / b0 = 1", "exp(b*) = 1"]:
+        assert hypotheses(m, hypothesis=expr).shape[0] == 2, expr
