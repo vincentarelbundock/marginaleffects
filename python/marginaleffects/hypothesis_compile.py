@@ -314,17 +314,31 @@ def _combine(results) -> tuple[pl.DataFrame, Hyp]:
     return out, Hyp(kind="list", apply=apply)
 
 
+# `b*` as a standalone token: not the tail of a name (`carb*2`) and not a
+# power (`b**2`, where `b` would be a term name).
+_WILDCARD = re.compile(r"\bb\*(?!\*)")
+
+
+def _as_polars_frame(obj) -> pl.DataFrame:
+    """A user-supplied data frame as polars, without a pandas index column."""
+    if isinstance(obj, pl.DataFrame):
+        return obj
+    if type(obj).__module__.startswith("pandas"):
+        return pl.from_pandas(obj, include_index=False)
+    return pl.DataFrame(ingest(obj))
+
+
 def _expand_wildcard(hypothesis: str, n: int) -> list[str] | None:
     """``"b* = 0"`` -> ``["b0 = 0", ..., "b{n-1} = 0"]``, as R's expand_wildcard().
 
     Indices are 0-based, like Python's positional indices.
     """
-    count = hypothesis.count("b*")
+    count = len(_WILDCARD.findall(hypothesis))
     if count == 0:
         return None
     if count > 1:
         raise ValueError("More than one 'b*' substring found.")
-    return [hypothesis.replace("b*", f"b{i}") for i in range(n)]
+    return [_WILDCARD.sub(f"b{i}", hypothesis) for i in range(n)]
 
 
 def _weights_hypothesis(x: pl.DataFrame, hypothesis) -> tuple[pl.DataFrame, Hyp]:
@@ -336,7 +350,7 @@ def _weights_hypothesis(x: pl.DataFrame, hypothesis) -> tuple[pl.DataFrame, Hyp]
     if isinstance(hypothesis, (np.ndarray, list, tuple)):
         H, labels = np.asarray(hypothesis, dtype=float), None
     else:
-        frame = pl.DataFrame(ingest(hypothesis))
+        frame = _as_polars_frame(hypothesis)
         H, labels = frame.to_numpy().astype(float), frame.columns
     if H.ndim == 1:
         H = H.reshape(-1, 1)
@@ -368,7 +382,7 @@ def _function_output(out, x: pl.DataFrame) -> pl.DataFrame:
         raise ValueError("The `hypothesis` function returned an empty result.")
     # Data frames have columns; Series and arrays are numeric results.
     if hasattr(out, "columns") and hasattr(out, "__arrow_c_stream__"):
-        out = pl.DataFrame(ingest(out))
+        out = _as_polars_frame(out)
         if "estimate" not in out.columns or not (
             "term" in out.columns or "hypothesis" in out.columns
         ):

@@ -199,3 +199,43 @@ def test_function_hypothesis_numeric_return_and_errors():
 def test_weights_with_wrong_number_of_rows():
     with pytest.raises(ValueError, match="must have 4 rows"):
         hypotheses(m1, hypothesis=np.array([1, -1]))
+
+
+@pytest.mark.parametrize("index", [None, ["x", "y", "z"]])
+def test_pandas_weights_ignore_the_index(index):
+    pd = pytest.importorskip("pandas")
+    H = pd.DataFrame({"a": [1, -1, 0], "b": [1, 0, -1]}, index=index)
+    out = avg_predictions(m1, by="gear", hypothesis=H)
+    expected = avg_predictions(
+        m1, by="gear", hypothesis=pl.DataFrame({"a": [1, -1, 0], "b": [1, 0, -1]})
+    )
+    assert out["term"].to_list() == ["a", "b"]
+    np.testing.assert_allclose(out["estimate"], expected["estimate"])
+
+
+def test_function_returning_pandas_frame_has_no_index_column():
+    pd = pytest.importorskip("pandas")
+    out = avg_predictions(
+        m1,
+        by="gear",
+        hypothesis=lambda x: pd.DataFrame(
+            {
+                "hypothesis": ["range"],
+                "estimate": [x["estimate"].max() - x["estimate"].min()],
+            },
+            index=[7],
+        ),
+    )
+    assert "index" not in out.columns
+    assert out["hypothesis"].to_list() == ["range"]
+
+
+@pytest.mark.parametrize("expr", ["carb*2 = 0", "carb**2 = 0", "2*carb = 0"])
+def test_wildcard_does_not_match_inside_names(expr):
+    # `b*` ending a term name, or starting a power, is not the wildcard.
+    m = smf.ols("mpg ~ carb", data=dat.to_pandas()).fit()
+    out = hypotheses(m, hypothesis=expr)
+    carb = m.params["carb"]
+    expected = {"carb*2 = 0": carb * 2, "carb**2 = 0": carb**2, "2*carb = 0": 2 * carb}
+    assert out.shape[0] == 1
+    np.testing.assert_allclose(out["estimate"], expected[expr])
