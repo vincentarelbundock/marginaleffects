@@ -546,7 +546,7 @@ slopes(
 ```{python}
 s = slopes(
   mod,
-  hypothesis = "b0 = b1",
+  hypothesis = "b1 = b2",
   variables = "drat",
   newdata = datagrid(qsec = [mtcars["qsec"].min(), mtcars["qsec"].max()]))
 print(s)
