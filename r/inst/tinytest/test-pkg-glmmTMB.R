@@ -491,3 +491,32 @@ if (exists("ordinal", envir = asNamespace("glmmTMB"))) {
 }
 m_tw <- glmmTMB(count ~ mined + (1 | site), family = tweedie, data = Salamanders)
 expect_true("psi~1" %in% names(get_coef(m_tw)))
+
+# Golden standard errors against `predict(se.fit = TRUE)` for families whose
+# uncertainty involves zero-inflation, dispersion, or family parameters
+expect_predict_se <- function(model, newdata, type) {
+    p <- predictions(model, newdata = newdata, type = type, re.form = NA)
+    ref <- predict(model, newdata = newdata, type = type, re.form = NA, se.fit = TRUE)
+    expect_equivalent(p$estimate, ref$fit)
+    expect_equivalent(p$std.error, ref$se.fit, tolerance = 1e-6)
+}
+nd_sal <- head(Salamanders, 6)
+m_zinb <- glmmTMB(count ~ mined + cover + (1 | site), zi = ~mined, family = nbinom2, data = Salamanders)
+expect_predict_se(m_zinb, nd_sal, "response")
+expect_predict_se(m_zinb, nd_sal, "conditional")
+expect_predict_se(m_zinb, nd_sal, "zprob")
+m_disp <- glmmTMB(count ~ mined + (1 | site), dispformula = ~mined, family = nbinom2, data = Salamanders)
+expect_predict_se(m_disp, nd_sal, "response")
+expect_predict_se(m_disp, nd_sal, "disp")
+m_hurdle <- glmmTMB(count ~ mined + (1 | site), zi = ~mined, family = truncated_poisson, data = Salamanders)
+expect_predict_se(m_hurdle, nd_sal, "response")
+expect_predict_se(m_tw, nd_sal, "response") # the mean does not depend on the power parameter
+
+# Golden HC0 standard errors: delta method by hand with glmmTMB's sandwich vcov
+m_hc0 <- glmmTMB(count ~ mined + cover + (1 | site), family = poisson, data = Salamanders)
+p <- predictions(m_hc0, newdata = nd_sal, type = "link", vcov = "HC0", re.form = NA)
+V <- vcov(m_hc0, full = TRUE, sandwich = TRUE)
+b <- names(m_hc0$fit$par) == "beta"
+X <- model.matrix(~ mined + cover, data = nd_sal)
+expect_equivalent(p$estimate, drop(X %*% m_hc0$fit$par[b]))
+expect_equivalent(p$std.error, sqrt(diag(X %*% V[b, b] %*% t(X))), tolerance = 1e-6)
