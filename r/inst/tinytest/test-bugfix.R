@@ -453,11 +453,9 @@ expect_equivalent(p0$estimate[p0$g == "b"], 2)
 
 
 # The centering hypothesis shortcuts must not materialize their dense n x n
-# operators; their structured pullback must equal the dense algebra exactly,
+# operators; their structured pullback must equal the dense algebra exactly
+# (here: the same contrast supplied as an explicit block-diagonal matrix),
 # and end-to-end standard errors must agree with the numeric path.
-set.seed(11)
-J <- matrix(rnorm(21), nrow = 7)
-groups <- list(1:3, 4:7)
 dense_block <- function(shortcut, n) {
     if (shortcut == "meandev") {
         diag(n) - matrix(1 / n, n, n)
@@ -467,13 +465,24 @@ dense_block <- function(shortcut, n) {
         H
     }
 }
+dat_pb <- transform(mtcars, cyl = factor(cyl), am = factor(am))
+mod_pb <- lm(mpg ~ hp + cyl * am, data = dat_pb)
+base_pb <- avg_predictions(mod_pb, by = c("cyl", "am"))
 for (shortcut in c("meandev", "meanotherdev")) {
-    pb <- marginaleffects:::hypothesis_formula_pullback(shortcut, groups)
-    expected <- rbind(
-        t(dense_block(shortcut, 3)) %*% J[1:3, , drop = FALSE],
-        t(dense_block(shortcut, 4)) %*% J[4:7, , drop = FALSE]
-    )
-    expect_equivalent(pb(J), expected)
+    # columns of the explicit matrix follow the grouped output order
+    H <- matrix(0, nrow(base_pb), nrow(base_pb))
+    ord <- integer(0)
+    for (g in sort(unique(as.character(base_pb$am)))) {
+        idx <- which(as.character(base_pb$am) == g)
+        H[idx, idx] <- t(dense_block(shortcut, length(idx)))
+        ord <- c(ord, idx)
+    }
+    H <- H[, ord, drop = FALSE]
+    form <- stats::as.formula(paste("~", shortcut, "| am"))
+    a <- avg_predictions(mod_pb, by = c("cyl", "am"), hypothesis = form)
+    b <- avg_predictions(mod_pb, by = c("cyl", "am"), hypothesis = H)
+    expect_equivalent(a$estimate, b$estimate)
+    expect_equivalent(a$std.error, b$std.error, tolerance = 1e-10)
 }
 dat <- transform(mtcars, cyl = factor(cyl))
 mod <- glm(am ~ mpg + cyl, family = binomial, data = dat)

@@ -95,6 +95,9 @@ record_plan_aggregation <- function(
 }
 
 apply_plan_aggregation <- function(agg, est) {
+    if (is.matrix(est)) {
+        return(apply_plan_aggregation_matrix(agg, est))
+    }
     out <- numeric(agg$n)
 
     for (block in agg$blocks) {
@@ -117,18 +120,148 @@ apply_plan_aggregation <- function(agg, est) {
     out
 }
 
+# Matrix version of apply_plan_aggregation(): `est` is an n_pred x k matrix
+# (k = 1 for a point estimate, k = ndraws for posterior draws). Every column is
+# aggregated with exactly the arithmetic of the vector version, so missing
+# entries and zero weights are handled draw by draw.
+apply_plan_aggregation_matrix <- function(agg, est) {
+    k <- ncol(est)
+    out <- matrix(NA_real_, nrow = agg$n, ncol = k)
+
+    for (block in agg$blocks) {
+        n <- nrow(block$idx)
+        g <- ncol(block$idx)
+        e <- est[as.vector(block$idx), , drop = FALSE]
+        dim(e) <- c(n, g, k)
+
+        if (isTRUE(agg$weighted)) {
+            # Weights are shared by every draw: recycle the n x g block.
+            w <- array(block$w, dim = c(n, g, k))
+            missing_estimate <- is.na(e)
+            e[missing_estimate] <- 0
+            w[missing_estimate] <- 0
+            zero_weight <- !is.na(w) & w == 0
+            e[zero_weight] <- 0
+            out[block$cols, ] <- colSums(e * w) / colSums(w)
+        } else {
+            out[block$cols, ] <- colMeans(e, na.rm = TRUE)
+        }
+    }
+
+    out
+}
+
+# Apply a compiled hypothesis stage to estimates: a vector of point estimates
+# or an n x k matrix of draws. Stages with a compiled contrast matrix map every
+# column at once; any other stage is applied column by column with the same
+# closure used for point estimates.
+apply_plan_hypothesis <- function(hyp, est) {
+    if (!is.matrix(est)) {
+        return(hyp$apply(est))
+    }
+    if (identical(hyp$kind, "matrix") && !is.null(hyp$H) && nrow(hyp$H) == nrow(est)) {
+        out <- as.matrix(Matrix::crossprod(hyp$H, est))
+        offset <- hyp$offset %||% 0
+        if (!all(offset == 0)) {
+            out <- out + offset
+        }
+        dimnames(out) <- NULL
+        return(out)
+    }
+    cols <- lapply(seq_len(ncol(est)), function(i) hyp$apply(est[, i]))
+    n_out <- unique(lengths(cols))
+    if (length(n_out) != 1L) {
+        stop_sprintf("Internal error: the hypothesis stage changed shape across draws.")
+    }
+    matrix(unlist(cols, use.names = FALSE), nrow = n_out)
+}
+
 apply_plan_stages <- function(est, agg = NULL, hyp = NULL) {
     # Preserve original pipeline order: aggregate, then transform/test. The
     # intermediate value is returned as well because the hypothesis stage is
     # differentiated at the estimates which feed it, not at its own output.
+    # `est` is a vector of point estimates or an n x k matrix of draws.
     if (!is.null(agg)) {
         est <- apply_plan_aggregation(agg, est)
     }
     pre <- est
     if (!is.null(hyp)) {
-        est <- hyp$apply(est)
+        est <- apply_plan_hypothesis(hyp, est)
     }
     list(pre = pre, post = est)
+}
+
+
+# Row subset which works for both vectors and n x k matrices.
+plan_rows <- function(x, i) {
+    if (is.matrix(x)) x[i, , drop = FALSE] else x[i]
+}
+
+
+plan_nrow <- function(x) {
+    if (is.matrix(x)) nrow(x) else length(x)
+}
+
+
+# Posterior draws flow through the same plan as point estimates. The plan is
+# recorded on point estimates; the draws matrix is pushed through each stage as
+# soon as that stage is recorded, and the displayed estimate is replaced by
+# the summary of the stage's draws which the package has always reported
+# (get_ci() later overwrites it with the posterior center, but it is visible
+# as is with `vcov = FALSE`).
+plan_draws_center <- function(draws, how = c("median", "option", "collapse")) {
+    how <- match.arg(how)
+    if (identical(how, "option")) {
+        FUN_CENTER <- getOption(
+            "marginaleffects_posterior_center",
+            default = stats::median
+        )
+        return(posterior_draws_center(draws, FUN_CENTER))
+    }
+    if (identical(how, "collapse")) {
+        insight::check_if_installed("collapse", minimum_version = "1.9.0")
+        return(as.vector(collapse::dapply(draws, MARGIN = 1, FUN = collapse::fmedian)))
+    }
+    posterior_draws_center(draws, stats::median)
+}
+
+
+plan_draws_aggregate <- function(out, draws, agg) {
+    if (is.null(draws) || is.null(agg)) {
+        return(list(out = out, draws = draws))
+    }
+    draws <- apply_plan_aggregation(agg, draws)
+    out[, estimate := plan_draws_center(draws, "collapse")]
+    list(out = out, draws = draws)
+}
+
+
+plan_draws_hypothesis <- function(out, draws, hyp, hypothesis) {
+    if (is.null(draws) || is.null(hyp)) {
+        return(list(out = out, draws = draws))
+    }
+    draws <- apply_plan_hypothesis(hyp, draws)
+    if (nrow(draws) != nrow(out)) {
+        stop_sprintf("Internal error: hypothesis draws do not match the estimates.")
+    }
+    # Formula hypotheses report the hypothesis applied to the incoming
+    # estimates; strings and matrices report the center of the draws.
+    if (is.character(hypothesis)) {
+        out[, estimate := plan_draws_center(draws, "collapse")]
+    } else if (!isTRUE(checkmate::check_formula(hypothesis))) {
+        out[, estimate := plan_draws_center(draws, "median")]
+    }
+    list(out = out, draws = draws)
+}
+
+
+# Function hypotheses are arbitrary code on a data frame of estimates and are
+# not applied to posterior draws.
+plan_draws_check_hypothesis <- function(hypothesis, draws) {
+    if (!is.null(draws) && isTRUE(checkmate::check_function(hypothesis))) {
+        msg <- "The `hypothesis` argument does not support function for models with draws. You can use `get_draws()` to extract draws and manipulate them directly instead."
+        stop_sprintf(msg)
+    }
 }
 
 # Element-wise agreement for replay guards. all.equal() compares a *mean*
@@ -216,25 +349,70 @@ simulation_replay_store <- function(mfx, plan, transforms = list(), enabled = FA
 }
 
 
-simulation_replay_evaluate <- function(replay, model) {
+# Model evaluation for one simulation draw: the predictions which feed the
+# plan, without applying any stage.
+simulation_replay_predict <- function(replay, model) {
     plan <- replay$plan
     if (identical(plan$kind, "predictions")) {
-        pred <- prediction_plan_predict(plan, model)
-        estimate <- prediction_plan_apply(plan, pred)
+        list(pred = prediction_plan_predict(plan, model))
     } else if (identical(plan$kind, "comparisons")) {
-        pred <- comparison_plan_predict(plan, model)
-        estimate <- comparison_plan_apply(plan, pred$hi, pred$lo, pred$or)
+        comparison_plan_predict(plan, model)
     } else {
         stop_sprintf("Unknown simulation replay plan: %s", plan$kind %||% "NULL")
+    }
+}
+
+
+# Apply the plan stages and the user transforms to the predictions of one
+# draw (vectors) or of every draw at once (n_pred x R matrices, built by
+# simulation_replay_stack()). Returns a vector or an n_est x R matrix.
+simulation_replay_apply <- function(replay, pred) {
+    plan <- replay$plan
+    if (identical(plan$kind, "predictions")) {
+        estimate <- prediction_plan_apply(plan, pred$pred)
+    } else {
+        estimate <- comparison_plan_apply(plan, pred$hi, pred$lo, pred$or)
     }
 
     for (transform in replay$transforms) {
         if (is.list(transform)) {
             transform <- transform[[1]]
         }
-        estimate <- transform(estimate)
+        if (is.matrix(estimate)) {
+            # Transforms are user functions of an estimate vector: apply them
+            # one draw at a time, exactly as on the per-draw path.
+            cols <- lapply(seq_len(ncol(estimate)), function(i) {
+                as.vector(transform(estimate[, i]))
+            })
+            estimate <- matrix(unlist(cols, use.names = FALSE), ncol = ncol(estimate))
+        } else {
+            estimate <- transform(estimate)
+        }
     }
-    as.vector(estimate)
+    if (is.matrix(estimate)) estimate else as.vector(estimate)
+}
+
+
+# Stack the per-draw predictions into n_pred x R matrices.
+simulation_replay_stack <- function(preds) {
+    stack <- function(name) {
+        cols <- lapply(preds, `[[`, name)
+        if (all(vapply(cols, is.null, logical(1)))) {
+            return(NULL)
+        }
+        n <- unique(lengths(cols))
+        if (length(n) != 1L) {
+            stop_sprintf("Simulation draw changed the number of estimates.")
+        }
+        matrix(unlist(cols, use.names = FALSE), nrow = n)
+    }
+    out <- lapply(stats::setNames(nm = names(preds[[1]])), stack)
+    out[!vapply(out, is.null, logical(1))]
+}
+
+
+simulation_replay_evaluate <- function(replay, model) {
+    simulation_replay_apply(replay, simulation_replay_predict(replay, model))
 }
 
 

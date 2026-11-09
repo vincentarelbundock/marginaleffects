@@ -7,6 +7,37 @@ predictions_hi_lo <- function(model, lo, hi, type, ...) {
 }
 
 
+predictions_hi_lo_bayesian <- function(model, lo, hi, type, ...) {
+    # brms models need to be combined to use a single seed when sample_new_levels="gaussian"
+    if (!"rowid" %in% colnames(lo)) {
+        lo$rowid <- hi$rowid <- seq_len(nrow(lo))
+    }
+
+    both <- rbindlist(list(lo, hi))
+
+    pred_both <- get_predict_error(
+        model,
+        type = type,
+        newdata = both,
+        ...
+    )
+
+    pred_both[, "lo" := seq_len(.N) <= .N / 2, by = "group"]
+
+    pred_lo <- pred_both[pred_both$lo, .(rowid, group, estimate), drop = FALSE]
+    pred_hi <- pred_both[!pred_both$lo, .(rowid, group, estimate), drop = FALSE]
+
+    draws <- attr(pred_both, "posterior_draws")
+    draws_lo <- draws[pred_both$lo, , drop = FALSE]
+    draws_hi <- draws[!pred_both$lo, , drop = FALSE]
+
+    attr(pred_lo, "posterior_draws") <- draws_lo
+    attr(pred_hi, "posterior_draws") <- draws_hi
+
+    list(pred_lo = pred_lo, pred_hi = pred_hi)
+}
+
+
 comparison_subset_newdata <- function(newdata, idx) {
     if (!is.data.frame(newdata) && !is.matrix(newdata)) {
         return(newdata)
@@ -309,12 +340,22 @@ comparison_plan_build <- function(
         elasticities = elasticities
     )
 
+    # Posterior draws (n_pred x ndraws) are replayed through the same plan as
+    # the point estimates. The plan is recorded on the row means of the draws:
+    # the `estimate` column of a Bayesian prediction is not a usable point
+    # prediction (brms fills it with zeros).
     draws_lo <- attr(pred_lo, "posterior_draws")
     draws_hi <- attr(pred_hi, "posterior_draws")
     draws_or <- attr(pred_or, "posterior_draws")
-    # Scratch matrix overwritten with comparison draws; draws_lo stays unchanged
-    # as the low-prediction input to compare_hi_lo_bayesian().
-    draws <- draws_lo
+    data.table::setattr(out, "posterior_draws", NULL)
+    point <- NULL
+    if (!is.null(draws_lo)) {
+        point <- list(
+            hi = rowMeans(draws_hi),
+            lo = rowMeans(draws_lo),
+            y = if (is.null(draws_or)) NULL else rowMeans(draws_or)
+        )
+    }
 
     out[, predicted_lo := pred_lo[["estimate"]]]
     out[, predicted_hi := pred_hi[["estimate"]]]
@@ -370,39 +411,32 @@ comparison_plan_build <- function(
         out[, tmp_idx := seq_len(.N)]
     }
 
-    if (!is.null(draws)) {
-        built <- compare_hi_lo_bayesian(
-            out = out,
-            draws = draws,
-            draws_hi = draws_hi,
-            draws_lo = draws_lo,
-            draws_or = draws_or,
-            by = by,
-            context = comparison_context
-        )
-        out <- built$out
-        draws <- built$draws
-        plan <- NULL
-    } else {
-        built <- comparison_plan_build_frequentist(
-            out = out,
-            idx = idx,
-            context = comparison_context,
-            n_pred = length(pred_lo[["estimate"]]),
-            baseline_hi = pred_hi[["estimate"]],
-            baseline_lo = pred_lo[["estimate"]],
-            eta_hi = eta_hi,
-            eta_lo = eta_lo,
-            model_matrix_used = matrix_used_hi && matrix_used_lo,
-            type = type,
-            dots = dots,
-            hi = hi,
-            lo = lo,
-            original = original,
-            need_y = need_y
-        )
-        out <- built$out
-        plan <- built$plan
+    built <- comparison_plan_record_groups(
+        out = out,
+        idx = idx,
+        context = comparison_context,
+        n_pred = length(pred_lo[["estimate"]]),
+        baseline_hi = pred_hi[["estimate"]],
+        baseline_lo = pred_lo[["estimate"]],
+        eta_hi = eta_hi,
+        eta_lo = eta_lo,
+        model_matrix_used = matrix_used_hi && matrix_used_lo,
+        type = type,
+        dots = dots,
+        hi = hi,
+        lo = lo,
+        original = original,
+        need_y = need_y,
+        point = point,
+        preserve_order = !is.null(point)
+    )
+    out <- built$out
+    plan <- built$plan
+
+    draws <- NULL
+    if (!is.null(draws_lo)) {
+        draws <- comparison_plan_apply_groups(plan, draws_hi, draws_lo, draws_or)
+        out[, estimate := plan_draws_center(draws, "option")]
     }
 
     if ("rowid_dedup" %in% colnames(out)) {
@@ -411,26 +445,17 @@ comparison_plan_build <- function(
 
     auto_mean_fun_sub <- any(grepl("^mean\\(", unique(out$contrast)))
     if (!auto_mean_fun_sub && any(grepl("^contrast[_]?", colnames(out)))) {
-        if (is.null(draws) && !is.null(plan)) {
-            agg <- record_plan_aggregation(
-                out,
-                draws = NULL,
-                newdata = newdata,
-                by = by,
-                verbose = verbose
-            )
-            out <- agg$out
-            plan$agg <- agg$agg
-        } else {
-            out <- get_by(
-                out,
-                draws = draws,
-                newdata = newdata,
-                by = by,
-                verbose = verbose
-            )
-            draws <- attr(out, "posterior_draws")
-        }
+        agg <- record_plan_aggregation(
+            out,
+            newdata = newdata,
+            by = by,
+            verbose = verbose
+        )
+        out <- agg$out
+        plan$agg <- agg$agg
+        tmp <- plan_draws_aggregate(out, draws, agg$agg)
+        out <- tmp$out
+        draws <- tmp$draws
     }
 
     if (
@@ -457,34 +482,33 @@ comparison_plan_build <- function(
         }
     }
 
-    attr(out, "posterior_draws") <- draws
-    if (is.null(draws) && !is.null(plan)) {
-        hyp <- hypothesis_compile(
-            hypothesis,
-            out,
-            by = by,
-            newdata = original,
-            mfx = mfx
-        )
-        out <- hyp$cmp
-        plan$hyp <- hyp$hyp
-        baseline <- comparison_plan_apply(
-            plan,
-            pred_hi[["estimate"]],
-            pred_lo[["estimate"]],
-            if (!is.null(pred_or)) pred_or[["estimate"]] else NULL
-        )
-        validate_plan_replay("comparison", baseline, out[["estimate"]])
-    } else {
-        out <- get_hypothesis(
-            out,
-            hypothesis,
-            by = by,
-            newdata = original,
-            draws = draws,
-            mfx = mfx
-        )
+    plan_draws_check_hypothesis(hypothesis, draws)
+    hyp <- hypothesis_compile(
+        hypothesis,
+        out,
+        by = by,
+        newdata = original,
+        mfx = mfx
+    )
+    out <- hyp$cmp
+    plan$hyp <- hyp$hyp
+
+    if (!is.null(draws)) {
+        tmp <- plan_draws_hypothesis(out, draws, hyp$hyp, hypothesis)
+        out <- tmp$out
+        attr(out, "posterior_draws") <- tmp$draws
+        # Posterior draws carry their own uncertainty: no delta method, no
+        # simulation replay, so the plan is not exported.
+        return(list(cmp = out, plan = NULL))
     }
+
+    baseline <- comparison_plan_apply(
+        plan,
+        pred_hi[["estimate"]],
+        pred_lo[["estimate"]],
+        if (!is.null(pred_or)) pred_or[["estimate"]] else NULL
+    )
+    validate_plan_replay("comparison", baseline, out[["estimate"]])
 
     list(cmp = out, plan = plan)
 }

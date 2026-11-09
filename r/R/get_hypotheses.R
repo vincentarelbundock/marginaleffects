@@ -52,7 +52,31 @@ get_hypotheses_skeleton <- function(model_perturbed, hypothesis, hypothesis_is_f
 }
 
 
-get_hypotheses <- function(model_perturbed, hypothesis, hypothesis_is_formula, newparams = NULL, ...) {
+# Compile the hypothesis once against the estimates of the unperturbed model,
+# so that every perturbation in the delta method only re-extracts the
+# estimates and applies the compiled stage. User-supplied functions receive
+# the model itself on some inputs, so they are not compiled and are re-run on
+# each perturbation instead.
+get_hypotheses_compile <- function(model, hypothesis, hypothesis_is_formula, ...) {
+    if (is.null(hypothesis) || is.function(hypothesis)) {
+        return(NULL)
+    }
+    skeleton <- get_hypotheses_skeleton(
+        model_perturbed = model,
+        hypothesis = hypothesis,
+        hypothesis_is_formula = hypothesis_is_formula,
+        ...
+    )
+    out <- hypothesis_compile(hypothesis, skeleton)
+    out$estimate_pre <- skeleton[["estimate"]]
+    out
+}
+
+
+# `compiled`: a stage from `get_hypotheses_compile()`. When supplied, only the
+# estimates are returned, without labels: this is the function the delta
+# method differentiates.
+get_hypotheses <- function(model_perturbed, hypothesis, hypothesis_is_formula, newparams = NULL, compiled = NULL, ...) {
     out <- get_hypotheses_skeleton(
         model_perturbed = model_perturbed,
         hypothesis = hypothesis,
@@ -61,14 +85,33 @@ get_hypotheses <- function(model_perturbed, hypothesis, hypothesis_is_formula, n
         ...
     )
 
-    tmp <- get_hypothesis(out, hypothesis = hypothesis)
+    if (!is.null(compiled)) {
+        return(compiled$apply(out[["estimate"]]))
+    }
+
+    if (isTRUE(checkmate::check_function(hypothesis))) {
+        tmp <- hypothesis_function(
+            data.table::copy(out),
+            newdata = NULL,
+            hypothesis = hypothesis,
+            by = NULL
+        )
+    } else {
+        tmp <- hypothesis_compile(hypothesis, out)$cmp
+    }
+
+    get_hypotheses_label(tmp)
+}
+
+
+# Labelled estimate vector from a hypothesis output table.
+get_hypotheses_label <- function(tmp) {
+    hypothesis_function_by <- attr(tmp, "hypothesis_function_by")
 
     # must be a data.table
-    data.table::setDT(tmp)
+    tmp <- data.table::as.data.table(tmp)
 
     out <- tmp$estimate
-
-    hypothesis_function_by <- attr(tmp, "hypothesis_function_by")
 
     # labels
     lab <- c("hypothesis", "term", hypothesis_function_by)

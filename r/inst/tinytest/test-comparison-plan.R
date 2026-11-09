@@ -171,42 +171,38 @@ expect_error(
     pattern = "changed shape"
 )
 
-out_bayes <- data.table::data.table(
-    term = rep("hp", 4),
-    group = rep(c("a", "b"), each = 2),
-    estimate = NA_real_,
-    marginaleffects_wts_internal = NA_real_,
-    tmp_idx = rep(1:2, 2)
-)
-draws_lo <- matrix(seq_len(12), nrow = 4)
-draws_hi <- draws_lo + 1
-variables_bayes <- list(
-    hp = list(
-        "function" = function(hi, lo) mean(hi - lo),
-        fun_key = "custom",
-        eps = 1
+# Comparisons with posterior draws replay the same plan on matrices of draws:
+# built-in closed forms, scalar (avg) comparisons, and custom functions must
+# all reproduce the comparison computed by hand from prediction draws.
+if (requireNamespace("brms", quietly = TRUE)) {
+    brms_plan <- readRDS(testing_path("modelarchive/data/brms_numeric.rds"))
+    nd_plan <- brms_plan$data
+    draws_plan <- function(x) unname(get_draws(x, shape = "PxD"))
+    pl <- draws_plan(predictions(brms_plan, newdata = transform(nd_plan, hp = 100)))
+    ph <- draws_plan(predictions(brms_plan, newdata = transform(nd_plan, hp = 200)))
+    v <- list(hp = c(100, 200))
+    expect_equivalent(
+        draws_plan(comparisons(brms_plan, variables = v, newdata = nd_plan)),
+        ph - pl
     )
-)
-context_bayes <- list(
-    cross = FALSE,
-    newdata = data.frame(hp = seq_len(4)),
-    variables = variables_bayes,
-    fun_list = list(hp = variables_bayes$hp[["function"]]),
-    elasticities = list(hp = out_bayes$tmp_idx)
-)
-scalar_bayes <- marginaleffects:::compare_hi_lo_bayesian(
-    out = out_bayes,
-    draws = draws_lo,
-    draws_hi = draws_hi,
-    draws_lo = draws_lo,
-    draws_or = draws_lo,
-    by = "group",
-    context = context_bayes
-)
-marginaleffects:::settings_rm("marginaleffects_safefun_return1")
-expect_equal(dim(scalar_bayes$draws), c(2, 3))
-expect_equivalent(scalar_bayes$draws, matrix(1, nrow = 2, ncol = 3))
-expect_equivalent(scalar_bayes$out$estimate, c(1, 1))
+    expect_equivalent(
+        draws_plan(comparisons(brms_plan, variables = v, newdata = nd_plan, comparison = "ratio")),
+        ph / pl
+    )
+    expect_equivalent(
+        draws_plan(avg_comparisons(brms_plan, variables = v, newdata = nd_plan, comparison = "ratioavg"))[1, ],
+        colMeans(ph) / colMeans(pl)
+    )
+    expect_equivalent(
+        draws_plan(comparisons(
+            brms_plan,
+            variables = v,
+            newdata = nd_plan,
+            comparison = function(hi, lo) mean(hi - lo)
+        ))[1, ],
+        colMeans(ph - pl)
+    )
+}
 
 
 fdcenter_calls <- 0L

@@ -86,41 +86,33 @@ expect_identical(marginaleffects:::get_labels(label_data), expected_labels)
 expected_index <- apply(label_data[, c("term", "contrast")], 1, toString)
 expect_identical(marginaleffects:::get_unique_index(label_data), expected_index)
 
-# Positional hypotheses compile one expression and bind only referenced estimates.
-compiled <- marginaleffects:::hypothesis_string_compile_expression(
-    "b1 + b10 + exp(b100000)",
-    n_estimates = 100000L,
-    positional = TRUE
+# Positional hypotheses compile one expression and bind only referenced
+# estimates, so a hypothesis over a very large number of estimates is cheap.
+set.seed(48103)
+big <- data.frame(x = rnorm(100000L))
+big$y <- big$x + rnorm(100000L)
+mod_big <- lm(y ~ x, data = big)
+p_big <- predictions(mod_big, newdata = big, vcov = FALSE)
+h_big <- predictions(
+    mod_big,
+    newdata = big,
+    vcov = FALSE,
+    hypothesis = "b1 + b10 + exp(b100000) = 0"
 )
-expect_identical(compiled$idx, c(1L, 10L, 100000L))
-estimates <- numeric(100000L)
-estimates[c(1L, 10L, 100000L)] <- c(2, 3, 0)
 expect_equal(
-    marginaleffects:::hypothesis_string_eval_compiled(estimates, compiled),
-    6
+    h_big$estimate,
+    p_big$estimate[1] + p_big$estimate[10] + exp(p_big$estimate[100000])
 )
 
 # Dynamic lookup retains the previous behavior by binding the complete environment.
-compiled_dynamic <- marginaleffects:::hypothesis_string_compile_expression(
-    "get('b10')",
-    n_estimates = 10L,
-    positional = TRUE
-)
-expect_identical(compiled_dynamic$idx, seq_len(10L))
-expect_equal(
-    marginaleffects:::hypothesis_string_eval_compiled(seq_len(10L), compiled_dynamic),
-    10
-)
-compiled_dynamic <- marginaleffects:::hypothesis_string_compile_expression(
-    "do.call('get', list('b10'))",
-    n_estimates = 10L,
-    positional = TRUE
-)
-expect_identical(compiled_dynamic$idx, seq_len(10L))
-expect_equal(
-    marginaleffects:::hypothesis_string_eval_compiled(seq_len(10L), compiled_dynamic),
-    10
-)
+mod_dyn <- lm(mpg ~ hp, data = mtcars)
+nd_dyn <- datagrid(model = mod_dyn, hp = seq(100, 300, length.out = 10))
+p_dyn <- predictions(mod_dyn, newdata = nd_dyn)
+h_dyn <- predictions(mod_dyn, newdata = nd_dyn, hypothesis = "get('b10') = 0")
+expect_equal(h_dyn$estimate, p_dyn$estimate[10])
+h_dyn <- predictions(mod_dyn, newdata = nd_dyn, hypothesis = "do.call('get', list('b10')) = 0")
+expect_equal(h_dyn$estimate, p_dyn$estimate[10])
+expect_equal(h_dyn$std.error, p_dyn$std.error[10], tolerance = 1e-6)
 
 # Aligned unit-level keys use positional attachment without changing join semantics.
 merge_out <- data.table::data.table(rowid = 1:4, estimate = c(0.1, 0.2, 0.3, 0.4))

@@ -16,7 +16,7 @@ predictions_hi_lo_frequentist <- function(model, lo, hi, type, ...) {
 }
 
 
-comparison_plan_build_frequentist <- function(
+comparison_plan_record_groups <- function(
     out,
     idx,
     context,
@@ -31,7 +31,22 @@ comparison_plan_build_frequentist <- function(
     hi,
     lo,
     original,
-    need_y) {
+    need_y,
+    point = NULL,
+    preserve_order = FALSE) {
+    # `preserve_order = TRUE` keeps output rows in the order of their first
+    # source row instead of sorting them by group. Posterior-draws models
+    # have always reported comparisons in that order.
+    #
+    # `point` optionally supplies the hi/lo/y vectors (aligned with the rows
+    # of `out`) on which the plan is recorded. Models with posterior draws use
+    # it to record the plan on a summary of the draws, because their
+    # `predicted_*` columns are not meaningful point predictions.
+    if (is.null(point)) {
+        point <- list(hi = out$predicted_hi, lo = out$predicted_lo, y = out$predicted)
+    }
+    point_rows <- seq_len(nrow(out))
+
     # Both operands decide missingness symmetrically: a finite lo with a
     # missing hi is just as uncomputable as the reverse, and letting it
     # through surfaced later as a misleading complaint about the user's
@@ -40,12 +55,17 @@ comparison_plan_build_frequentist <- function(
     na_keep <- if (all(keep_mask)) NULL else which(keep_mask)
     if (!is.null(na_keep)) {
         out <- out[na_keep]
+        point_rows <- point_rows[na_keep]
     }
 
     idx <- intersect(idx, colnames(out))
     n_out <- nrow(out)
     if (length(idx) > 0) {
-        groups_dt <- out[, .(rows = list(.I)), keyby = idx]
+        groups_dt <- if (isTRUE(preserve_order)) {
+            out[, .(rows = list(.I)), by = idx]
+        } else {
+            out[, .(rows = list(.I)), keyby = idx]
+        }
         perm <- unlist(groups_dt$rows, use.names = FALSE)
         group_len <- lengths(groups_dt$rows)
         last <- cumsum(group_len)
@@ -58,6 +78,10 @@ comparison_plan_build_frequentist <- function(
         bounds <- data.table::data.table(first = 1L, last = n_out)
     }
     out_sorted <- out[perm]
+    point_rows <- point_rows[perm]
+    point_hi <- point$hi[point_rows]
+    point_lo <- point$lo[point_rows]
+    point_y <- if (is.null(point$y)) NULL else point$y[point_rows]
     perm_store <- if (identical(perm, seq_len(n_out))) NULL else perm
 
     plan_groups <- vector("list", nrow(bounds))
@@ -73,9 +97,9 @@ comparison_plan_build_frequentist <- function(
         term <- out_sorted$term[rows]
         group_wts <- out_sorted$marginaleffects_wts_internal[rows]
         call <- comparison_call(
-            hi = out_sorted$predicted_hi[rows],
-            lo = out_sorted$predicted_lo[rows],
-            y = out_sorted$predicted[rows],
+            hi = point_hi[rows],
+            lo = point_lo[rows],
+            y = point_y[rows],
             n = n,
             term = term,
             wts = group_wts,
@@ -108,6 +132,7 @@ comparison_plan_build_frequentist <- function(
         }
         plan_groups[[j]] <- list(
             idx = rows,
+            n = n,
             out_idx = out_idx,
             scalar = length(con) == 1,
             uses_y = call$uses_y,
@@ -128,6 +153,15 @@ comparison_plan_build_frequentist <- function(
         out <- out_sorted
     }
     out[, estimate := unlist(estimates, use.names = FALSE)]
+
+    order_store <- NULL
+    if (isTRUE(preserve_order)) {
+        ord <- order(perm[unlist(out_rows, use.names = FALSE)])
+        if (!identical(ord, seq_along(ord))) {
+            out <- out[ord]
+            order_store <- ord
+        }
+    }
     out[, tmp_idx := NULL]
 
     if (isTRUE(any_scalar_aggregate)) {
@@ -168,6 +202,7 @@ comparison_plan_build_frequentist <- function(
         perm = perm_store,
         groups = plan_groups,
         n_comp = n_comp,
+        order = order_store,
         est_keep = est_keep,
         agg = NULL,
         hyp = NULL
@@ -181,28 +216,49 @@ comparison_plan_apply <- function(plan, hi, lo, y = NULL) {
 }
 
 
-comparison_plan_apply_stages <- function(plan, hi, lo, y = NULL) {
-    stopifnot(length(hi) == plan$n_pred)
-    stopifnot(length(lo) == plan$n_pred)
+# Comparison stage of the plan: per-group comparison functions with the
+# recorded missing-value, permutation, and missing-estimate index steps. `hi`,
+# `lo`, and `y` are vectors of point predictions or n_pred x k matrices of
+# draws; the result has one element (row) per comparison estimate.
+comparison_plan_apply_groups <- function(plan, hi, lo, y = NULL) {
+    stopifnot(plan_nrow(hi) == plan$n_pred)
+    stopifnot(plan_nrow(lo) == plan$n_pred)
+    rows <- seq_len(plan$n_pred)
     if (!is.null(plan$na_keep)) {
-        hi <- hi[plan$na_keep]
-        lo <- lo[plan$na_keep]
-        if (!is.null(y)) y <- y[plan$na_keep]
+        rows <- rows[plan$na_keep]
     }
     if (!is.null(plan$perm)) {
-        hi <- hi[plan$perm]
-        lo <- lo[plan$perm]
-        if (!is.null(y)) y <- y[plan$perm]
+        rows <- rows[plan$perm]
+    }
+    if (!identical(rows, seq_len(plan$n_pred))) {
+        hi <- plan_rows(hi, rows)
+        lo <- plan_rows(lo, rows)
+        if (!is.null(y)) y <- plan_rows(y, rows)
     }
 
-    est <- numeric(plan$n_comp)
-    for (g in plan$groups) {
-        con <- comparison_plan_group_eval(g, hi = hi, lo = lo, y = y)
-        est[g$out_idx] <- con
+    if (is.matrix(hi)) {
+        est <- matrix(NA_real_, nrow = plan$n_comp, ncol = ncol(hi))
+        for (g in plan$groups) {
+            est[g$out_idx, ] <- comparison_plan_group_eval_draws(g, hi = hi, lo = lo, y = y)
+        }
+    } else {
+        est <- numeric(plan$n_comp)
+        for (g in plan$groups) {
+            est[g$out_idx] <- comparison_plan_group_eval(g, hi = hi, lo = lo, y = y)
+        }
+    }
+    if (!is.null(plan$order)) {
+        est <- plan_rows(est, plan$order)
     }
     if (!is.null(plan$est_keep)) {
-        est <- est[plan$est_keep]
+        est <- plan_rows(est, plan$est_keep)
     }
+    est
+}
+
+
+comparison_plan_apply_stages <- function(plan, hi, lo, y = NULL) {
+    est <- comparison_plan_apply_groups(plan, hi, lo, y = y)
     apply_plan_stages(est, plan$agg, plan$hyp)
 }
 
