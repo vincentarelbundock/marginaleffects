@@ -13,7 +13,8 @@ Performance:
 
 Bug fixes:
 
-* `plot_predictions()`, `plot_comparisons()`, and `plot_slopes()` failed for all `glmmTMB` models, because their default `vcov = NULL` was rejected by the `glmmTMB` argument check.
+* `plot_predictions()`, `plot_comparisons()`, and `plot_slopes()` failed for all `glmmTMB` models, because their default `vcov = NULL` was rejected by the `glmmTMB` argument check. `vcov = NULL` now means the default for `glmmTMB`, as for other models.
+* `glmmTMB`: coefficients and their covariance matrix are now aligned with the estimated parameters of the model. Previously, standard errors were `NA` when columns were dropped for rank deficiency. Family parameters such as the Tweedie power are now included among the coefficients. `hypotheses()` labels coefficients with the same `cond~`, `zi~`, and `disp~` prefixes as `get_coef()`. Models fitted with `REML = TRUE`, which used to return `NA` standard errors silently, now raise an informative error unless `vcov = FALSE`.
 * `print(x, "tinytable")` and Quarto/Rmarkdown rendering failed with "Input is not a list" when the table had no footnotes, for example `hypotheses(mod, hypothesis = 0.5)`.
 * Corrected the documented elasticity formulas and interpretations for `slopes()` and related functions. Thanks to @KWB4484 for report #1776.
 * `mlogit` data are converted to `data.table` as intended; the converted object was assigned to a discarded variable.

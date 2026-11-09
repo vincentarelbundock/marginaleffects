@@ -67,8 +67,6 @@ plot_slopes <- function(
     gray = getOption("marginaleffects_plot_gray", default = FALSE),
     draw = TRUE,
     ...) {
-    # `NULL` means the default; some models reject it in `predictions()` et al.
-    if (is.null(vcov)) vcov <- TRUE
     vcov <- sanitize_vcov_request(vcov)
     if ("effect" %in% ...names()) {
         if (is.null(variables)) {

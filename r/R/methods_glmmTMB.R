@@ -18,11 +18,11 @@ get_predict.glmmTMB <- function(
 
     np <- model$fit$par
     if (!is.null(newparams)) {
-        if (glmmTMB_is_ordinal(model)) {
-            np[glmmTMB_ordinal_index(model)] <- newparams
-        } else {
-            np[seq_along(newparams)] <- newparams
+        idx <- glmmTMB_coef_index(model)
+        if (length(newparams) != length(idx)) {
+            stop_sprintf("Unable to align the parameters of this `glmmTMB` model.")
         }
+        np[idx] <- newparams
     }
 
     out <- get_predict.default(
@@ -55,60 +55,11 @@ get_vcov.glmmTMB <- function(model, vcov, ...) {
         }, add = TRUE)
     }
 
-    if (glmmTMB_is_ordinal(model)) {
-        # The fixed intercept triggers a spurious rank-deficiency warning.
-        out <- withCallingHandlers(
-            insight::get_varcov(model, vcov = vcov, component = "full"),
-            warning = function(w) {
-                if (grepl("rank deficient", conditionMessage(w), fixed = TRUE)) {
-                    invokeRestart("muffleWarning")
-                }
-            }
-        )
-        # The fixed intercept has an all-NA row; the remaining rows follow
-        # `model$fit$par`. Keep fixed effects and cutpoints, drop RE parameters.
-        keep <- !apply(is.na(out), 1, all)
-        out <- out[keep, keep, drop = FALSE]
-        if (nrow(out) != length(model$fit$par)) {
-            stop_sprintf("Unable to align the variance-covariance matrix with the parameters of this ordinal `glmmTMB` model.")
-        }
-        idx <- glmmTMB_ordinal_index(model)
-        out <- out[idx, idx, drop = FALSE]
-        dimnames(out) <- list(names(get_coef.glmmTMB(model)), names(get_coef.glmmTMB(model)))
-        return(out)
-    }
-
-    # Extract the full covariance matrix
-    out <- insight::get_varcov(model, vcov = vcov, component = "full")
-
-    # Extract the fixed-effect coefficient names from get_coef
-    coef_names <- names(get_coef.glmmTMB(model))
-
-    # Handle dispersion and conditional terms
-    cleaned_coef_names <- gsub("^cond~", "", coef_names) # Remove cond~ for conditional terms
-    cleaned_coef_names <- gsub("^disp~", "d~", cleaned_coef_names) # Map disp~ to d~ for dispersion terms
-
-    # The 'upper cutoff' and 'lower cutoff' will remain in both, so no removal
-
-    # Get the current row and column names from the covariance matrix
-    current_names <- rownames(out)
-
-    # Match cleaned coef_names with current names in the covariance matrix
-    matched_indices <- match(current_names, cleaned_coef_names)
-
-    # Replace row/column names only where there is a valid match
-    valid_indices <- which(!is.na(matched_indices))
-
-    if (length(valid_indices) > 0) {
-        # Apply the correct names from coef_names to matched rows/columns in the covariance matrix
-        rownames(out)[valid_indices] <- coef_names[matched_indices[valid_indices]]
-        colnames(out)[valid_indices] <- coef_names[matched_indices[valid_indices]]
-    } else {
-        warning(
-            "No matching terms found between the covariance matrix and fixed-effect coefficients."
-        )
-    }
-
+    out <- glmmTMB_vcov_full(model, sandwich = identical(vcov, "HC0"))
+    idx <- glmmTMB_coef_index(model)
+    out <- out[idx, idx, drop = FALSE]
+    nam <- names(get_coef.glmmTMB(model))
+    dimnames(out) <- list(nam, nam)
     return(out)
 }
 
@@ -117,32 +68,18 @@ get_vcov.glmmTMB <- function(model, vcov, ...) {
 #' @rdname get_coef
 #' @export
 get_coef.glmmTMB <- function(model, ...) {
-    if (glmmTMB_is_ordinal(model)) {
-        # The intercept is not identified in ordinal models: `fixef()` reports
-        # it as 0, but it is absent from `model$fit$par`. The cutpoints (`psi`)
-        # are absent from `fixef()`. Return the free fixed effects and cutpoints,
-        # in `model$fit$par` order.
-        lev <- get_group_names(model)
-        b <- setdiff(names(glmmTMB::fixef(model)$cond), "(Intercept)")
-        nam <- c(
-            if (length(b) > 0) paste0("cond~", b) else character(0),
-            paste(lev[-length(lev)], lev[-1], sep = "|")
-        )
-        out <- model$fit$par[glmmTMB_ordinal_index(model)]
-        if (length(out) != length(nam)) {
-            stop_sprintf("Unable to extract the coefficients of this ordinal `glmmTMB` model.")
-        }
-        names(out) <- nam
-        return(out)
-    }
-
-    # Extract the fixed-effect coefficients
-    out <- unlist(glmmTMB::fixef(model))
-
-    # Apply the gsub logic to rename terms (cond~, disp~, etc.)
-    names(out) <- gsub("^(cond|zi|disp)\\.", "\\1~", names(out))
-
-    # No removal of "lower cutoff" and "upper cutoff" - they remain in place
+    # Coefficients are the estimated elements of `model$fit$par`, except the
+    # random-effect variance parameters (`theta*`). This covers the
+    # conditional, zero-inflation, and dispersion fixed effects, as well as
+    # family parameters (`psi`) like ordinal cutpoints or the Tweedie power.
+    # It excludes columns dropped for rank deficiency, mapped parameters, and
+    # the fixed intercept of ordinal models, none of which are estimated.
+    nam <- colnames(glmmTMB_vcov_full(model))
+    idx <- glmmTMB_coef_index(model)
+    out <- model$fit$par[idx]
+    nam <- nam[idx]
+    nam <- ifelse(names(out) == "beta", paste0("cond~", nam), nam)
+    names(out) <- nam
     return(out)
 }
 
@@ -162,9 +99,17 @@ sanitize_model_specific.glmmTMB <- function(model, vcov = TRUE, re.form, ...) {
         insight::check_if_installed("glmmTMB", minimum_version = "1.1.12")
     }
 
-    # re.form=NA
+    # `NULL` is the default, used by `plot_*()`
+    if (is.null(vcov)) vcov <- TRUE
+
     if (!isTRUE(checkmate::check_flag(vcov)) && !identical(vcov, "HC0")) {
-        msg <- 'For this model type, `vcov` must be `TRUE`, `FALSE`, `"HC0"`.'
+        msg <- 'For this model type, `vcov` must be `TRUE`, `FALSE`, `"HC0"`, or `NULL`.'
+        stop_sprintf(msg)
+    }
+
+    # REML integrates the fixed effects out of `model$fit$par`
+    if (!isFALSE(vcov) && isTRUE(model$modelInfo$REML)) {
+        msg <- "Standard errors are unavailable for `glmmTMB` models fitted with `REML = TRUE`. Set `vcov = FALSE` or refit with `REML = FALSE`."
         stop_sprintf(msg)
     }
 
@@ -193,7 +138,17 @@ glmmTMB_is_ordinal <- function(model) {
 }
 
 
-# positions in `model$fit$par` of the fixed effects and cutpoints of an ordinal model
-glmmTMB_ordinal_index <- function(model) {
-    which(names(model$fit$par) %in% c("beta", "psi"))
+# Covariance of the estimated parameters, labelled and aligned with `model$fit$par`.
+glmmTMB_vcov_full <- function(model, sandwich = FALSE) {
+    out <- stats::vcov(model, full = TRUE, include_nonest = FALSE, sandwich = sandwich)
+    if (nrow(out) != length(model$fit$par)) {
+        stop_sprintf("Unable to align the variance-covariance matrix with the parameters of this `glmmTMB` model.")
+    }
+    return(out)
+}
+
+
+# Positions in `model$fit$par` of the coefficients: all but random-effect variance parameters.
+glmmTMB_coef_index <- function(model) {
+    which(!startsWith(names(model$fit$par), "theta"))
 }

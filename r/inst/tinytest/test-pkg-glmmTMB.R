@@ -171,10 +171,9 @@ expect_error(
     predictions(mod, newdata = datagrid(), vcov = "HC3", re.form = NA),
     pattern = "vcov"
 )
-expect_error(
-    predictions(mod, newdata = datagrid(), vcov = NULL, re.form = NA),
-    pattern = "vcov"
-)
+# `NULL` is the default vcov, as in other models
+p <- predictions(mod, newdata = datagrid(), vcov = NULL, re.form = NA)
+expect_false(anyNA(p$std.error))
 expect_error(
     predictions(
         mod,
@@ -462,3 +461,26 @@ p <- plot_comparisons(mod_simple, variables = "wt", by = "am", draw = FALSE)
 expect_inherits(p, "data.frame")
 p <- plot_slopes(mod_simple, variables = "wt", condition = "am", draw = FALSE)
 expect_inherits(p, "data.frame")
+
+# Coefficients are aligned with `fit$par`: columns dropped for rank deficiency
+# used to shift every later parameter and produce NA standard errors
+dat_rd <- transform(mtcars, wt2 = 2 * wt)
+m_rd <- suppressMessages(glmmTMB(mpg ~ wt + wt2 + hp + (1 | cyl), data = dat_rd))
+p <- suppressMessages(predictions(m_rd, newdata = head(dat_rd), re.form = NA))
+ref <- suppressMessages(predict(m_rd, newdata = head(dat_rd), re.form = NA, se.fit = TRUE))
+expect_equivalent(p$estimate, ref$fit)
+expect_equivalent(p$std.error, ref$se.fit, tolerance = 1e-6)
+expect_false("cond~wt2" %in% names(get_coef(m_rd)))
+
+# Coefficient and vcov names agree for zero-inflation and dispersion components
+m_zi <- glmmTMB(count ~ mined + (1 | site), zi = ~mined, family = nbinom2, data = Salamanders)
+expect_equal(
+    names(get_coef(m_zi)),
+    c("cond~(Intercept)", "cond~minedno", "zi~(Intercept)", "zi~minedno", "disp~(Intercept)")
+)
+expect_equal(rownames(get_vcov(m_zi, vcov = TRUE)), names(get_coef(m_zi)))
+
+# REML integrates the fixed effects out of `fit$par`: no standard errors
+m_reml <- glmmTMB(mpg ~ wt + (1 | cyl), data = mtcars, REML = TRUE)
+expect_error(predictions(m_reml, re.form = NA), pattern = "REML")
+expect_false(anyNA(predictions(m_reml, re.form = NA, vcov = FALSE)$estimate))

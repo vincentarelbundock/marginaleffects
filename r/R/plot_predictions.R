@@ -69,8 +69,6 @@ plot_predictions <- function(
   draw = TRUE,
   ...
 ) {
-    # `NULL` means the default; some models reject it in `predictions()` et al.
-    if (is.null(vcov)) vcov <- TRUE
     vcov <- sanitize_vcov_request(vcov)
     checkmate::assert_number(points, lower = 0, upper = 1)
 
