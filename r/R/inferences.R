@@ -45,7 +45,7 @@
 #' 2. Use the `R` sets of coefficients to compute `R` sets of estimands: predictions, comparisons, slopes, or hypotheses.
 #' 3. Take quantiles of the resulting distribution of estimands to obtain a confidence interval (when `conf_type = "perc"`) and the standard deviation of simulated estimates to estimate the standard error (which is used for a Z-test and Wald confidence intervals when `conf_type = "wald"`).
 #'
-#' When `method = "fwb"`, drawn weights are supplied to the model fitting function's `weights` argument; if the model doesn't accept non-integer weights, this method should not be used. If weights were included in the original model fit, they are extracted by [weights()] and multiplied by the drawn weights. These weights are supplied to the `wts` argument of the estimation function (e.g., `comparisons()`).
+#' When `method = "fwb"`, drawn weights are supplied to the model fitting function's `weights` argument; if the model doesn't accept non-integer weights, this method should not be used. If weights were included in the original model fit, they are extracted by [weights()] and multiplied by the drawn weights. When the estimates are computed over the data used to fit the model, the drawn weights are also supplied to the `wts` argument of the estimation function (e.g., `comparisons()`), multiplied by the user's `wts` if any. When `newdata` holds other rows, the model is refit with the drawn weights, but the averaging over `newdata` uses the user's `wts` only, and is treated as fixed.
 #'
 #' Warning: custom model classes are not supported by `inferences()` because they are not guaranteed to come with an appropriate `update()` method.
 #'
@@ -214,6 +214,9 @@ inferences <- function(
         stop_unconditional("inferences")
     }
 
+    # Did the user supply `newdata`? Record before the call is overwritten below.
+    newdata_supplied <- !is.null(call_mfx) && !is.null(call_mfx[["newdata"]])
+
     # Update call with pre-evaluated newdata if available
     if (!is.null(call_mfx)) {
         nd <- mfx@newdata
@@ -243,14 +246,12 @@ inferences <- function(
             mfx = mfx,
             ...)
     } else if (method == "fwb") {
-        if (isTRUE("wts" %in% names(mfx@call)) && !isFALSE(mfx@call[["wts"]])) {
-            stop_sprintf("The `fwb` method is not supported with the `wts` argument.")
-        }
         out <- inferences_fwb(x,
             R = R,
             conf_level = conf_level,
             conf_type = conf_type,
             mfx = mfx,
+            newdata_supplied = newdata_supplied,
             ...)
     } else if (method == "rsample") {
         out <- inferences_rsample(x,

@@ -44,6 +44,12 @@ New features:
 
 Bug fixes:
 
+* `vcov=vcovUnconditional()` silently inflated standard errors when the
+  statsmodels model had been fit with a robust covariance (e.g.
+  `fit(cov_type="HC1")` or `cov_type="cluster"`), because it used that
+  sandwich as the bread of its own sandwich. It now always uses the model's
+  non-robust covariance, so results no longer depend on the `cov_type` used
+  at fit time.
 * `pairwise` and `revpairwise` formula hypotheses dropped every difference
   that was exactly zero (e.g. two equal estimates), so estimates and labels
   no longer lined up.

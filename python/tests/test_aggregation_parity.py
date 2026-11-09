@@ -390,6 +390,44 @@ def test_unconditional_logit_subgroups_match_r(mtcars):
     )
 
 
+ROBUST_FITS = [
+    pytest.param({}, id="nonrobust"),
+    pytest.param({"cov_type": "HC1"}, id="HC1"),
+    pytest.param({"cov_type": "cluster"}, id="cluster"),
+]
+
+UNCONDITIONAL_MODELS = {
+    "ols": lambda d, **k: smf.ols("mpg ~ hp * am", d).fit(**k),
+    "glm_gaussian": lambda d, **k: smf.glm("mpg ~ hp * am", d).fit(**k),
+    "glm_binomial": lambda d, **k: smf.glm(
+        "vs ~ mpg + am", d, family=sm.families.Binomial()
+    ).fit(**k),
+    "logit": lambda d, **k: smf.logit("vs ~ mpg + am", d).fit(disp=0, **k),
+}
+
+
+@pytest.mark.parametrize("family", list(UNCONDITIONAL_MODELS))
+@pytest.mark.parametrize("fit_kwargs", ROBUST_FITS)
+@pytest.mark.parametrize("vtype", ["HC0", "HC1"])
+def test_unconditional_ignores_the_covariance_type_the_model_was_fit_with(
+    mtcars, family, fit_kwargs, vtype
+):
+    from marginaleffects import vcovUnconditional
+
+    fit = UNCONDITIONAL_MODELS[family]
+    if fit_kwargs.get("cov_type") == "cluster":
+        fit_kwargs = {**fit_kwargs, "cov_kwds": {"groups": mtcars["cyl"]}}
+    reference = fit(mtcars)
+    robust = fit(mtcars, **fit_kwargs)
+    for V in [vcovUnconditional(vtype), vcovUnconditional(vtype, cluster="cyl")]:
+        expected = se(avg_comparisons(reference, variables="am", vcov=V))
+        observed = se(avg_comparisons(robust, variables="am", vcov=V))
+        np.testing.assert_allclose(observed, expected, rtol=1e-10)
+        expected = se(avg_predictions(reference, by="am", vcov=V))
+        observed = se(avg_predictions(robust, by="am", vcov=V))
+        np.testing.assert_allclose(observed, expected, rtol=1e-10)
+
+
 def test_unconditional_hypothesis_after_aggregation_matches_r(ols_simple):
     from marginaleffects import vcovUnconditional
 

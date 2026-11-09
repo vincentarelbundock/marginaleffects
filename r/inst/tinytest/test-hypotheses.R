@@ -282,3 +282,12 @@ expect_equal(h2$std.error, h1$std.error, tolerance = 1e-8)
 # Non-affine hypotheses keep their numerical derivative
 h1 <- hypotheses(mod, hypothesis = "exp(b2) = 0")
 expect_true(is.finite(h1$std.error) && h1$std.error > 0)
+
+
+# hypotheses() does not modify its input by reference (data.table::setDT)
+mod <- lm(mpg ~ hp * wt + factor(cyl), data = mtcars)
+x <- avg_comparisons(mod, variables = "hp", by = "cyl")
+hypotheses(x)
+expect_inherits(x, "comparisons")
+hypotheses(x, multcomp = "holm")
+expect_inherits(x, "comparisons")

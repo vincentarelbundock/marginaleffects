@@ -87,7 +87,7 @@ When \code{method = "simulation"}, we conduct simulation-based inference followi
 \item Take quantiles of the resulting distribution of estimands to obtain a confidence interval (when \code{conf_type = "perc"}) and the standard deviation of simulated estimates to estimate the standard error (which is used for a Z-test and Wald confidence intervals when \code{conf_type = "wald"}).
 }
 
-When \code{method = "fwb"}, drawn weights are supplied to the model fitting function's \code{weights} argument; if the model doesn't accept non-integer weights, this method should not be used. If weights were included in the original model fit, they are extracted by \code{\link[=weights]{weights()}} and multiplied by the drawn weights. These weights are supplied to the \code{wts} argument of the estimation function (e.g., \code{comparisons()}).
+When \code{method = "fwb"}, drawn weights are supplied to the model fitting function's \code{weights} argument; if the model doesn't accept non-integer weights, this method should not be used. If weights were included in the original model fit, they are extracted by \code{\link[=weights]{weights()}} and multiplied by the drawn weights. When the estimates are computed over the data used to fit the model, the drawn weights are also supplied to the \code{wts} argument of the estimation function (e.g., \code{comparisons()}), multiplied by the user's \code{wts} if any. When \code{newdata} holds other rows, the model is refit with the drawn weights, but the averaging over \code{newdata} uses the user's \code{wts} only, and is treated as fixed.
 
 Warning: custom model classes are not supported by \code{inferences()} because they are not guaranteed to come with an appropriate \code{update()} method.
 }

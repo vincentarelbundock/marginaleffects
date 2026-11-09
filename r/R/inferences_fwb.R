@@ -1,4 +1,4 @@
-inferences_fwb <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", mfx = NULL, ...) {
+inferences_fwb <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", mfx = NULL, newdata_supplied = TRUE, ...) {
     insight::check_if_installed("fwb", minimum_version = "0.5.0")
 
     out <- x
@@ -16,7 +16,22 @@ inferences_fwb <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", m
         call_mfx[["comparison"]] <- mfx@comparison
     }
 
+    # The random weights can reweight the averaging only when the estimates are
+    # computed over the rows of the model data. Otherwise, the model is refit
+    # with the random weights, but the averaging over `newdata` is fixed.
+    wts_user <- mfx@wts
+    on_modeldata <- !newdata_supplied || fwb_same_rows(mfx@newdata, modeldata)
+    if (!on_modeldata) {
+        msg <- "`inferences(method = \"fwb\")`: `newdata` is not the data used to fit the model. The bootstrap weights are used to refit the model, but not to reweight the averaging over `newdata`, which is treated as fixed."
+        warn_once(msg, "marginaleffects_fwb_newdata_fixed")
+        # The call may refer to `wts` by name; use the resolved numeric weights.
+        if (!is.null(wts_user) && isTRUE(length(wts_user) == nrow(mfx@newdata))) {
+            call_mfx[["wts"]] <- wts_user
+        }
+    }
+
     bootfun <- function(data, w, ...) {
+        w_fwb <- w
         # If model has weights, multiply them by random weights
         if (!is.null(w0 <- stats::weights(mfx@model))) {
             w <- w * w0
@@ -39,7 +54,9 @@ inferences_fwb <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", m
         # Update marginaleffects call
         call_mfx[["model"]] <- boot_mod
         call_mfx[["modeldata"]] <- data
-        call_mfx[["wts"]] <- w
+        if (on_modeldata) {
+            call_mfx[["wts"]] <- if (is.null(wts_user)) w else w_fwb * wts_user
+        }
         boot_mfx <- eval.parent(call_mfx)
         return(boot_mfx$estimate)
     }
@@ -90,4 +107,26 @@ inferences_fwb <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", m
     attr(out, "marginaleffects") <- mfx
 
     return(out)
+}
+
+
+# TRUE when `newdata` holds exactly the rows of `modeldata`, in the same order.
+fwb_same_rows <- function(newdata, modeldata) {
+    if (!inherits(newdata, "data.frame") || !inherits(modeldata, "data.frame")) {
+        return(FALSE)
+    }
+    if (nrow(newdata) != nrow(modeldata)) {
+        return(FALSE)
+    }
+    cols <- setdiff(intersect(colnames(newdata), colnames(modeldata)), "rowid")
+    if (length(cols) == 0) {
+        return(FALSE)
+    }
+    for (v in cols) {
+        same <- isTRUE(all.equal(newdata[[v]], modeldata[[v]], check.attributes = FALSE))
+        if (!same) {
+            return(FALSE)
+        }
+    }
+    return(TRUE)
 }
