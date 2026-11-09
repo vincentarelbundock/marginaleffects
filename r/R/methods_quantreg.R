@@ -44,18 +44,7 @@ sanitize_model_specific.rqs <- function(model, ...) {
 #' @export
 get_model_matrix.rq <- function(model, newdata, mfx = NULL) {
     # Match predict.rq(): its predictions are X %*% coefficients.
-    tt <- stats::delete.response(stats::terms(model))
-    mf <- stats::model.frame(
-        tt,
-        data = newdata,
-        na.action = stats::na.pass,
-        xlev = model$xlevels
-    )
-    stats::model.matrix(
-        tt,
-        mf,
-        contrasts.arg = model$contrasts
-    )
+    get_model_matrix.lm(model, newdata = newdata, mfx = mfx)
 }
 
 

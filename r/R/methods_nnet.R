@@ -35,12 +35,7 @@ set_coef.multinom <- function(model, coefs, ...) {
 #' @rdname get_coef
 #' @export
 get_coef.multinom <- function(model, ...) {
-    out <- insight::get_parameters(model, ...)
-    out <- stats::setNames(
-        out$Estimate,
-        sprintf("%s:%s", out$Response, out$Parameter)
-    )
-    return(out)
+    get_coef.mlm(model, ...)
 }
 
 
@@ -48,12 +43,7 @@ get_coef.multinom <- function(model, ...) {
 #' @rdname get_group_names
 #' @export
 get_group_names.multinom <- function(model, ...) {
-    resp <- insight::get_response(model)
-    if (is.factor(resp)) {
-        out <- levels(resp)
-    } else {
-        out <- unique(resp)
-    }
+    out <- get_group_names.polr(model)
     return(out[2:length(out)])
 }
 

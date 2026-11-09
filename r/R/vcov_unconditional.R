@@ -370,16 +370,7 @@ get_unconditional_comparison_base <- function(plan, model, rowid, n) {
     phi <- matrix(0, nrow = n, ncol = plan$n_comp)
 
     for (g in plan$groups) {
-        args <- g$args
-        args$hi <- hi[g$idx]
-        args$lo <- lo[g$idx]
-        if (isTRUE(g$uses_y)) {
-            args$y <- y[g$idx]
-        }
-        con <- do_call(g$fun, args)
-        if (length(con) != length(g$out_idx)) {
-            stop_sprintf("Internal error: comparison plan group changed shape.")
-        }
+        con <- comparison_plan_group_eval(g, hi = hi, lo = lo, y = y)
         if (length(con) == 1L && !is.finite(con)) {
             stop_sprintf(
                 "`vcov = \"unconditional\"` requires scalar comparison functions to return a finite value."

@@ -147,18 +147,6 @@ sanitize_model_specific.svy_vglm <- function(
         model <- set_modeldata(model, modeldata)
     }
 
-    if (identical(calling_function, "hypotheses")) {
-        return(model)
-    }
-
-    wts <- ...get("wts", FALSE)
-    by <- ...get("by", FALSE)
-    if (isFALSE(wts) && !isFALSE(by)) {
-        warning(
-            "With models of this class, it is normally good practice to specify weights using the `wts` argument. Otherwise, weights will be ignored in the computation of quantities of interest.",
-            call. = FALSE
-        )
-    }
-
-    return(model)
+    # same weights warning as other survey models
+    sanitize_model_specific.svyolr(model, calling_function = calling_function, ...)
 }
