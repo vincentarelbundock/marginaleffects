@@ -20,6 +20,7 @@ def _default_mapping(
         if col.startswith("contrast_")
     }
     mapping: dict[str, str] = {
+        "hypothesis": "Hypothesis",
         "term": "Term",
         "group": "Group",
         **datagrid_map,

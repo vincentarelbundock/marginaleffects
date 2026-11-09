@@ -70,6 +70,9 @@ def sort_columns(df, by=None, newdata=None):
     if isinstance(newdata, pl.DataFrame) and hasattr(newdata, "datagrid_explicit"):
         cols = newdata.datagrid_explicit + cols
 
+    # Hypothesis labels lead, ahead of any `| group` columns, as in R.
+    cols = ["hypothesis"] + cols
+
     # dict.fromkeys de-duplicates while keeping the first occurrence's position
     out = df.select(list(dict.fromkeys(x for x in cols if x in df.columns)))
     if "marginaleffects_comparison" in out.columns:

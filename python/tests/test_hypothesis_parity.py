@@ -1,0 +1,164 @@
+"""Every kind of `hypothesis` against R: tests/r/test_hypothesis_parity.R.
+
+Each case ID below matches one in the R script, which runs the same call on
+the same vendored CSV. For each case we compare whether it errors, the output
+columns (Python's snake_case statistics are a deliberate convention), the
+labels, the `| am` groups, the estimates and the standard errors.
+"""
+
+import numpy as np
+import polars as pl
+import pytest
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+
+from marginaleffects import (
+    avg_comparisons,
+    avg_predictions,
+    avg_slopes,
+    comparisons,
+    datagrid,
+    hypotheses,
+)
+
+dat = pl.read_csv("tests/data/mtcars.csv", null_values="NA")
+m1 = smf.ols("mpg ~ hp + wt + am", data=dat.to_pandas()).fit()
+m2 = smf.glm("am ~ hp + wt", data=dat.to_pandas(), family=sm.families.Binomial()).fit()
+
+CASES = {}
+for r in [
+    "reference",
+    "revreference",
+    "sequential",
+    "revsequential",
+    "pairwise",
+    "revpairwise",
+    "meandev",
+    "meanotherdev",
+    "trt_vs_ctrl",
+]:
+    for lhs in ["difference", "ratio"]:
+        CASES[f"F/{lhs}~{r}"] = lambda f=f"{lhs} ~ {r}": avg_predictions(
+            m1, by="carb", hypothesis=f
+        )
+        CASES[f"G/{lhs}~{r}|am"] = lambda g=f"{lhs} ~ {r} | am": avg_predictions(
+            m1, by=["am", "carb"], hypothesis=g
+        )
+for r in ["poly", "helmert"]:
+    CASES[f"F/~{r}"] = lambda r=r: avg_predictions(m1, by="carb", hypothesis=f"~ {r}")
+    CASES[f"G/~{r}|am"] = lambda r=r: avg_predictions(
+        m1, by=["am", "carb"], hypothesis=f"~ {r} | am"
+    )
+CASES["L/multicol"] = lambda: avg_predictions(
+    m1, by=["am", "gear"], hypothesis="~reference"
+)
+CASES["L/nolabel"] = lambda: comparisons(
+    m1,
+    variables="hp",
+    newdata=datagrid(m1, am=[0, 1], wt=[2, 3]),
+    hypothesis="~reference",
+)
+CASES["L/comparisons_by"] = lambda: avg_comparisons(
+    m1, variables=["hp", "wt"], by="am", hypothesis="~reference"
+)
+CASES["L/slopes_pairwise"] = lambda: avg_slopes(
+    m1, variables="hp", by="gear", hypothesis="~pairwise"
+)
+CASES["L/bare_string"] = lambda: avg_predictions(m1, by="carb", hypothesis="pairwise")
+CASES["S/terms"] = lambda: hypotheses(m1, hypothesis="hp = wt")
+CASES["S/positional"] = lambda: hypotheses(m1, hypothesis="b2 - b3 = 0")
+CASES["S/nonlinear"] = lambda: hypotheses(m1, hypothesis="exp(b2) = 1")
+CASES["S/wildcard"] = lambda: hypotheses(m1, hypothesis="b* = 0")
+CASES["S/multiple"] = lambda: hypotheses(m1, hypothesis=["b2 = 0", "b3 = b4"])
+CASES["S/preds_positional"] = lambda: avg_predictions(
+    m1, by="carb", hypothesis="b1 = b2"
+)
+CASES["S/glm"] = lambda: avg_comparisons(m2, variables="hp", hypothesis="b1 = 0")
+CASES["M/vector"] = lambda: hypotheses(m1, hypothesis=np.array([0, 1, -1, 0]))
+CASES["M/matrix_nonames"] = lambda: avg_predictions(
+    m1, by="gear", hypothesis=np.column_stack([[1, -1, 0], [1, 0, -1]])
+)
+CASES["M/matrix_names"] = lambda: avg_predictions(
+    m1, by="gear", hypothesis=pl.DataFrame({"a": [1, -1, 0], "b": [1, 0, -1]})
+)
+CASES["N/null"] = lambda: avg_predictions(m1, by="gear", hypothesis=20)
+CASES["X/function"] = lambda: avg_predictions(
+    m1,
+    by="gear",
+    hypothesis=lambda x: pl.DataFrame(
+        {
+            "hypothesis": ["max - min"],
+            "estimate": [x["estimate"].max() - x["estimate"].min()],
+        }
+    ),
+)
+
+R_META = pl.read_csv("tests/r/test_hypothesis_parity_meta.csv")
+R_ROWS = pl.read_csv("tests/r/test_hypothesis_parity_rows.csv", infer_schema_length=0)
+SNAKE = {
+    "std_error": "std.error",
+    "p_value": "p.value",
+    "s_value": "s.value",
+    "conf_low": "conf.low",
+    "conf_high": "conf.high",
+}
+
+
+def test_cases_match_r_script():
+    assert sorted(CASES) == sorted(R_META["case"].to_list())
+
+
+@pytest.mark.parametrize("case", sorted(CASES))
+def test_hypothesis_matches_r(case):
+    meta = R_META.filter(pl.col("case") == case).row(0, named=True)
+    if meta["error"]:
+        with pytest.raises((ValueError, AssertionError, TypeError)):
+            CASES[case]()
+        return
+
+    py = CASES[case]().data
+    r = R_ROWS.filter(pl.col("case") == case)
+
+    # R adds a `df` column for some models; Python reports z statistics.
+    r_cols = [c for c in meta["columns"].split("|") if c != "df"]
+    assert [SNAKE.get(c, c) for c in py.columns] == r_cols
+
+    labcol = next((c for c in ("hypothesis", "term") if c in py.columns), None)
+    if labcol is not None:
+        assert [str(v) for v in py[labcol]] == r["label"].to_list()
+    if "am" in py.columns:
+        assert [str(v) for v in py["am"]] == r["group"].to_list()
+
+    np.testing.assert_allclose(
+        py["estimate"], r["estimate"].cast(pl.Float64), rtol=1e-5, atol=1e-8
+    )
+
+    # An exactly-zero SE is reported as NaN on both sides, but either side may
+    # land on floating-point noise (~1e-14) instead of an exact zero.
+    def zero_as_nan(se):
+        return np.where(np.abs(se) < 1e-12, np.nan, se)
+
+    se_py = zero_as_nan(py["std_error"].to_numpy())
+    se_r = zero_as_nan(r["std.error"].cast(pl.Float64).to_numpy())
+    np.testing.assert_allclose(se_py, se_r, rtol=1e-5, atol=1e-8, equal_nan=True)
+
+
+def test_positional_index_zero_is_rejected():
+    with pytest.raises(ValueError, match="start at b1"):
+        hypotheses(m1, hypothesis="b0 = 0")
+
+
+def test_function_hypothesis_numeric_return_and_errors():
+    # A numeric return is labelled with the `term` column when lengths match.
+    out = hypotheses(m1, hypothesis=lambda x: x["estimate"] * 2)
+    assert out["term"].to_list() == ["Intercept", "hp", "wt", "am"]
+    np.testing.assert_allclose(out["estimate"], m1.params.to_numpy() * 2)
+    with pytest.raises(ValueError, match="must accept an `x` argument"):
+        hypotheses(m1, hypothesis=lambda y: y)
+    with pytest.raises(ValueError, match="allowable arguments"):
+        hypotheses(m1, hypothesis=lambda x, draws: x)
+
+
+def test_weights_with_wrong_number_of_rows():
+    with pytest.raises(ValueError, match="must have 4 rows"):
+        hypotheses(m1, hypothesis=np.array([1, -1]))

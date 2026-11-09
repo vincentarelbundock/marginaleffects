@@ -394,7 +394,7 @@ def test_unconditional_hypothesis_after_aggregation_matches_r(ols_simple):
     from marginaleffects import vcovUnconditional
 
     out = avg_predictions(
-        ols_simple, by="cyl", hypothesis="b0-b1=0", vcov=vcovUnconditional()
+        ols_simple, by="cyl", hypothesis="b1-b2=0", vcov=vcovUnconditional()
     )
     assert est(out) == pytest.approx([4.483866], rel=1e-6)
     assert se(out) == pytest.approx([1.093565], rel=1e-6)

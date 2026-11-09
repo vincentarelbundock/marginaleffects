@@ -44,7 +44,7 @@ def test_by_2():
 
 def test_by_hypothesis():
     pre_py = predictions(mod_py, by="Region")
-    pre_py = predictions(mod_py, by="Region", hypothesis="b0 * b2 = b2*2")
+    pre_py = predictions(mod_py, by="Region", hypothesis="b1 * b3 = b3*2")
     pre_r = pl.read_csv("tests/r/test_predictions_03.csv")
     compare_r_to_py(pre_r, pre_py)
 

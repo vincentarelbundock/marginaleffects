@@ -31,7 +31,7 @@ def test_explicit_step_reports_finite_difference():
 
 
 def test_nonlinear_hypothesis_reports_composed_numeric_stage():
-    out = predictions(_model(), by="cyl", hypothesis="b1**2 - b0 = 0")
+    out = predictions(_model(), by="cyl", hypothesis="b2**2 - b1 = 0")
     assert out.jacobian_method == "analytic+numeric_stage"
 
 

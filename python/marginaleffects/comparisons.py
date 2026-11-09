@@ -466,7 +466,8 @@ def _compute_fd_estimates(
         by_keys = _resolve_grouping_keys(by, tmp)
     tmp = _apply_comparison_estimands(tmp, by_keys, wts, eps, comparison_functions)
     tmp, _ = _record_comparison_aggregation(tmp, by_keys, wts, by)
-    tmp = get_hypothesis(tmp, hypothesis=hypothesis, by=by_keys)
+    by_labels = ["by"] if by_is_frame(by) else by
+    tmp = get_hypothesis(tmp, hypothesis=hypothesis, by=by_labels)
     return tmp
 
 
@@ -482,6 +483,7 @@ def _comparisons_build(
     wts,
     eps,
     comparison_functions,
+    newdata=None,
 ):
     coefs = model.get_coef()
     tmp, align, plan_predictions = _assemble_prediction_table(
@@ -520,7 +522,8 @@ def _comparisons_build(
     if by_is_frame(by):
         # The frame has done its work; downstream only sees the label column.
         by = ["by"]
-    tmp, hyp = hypothesis_compile(tmp, hypothesis=hypothesis, by=by_keys)
+    # Labels and function hypotheses see the user's `by`, as in R.
+    tmp, hyp = hypothesis_compile(tmp, hypothesis=hypothesis, by=by, newdata=newdata)
 
     groups = []
     start = 0
@@ -795,6 +798,7 @@ def comparisons(
         wts=wts,
         eps=eps,
         comparison_functions=comparison_functions,
+        newdata=newdata,
     )
 
     def replay(beta):

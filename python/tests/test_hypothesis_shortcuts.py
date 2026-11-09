@@ -20,7 +20,7 @@ def test_shortcuts_match_r(spec):
     by = ["am", "carb"] if grouped else "carb"
     # No re-sorting: grouped output must already come in R's group order.
     py = avg_predictions(mod, by=by, hypothesis=spec)
-    assert py["term"].to_list() == r["hypothesis"].to_list()
+    assert py["hypothesis"].to_list() == r["hypothesis"].to_list()
     if grouped:
         assert py["am"].to_list() == r["am"].to_list()
     np.testing.assert_allclose(py["estimate"], r["estimate"], rtol=1e-6)

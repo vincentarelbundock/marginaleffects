@@ -56,26 +56,6 @@ def sequential_difference_label(x):
     return [f"({xi}) - ({shifted_xi})" for xi, shifted_xi in zip(x[1:], shifted_x[1:])]
 
 
-def revsequential_ratio_comparison(x):
-    shifted_x = np.roll(x, 1)
-    return (shifted_x / x)[1:]
-
-
-def revsequential_ratio_label(x):
-    shifted_x = np.roll(x, 1)
-    return [f"({shifted_xi}) / ({xi})" for xi, shifted_xi in zip(x[1:], shifted_x[1:])]
-
-
-def revsequential_difference_comparison(x):
-    shifted_x = np.roll(x, 1)
-    return (shifted_x - x)[1:]
-
-
-def revsequential_difference_label(x):
-    shifted_x = np.roll(x, 1)
-    return [f"({shifted_xi}) - ({xi})" for xi, shifted_xi in zip(x[1:], shifted_x[1:])]
-
-
 def _pair_index(n, reverse):
     """Index pairs ``(i, j)`` for the pairwise hypotheses, in R's order.
 
@@ -238,7 +218,6 @@ _RHS_DIFFERENCE_OR_RATIO = [
     "reference",
     "revreference",
     "sequential",
-    "revsequential",
     "pairwise",
     "revpairwise",
     "meandev",
@@ -301,18 +280,18 @@ def eval_hypothesis_formula(x, hypothesis, lab):
     if not by_hypothesis:
         out = pl.DataFrame(
             {
-                "term": lab_fun(lab),
+                "hypothesis": lab_fun(lab),
                 "estimate": hyp_fun(x["estimate"]),
             }
         )
     else:
-        x = x.with_columns(pl.Series(lab).alias("term"))
+        x = x.with_columns(pl.Series(lab).alias("hypothesis"))
         # maintain_order: groups come out in a fixed order, which the exact
         # Jacobian relies on (it re-evaluates this function and stacks results)
         out = x.group_by(*by_hypothesis, maintain_order=True).agg(
             pl.col("estimate").map_batches(hyp_fun),
-            pl.col("term").map_batches(lambda x: pl.Series(lab_fun(x))),
+            pl.col("hypothesis").map_batches(lambda x: pl.Series(lab_fun(x))),
         )
-        out = out.explode(["estimate", "term"], empty_as_null=True)
+        out = out.explode(["estimate", "hypothesis"], empty_as_null=True)
 
     return out

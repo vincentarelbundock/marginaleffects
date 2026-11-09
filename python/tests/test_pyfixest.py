@@ -192,7 +192,7 @@ def test_pyfixest_categorical_i_operator():
     fit_pf = pf.feols("Y ~ i(f1)", data=data_pf)
 
     # hypotheses() should work with b-index syntax
-    h = hypotheses(fit_pf, "b1 + b2 = 0")
+    h = hypotheses(fit_pf, "b2 + b3 = 0")
     assert h.shape[0] == 1
     assert "estimate" in h.columns
 
@@ -209,7 +209,7 @@ def test_pyfixest_categorical_i_operator():
         pl.col("f1").cast(pl.String).cast(pl.Categorical)
     )
     fit2 = feols("Y ~ C(f1)", data=data)
-    h2 = hypotheses(fit2, "b0 + b1 = 0")
+    h2 = hypotheses(fit2, "b1 + b2 = 0")
     assert h2.shape[0] == 1
     assert "estimate" in h2.columns
 
