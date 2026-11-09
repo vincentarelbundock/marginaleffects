@@ -13,100 +13,38 @@ def get_categorical_combinations(
     if len(uniqs) > 25:
         raise ValueError("There are too many unique categories to compute comparisons.")
 
-    out = []
-
+    n = len(uniqs)
     if combo == "reference":
-        for u in uniqs:
-            if u != uniqs[0]:
-                hl = HiLo(
-                    variable=variable,
-                    hi=clean([u]),
-                    lo=clean([uniqs[0]]),
-                    lab=lab.format(hi=u, lo=uniqs[0]),
-                    pad=uniqs,
-                    comparison=comparison,
-                )
-                out.append(hl)
+        pairs = [(u, uniqs[0]) for u in uniqs if u != uniqs[0]]
     elif combo == "revreference":
-        last_element = uniqs[-1]
-        for u in uniqs:
-            if u != last_element:
-                hl = HiLo(
-                    variable=variable,
-                    hi=clean([u]),
-                    lo=clean([last_element]),
-                    lab=lab.format(hi=u, lo=last_element),
-                    comparison=comparison,
-                    pad=uniqs,
-                )
-                out.append(hl)
+        pairs = [(u, uniqs[-1]) for u in uniqs if u != uniqs[-1]]
     elif combo == "sequential":
-        for i in range(len(uniqs) - 1):
-            hl = HiLo(
-                variable=variable,
-                hi=clean([uniqs[i + 1]]),
-                lo=clean([uniqs[i]]),
-                lab=lab.format(hi=uniqs[i + 1], lo=uniqs[i]),
-                comparison=comparison,
-                pad=uniqs,
-            )
-            out.append(hl)
+        pairs = [(uniqs[i + 1], uniqs[i]) for i in range(n - 1)]
     elif combo == "revsequential":
-        for i in range(len(uniqs) - 1, 0, -1):
-            hl = HiLo(
-                variable=variable,
-                hi=clean([uniqs[i - 1]]),
-                lo=clean([uniqs[i]]),
-                lab=lab.format(hi=uniqs[i - 1], lo=uniqs[i]),
-                comparison=comparison,
-                pad=uniqs,
-            )
-            out.append(hl)
+        pairs = [(uniqs[i - 1], uniqs[i]) for i in range(n - 1, 0, -1)]
     elif combo == "pairwise":
-        for i in range(len(uniqs)):
-            for j in range(i + 1, len(uniqs)):
-                hl = HiLo(
-                    variable=variable,
-                    hi=clean([uniqs[j]]),
-                    lo=clean([uniqs[i]]),
-                    lab=lab.format(hi=uniqs[j], lo=uniqs[i]),
-                    comparison=comparison,
-                    pad=uniqs,
-                )
-                out.append(hl)
+        pairs = [(uniqs[j], uniqs[i]) for i in range(n) for j in range(i + 1, n)]
     elif combo == "all":
-        for i in range(len(uniqs)):
-            for j in range(len(uniqs)):
-                if i == j:
-                    continue
-                hl = HiLo(
-                    variable=variable,
-                    hi=clean([uniqs[j]]),
-                    lo=clean([uniqs[i]]),
-                    lab=lab.format(hi=uniqs[j], lo=uniqs[i]),
-                    comparison=comparison,
-                    pad=uniqs,
-                )
-                out.append(hl)
+        pairs = [(uniqs[j], uniqs[i]) for i in range(n) for j in range(n) if i != j]
     elif combo == "revpairwise":
-        for i in range(len(uniqs)):
-            for j in range(i + 1, len(uniqs)):
-                hl = HiLo(
-                    variable=variable,
-                    hi=clean([uniqs[i]]),
-                    lo=clean([uniqs[j]]),
-                    lab=lab.format(hi=uniqs[i], lo=uniqs[j]),
-                    comparison=comparison,
-                    pad=uniqs,
-                )
-                out.append(hl)
+        pairs = [(uniqs[i], uniqs[j]) for i in range(n) for j in range(i + 1, n)]
     else:
         raise ValueError(
             "The supported comparisons are: 'reference', 'revreference', 'sequential', "
             "'revsequential', 'pairwise', 'revpairwise', and 'all'."
         )
 
-    return out
+    return [
+        HiLo(
+            variable=variable,
+            hi=clean([hi]),
+            lo=clean([lo]),
+            lab=lab.format(hi=hi, lo=lo),
+            comparison=comparison,
+            pad=uniqs,
+        )
+        for hi, lo in pairs
+    ]
 
 
 def _get_cross_factorial_combinations(

@@ -1,20 +1,10 @@
 import numpy as np
 import polars as pl
+import pytest
 from polars.testing import assert_frame_equal
 
-import marginaleffects.hypothesis_compile as hypc
 from marginaleffects.hypothesis_compile import hypothesis_compile
 from marginaleffects.test.core import get_hypothesis
-
-
-def test_group_term_indices_preserves_first_occurrence_order():
-    group_terms = getattr(hypc, "_group_term_indices", None)
-    assert group_terms is not None
-
-    rowlabels, groups = group_terms(["b", "a", "b", "c", "a"])
-
-    assert rowlabels == ["b", "a", "c"]
-    assert groups == [[0, 2], [1, 4], [3]]
 
 
 def test_matrix_hypothesis_compiles_replay_function():
@@ -29,17 +19,11 @@ def test_matrix_hypothesis_compiles_replay_function():
     np.testing.assert_allclose(hyp.apply(np.array([2.0, 3.0, 5.0])), [-1.0, 13.0])
 
 
-def test_string_hypothesis_compiles_duplicate_term_replay():
-    base = pl.DataFrame(
-        {"term": ["a", "a", "b"], "estimate": [1.0, 3.0, 5.0]},
-    )
-
-    out, hyp = hypothesis_compile(base, "b - a = 0")
-
-    assert hyp.kind == "matrix"
-    np.testing.assert_array_equal(hyp.H, [[-0.5], [-0.5], [1.0]])
-    assert_frame_equal(out, get_hypothesis(base, "b - a = 0"))
-    np.testing.assert_allclose(hyp.apply(np.array([2.0, 4.0, 9.0])), [6.0])
+def test_string_hypothesis_rejects_duplicate_terms():
+    # As in R: term names are ambiguous when a term appears on several rows.
+    base = pl.DataFrame({"term": ["a", "a", "b"], "estimate": [1.0, 3.0, 5.0]})
+    with pytest.raises(ValueError, match="unique row identifiers"):
+        hypothesis_compile(base, "b - a = 0")
 
 
 def test_sequence_hypothesis_compiles_concatenated_replay():

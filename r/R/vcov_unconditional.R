@@ -370,16 +370,7 @@ get_unconditional_comparison_base <- function(plan, model, rowid, n) {
     phi <- matrix(0, nrow = n, ncol = plan$n_comp)
 
     for (g in plan$groups) {
-        args <- g$args
-        args$hi <- hi[g$idx]
-        args$lo <- lo[g$idx]
-        if (isTRUE(g$uses_y)) {
-            args$y <- y[g$idx]
-        }
-        con <- do_call(g$fun, args)
-        if (length(con) != length(g$out_idx)) {
-            stop_sprintf("Internal error: comparison plan group changed shape.")
-        }
+        con <- comparison_plan_group_eval(g, hi = hi, lo = lo, y = y)
         if (length(con) == 1L && !is.finite(con)) {
             stop_sprintf(
                 "`vcov = \"unconditional\"` requires scalar comparison functions to return a finite value."
@@ -526,7 +517,7 @@ get_unconditional_known_scalar_comparison_phi <- function(
     rid <- rowid[idx]
     weighted <- endsWith(key, "wts")
     w <- if (weighted) group$args$w else rep(1, length(idx))
-    if (length(w) != length(idx) || anyNA(w) || any(!is.finite(w)) || sum(w) == 0) {
+    if (length(w) != length(idx) || anyNA(w) || !all(is.finite(w)) || sum(w) == 0) {
         return(NULL)
     }
 
@@ -931,7 +922,7 @@ update_unconditional_vcov_transform <- function(mfx, estimate, transform) {
     }
 
     estimate <- as.numeric(estimate)
-    if (anyNA(estimate) || any(!is.finite(estimate))) {
+    if (anyNA(estimate) || !all(is.finite(estimate))) {
         msg <- paste0(
             "`vcov = \"unconditional\"` cannot transform the saved covariance ",
             "matrix when pre-transform estimates are non-finite."
@@ -958,7 +949,7 @@ update_unconditional_vcov_transform <- function(mfx, estimate, transform) {
             )
         }
     )
-    if (!identical(dim(H), c(length(estimate), length(estimate))) || anyNA(H) || any(!is.finite(H))) {
+    if (!identical(dim(H), c(length(estimate), length(estimate))) || anyNA(H) || !all(is.finite(H))) {
         stop_sprintf(
             "`vcov = \"unconditional\"` could not compute a finite transform Jacobian."
         )

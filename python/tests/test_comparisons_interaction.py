@@ -1,10 +1,10 @@
 # FET re
 
 import polars as pl
-import statsmodels.formula.api as smf
-import statsmodels.api as sm
-from polars.testing import assert_series_equal
 import pytest
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+from polars.testing import assert_series_equal
 
 import marginaleffects
 from marginaleffects import *
@@ -31,7 +31,7 @@ def test_def_contrast():
     # comment in r version:
     # interaction automatic flip from NULL to useful
     assert "contrast" in cmp2.columns
-    assert all([s in cmp3.columns for s in ["contrast_cyl", "contrast_gear"]])
+    assert all(s in cmp3.columns for s in ["contrast_cyl", "contrast_gear"])
 
 
 def test_interaction_01_data():
@@ -93,8 +93,8 @@ def test_variables_specified():
     # All variables used as numeric (no C() in formula)
     mod = smf.ols("mpg ~ am + cyl + wt + gear", data=mtcars.to_pandas()).fit()
     cmp = comparisons(mod, variables=["am", "cyl"], cross=True)
-    isinstance(cmp, marginaleffects.MarginaleffectsResult)
-    with pytest.raises(Exception):
+    assert isinstance(cmp, marginaleffects.MarginaleffectsResult)
+    with pytest.raises(ValueError, match="must be specified when `cross=True`"):
         comparisons(mod, cross=True)
 
 

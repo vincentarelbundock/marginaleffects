@@ -1,3 +1,33 @@
+# Builds the comparison/label pair for `pairwise` and `revpairwise`
+# hypotheses. `pairwise` keeps the lower triangle of `outer(x, x, op)` and
+# guards on the number of inputs; `revpairwise` keeps the upper triangle and
+# guards on the number of pairs.
+hypothesis_formula_pairwise <- function(op, reverse) {
+    drop_tri <- if (reverse) lower.tri else upper.tri
+    keep <- function(out) {
+        diag(out) <- NA
+        out[drop_tri(out)] <- NA
+        out <- as.vector(out)
+        out[!is.na(out)]
+    }
+    list(
+        comparison = function(x) {
+            safe_mode <- getOption("marginaleffects_safe", default = TRUE)
+            n <- if (reverse) length(x) * (length(x) - 1) / 2 else length(x)
+            if (n > 25 && isTRUE(safe_mode)) {
+                msg <- "This command will generate many estimates. Set `options(marginaleffects_safe=FALSE)` to circumvent this guardrail."
+                stop(msg, call. = FALSE)
+            }
+            keep(outer(x, x, op))
+        },
+        label = function(x) {
+            x <- sprintf("(%s)", x)
+            keep(outer(x, x, paste, sep = paste0(" ", op, " ")))
+        }
+    )
+}
+
+
 hypothesis_formula_list <- list(
     reference = list(
         ratio = list(
@@ -30,102 +60,12 @@ hypothesis_formula_list <- list(
         )
     ),
     pairwise = list(
-        ratio = list(
-            comparison = function(x) {
-                safe_mode <- getOption("marginaleffects_safe", default = TRUE)
-                if (length(x) > 25 && isTRUE(safe_mode)) {
-                    msg <- "This command will generate many estimates. Set `options(marginaleffects_safe=FALSE)` to circumvent this guardrail."
-                    stop(msg, call. = FALSE)
-                }
-                out <- outer(x, x, "/")
-                diag(out) <- NA
-                out[upper.tri(out)] <- NA # Set upper triangle to NA
-                out <- as.vector(out)
-                out <- out[!is.na(out)] # Keep only non-NA values
-                out
-            },
-            label = function(x) {
-                x <- sprintf("(%s)", x)
-                out <- outer(x, x, paste, sep = " / ")
-                out[upper.tri(out)] <- NA # Set upper triangle to NA
-                diag(out) <- NA
-                out <- as.vector(out)
-                out[!is.na(out)]
-            }
-        ),
-        difference = list(
-            comparison = function(x) {
-                safe_mode <- getOption("marginaleffects_safe", default = TRUE)
-                if (length(x) > 25 && isTRUE(safe_mode)) {
-                    msg <- "This command will generate many estimates. Set `options(marginaleffects_safe=FALSE)` to circumvent this guardrail."
-                    stop(msg, call. = FALSE)
-                }
-                out <- outer(x, x, "-")
-                diag(out) <- NA
-                out[upper.tri(out)] <- NA # Set upper triangle to NA
-                out <- as.vector(out)
-                out <- out[!is.na(out)] # Keep only non-NA values
-                out
-            },
-            label = function(x) {
-                x <- sprintf("(%s)", x)
-                out <- outer(x, x, paste, sep = " - ")
-                out[upper.tri(out)] <- NA # Set upper triangle to NA
-                diag(out) <- NA
-                out <- as.vector(out)
-                out[!is.na(out)]
-            }
-        )
+        ratio = hypothesis_formula_pairwise("/", reverse = FALSE),
+        difference = hypothesis_formula_pairwise("-", reverse = FALSE)
     ),
     revpairwise = list(
-        ratio = list(
-            comparison = function(x) {
-                safe_mode <- getOption("marginaleffects_safe", default = TRUE)
-                n_pairs <- length(x) * (length(x) - 1) / 2
-                if (n_pairs > 25 && isTRUE(safe_mode)) {
-                    msg <- "This command will generate many estimates. Set `options(marginaleffects_safe=FALSE)` to circumvent this guardrail."
-                    stop(msg, call. = FALSE)
-                }
-                out <- outer(x, x, "/")
-                diag(out) <- NA
-                out[lower.tri(out)] <- NA
-                out <- as.vector(out)
-                out <- out[!is.na(out)]
-                out
-            },
-            label = function(x) {
-                x <- sprintf("(%s)", x)
-                out <- outer(x, x, paste, sep = " / ")
-                out[lower.tri(out)] <- NA # Set lower triangle to NA (keep upper)
-                diag(out) <- NA
-                out <- as.vector(out)
-                out[!is.na(out)]
-            }
-        ),
-        difference = list(
-            comparison = function(x) {
-                safe_mode <- getOption("marginaleffects_safe", default = TRUE)
-                n_pairs <- length(x) * (length(x) - 1) / 2
-                if (n_pairs > 25 && isTRUE(safe_mode)) {
-                    msg <- "This command will generate many estimates. Set `options(marginaleffects_safe=FALSE)` to circumvent this guardrail."
-                    stop(msg, call. = FALSE)
-                }
-                out <- outer(x, x, "-")
-                diag(out) <- NA
-                out[lower.tri(out)] <- NA
-                out <- as.vector(out)
-                out <- out[!is.na(out)]
-                out
-            },
-            label = function(x) {
-                x <- sprintf("(%s)", x)
-                out <- outer(x, x, paste, sep = " - ")
-                out[lower.tri(out)] <- NA # Set lower triangle to NA (keep upper)
-                diag(out) <- NA
-                out <- as.vector(out)
-                out[!is.na(out)]
-            }
-        )
+        ratio = hypothesis_formula_pairwise("/", reverse = TRUE),
+        difference = hypothesis_formula_pairwise("-", reverse = TRUE)
     ),
     trt_vs_ctrl = list(
         ratio = list(

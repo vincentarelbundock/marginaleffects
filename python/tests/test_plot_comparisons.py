@@ -1,9 +1,10 @@
 import pytest
+import statsmodels.formula.api as smf
+
 from marginaleffects import *
 from marginaleffects.plot.comparisons import *
-from tests.utilities import *
 from tests.helpers import *
-import statsmodels.formula.api as smf
+from tests.utilities import *
 
 pytestmark = plot_snapshot_skipif()
 

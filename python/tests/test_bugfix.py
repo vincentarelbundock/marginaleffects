@@ -6,7 +6,7 @@ import pandas as pd
 import polars as pl
 from statsmodels.formula.api import glm, ols
 
-from marginaleffects import predictions, MarginaleffectsResult
+from marginaleffects import MarginaleffectsResult, predictions
 
 
 def test_issue_25():
@@ -35,6 +35,7 @@ def test_issue_1724():
         [sys.executable, "-c", "from marginaleffects import datagrid"],
         capture_output=True,
         text=True,
+        check=False,
     )
     assert result.returncode == 0, (
         f"Fresh-process import of `datagrid` failed.\n"

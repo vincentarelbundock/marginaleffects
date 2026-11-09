@@ -28,59 +28,75 @@ get_comparisons_data_factor <- function(
         }
     }
 
-    # string shortcuts
-    flag <- checkmate::check_choice(
-        variable$value,
-        c(
-            "reference",
-            "revreference",
-            "pairwise",
-            "revpairwise",
-            "sequential",
-            "revsequential",
-            "all",
-            "minmax"
-        )
+    numeric_pair <- if (convert_to_factor) {
+        function(v) {
+            flevs <- levels(newdata[[variable$name]])
+            data.table::data.table(
+                lo = factor(as.character(v[1]), levels = flevs),
+                hi = factor(as.character(v[2]), levels = flevs)
+            )
+        }
+    } else {
+        function(v) data.table::data.table(lo = v[1], hi = v[2])
+    }
+
+    contrast_categories(
+        variable = variable,
+        levs = levs,
+        newdata = newdata,
+        modeldata = modeldata,
+        first_cross = first_cross,
+        as_factor = convert_to_factor,
+        numeric_pair = numeric_pair
     )
-    if (isTRUE(flag)) {
+}
+
+
+# Shared by the character and factor paths: build the lo/hi grid for a
+# categorical contrast and assemble the output list.
+# `numeric_pair` builds the lo/hi data.table when `variable$value` is a
+# numeric vector of length 2; `as_factor` controls whether the contrasted
+# column is returned as a factor with levels `levs`.
+contrast_categories <- function(
+    variable,
+    levs,
+    newdata,
+    modeldata,
+    first_cross,
+    as_factor,
+    numeric_pair) {
+    shortcuts <- c(
+        "reference",
+        "revreference",
+        "pairwise",
+        "revpairwise",
+        "sequential",
+        "revsequential",
+        "all",
+        "minmax"
+    )
+    value <- variable$value
+
+    if (isTRUE(checkmate::check_choice(value, shortcuts))) {
         levs_idx <- contrast_categories_shortcuts(levs, variable)
-
-        # custom data frame or function
     } else if (
-        isTRUE(checkmate::check_function(variable$value)) ||
-            isTRUE(checkmate::check_data_frame(variable$value))
+        isTRUE(checkmate::check_function(value)) ||
+            isTRUE(checkmate::check_data_frame(value))
     ) {
-        out <- contrast_categories_custom(variable, newdata)
-        return(out)
-
-        # vector of two values
-    } else if (isTRUE(checkmate::check_atomic_vector(variable$value, len = 2))) {
-        if (is.character(variable$value)) {
+        return(contrast_categories_custom(variable, newdata))
+    } else if (isTRUE(checkmate::check_atomic_vector(value, len = 2))) {
+        if (is.character(value)) {
             tmp <- modeldata[[variable$name]]
-            if (!all(variable$value %in% as.character(tmp))) {
+            if (!all(value %in% as.character(tmp))) {
                 msg <- "Some of the values supplied to the `variables` argument were not found in the dataset."
                 stop_sprintf(msg)
             }
-            idx <- match(variable$value, as.character(tmp))
+            idx <- match(value, as.character(tmp))
             levs_idx <- data.table::data.table(lo = tmp[idx[1]], hi = tmp[idx[[2]]])
-        } else if (is.numeric(variable$value)) {
-            tmp <- newdata[[variable$name]]
-            if (convert_to_factor) {
-                levs_idx <- data.table::data.table(
-                    lo = factor(as.character(variable$value[1]), levels = levels(tmp)),
-                    hi = factor(as.character(variable$value[2]), levels = levels(tmp))
-                )
-            } else {
-                levs_idx <- data.table::data.table(
-                    lo = variable$value[1],
-                    hi = variable$value[2]
-                )
-            }
+        } else if (is.numeric(value)) {
+            levs_idx <- numeric_pair(value)
         } else {
-            levs_idx <- data.table::data.table(
-                lo = variable$value[1],
-                hi = variable$value[2]
-            )
+            levs_idx <- data.table::data.table(lo = value[1], hi = value[2])
         }
     }
 
@@ -95,15 +111,9 @@ get_comparisons_data_factor <- function(
     hi <- tmp[[2]]
     original <- tmp[[3]]
 
-    if (is.factor(newdata[[variable$name]]) || isTRUE(convert_to_factor)) {
-        lo[[variable$name]] <- factor(
-            lo[["marginaleffects_contrast_lo"]],
-            levels = levs
-        )
-        hi[[variable$name]] <- factor(
-            hi[["marginaleffects_contrast_hi"]],
-            levels = levs
-        )
+    if (isTRUE(as_factor)) {
+        lo[[variable$name]] <- factor(lo[["marginaleffects_contrast_lo"]], levels = levs)
+        hi[[variable$name]] <- factor(hi[["marginaleffects_contrast_hi"]], levels = levs)
     } else {
         lo[[variable$name]] <- lo[["marginaleffects_contrast_lo"]]
         hi[[variable$name]] <- hi[["marginaleffects_contrast_hi"]]
@@ -112,11 +122,11 @@ get_comparisons_data_factor <- function(
     contrast_label <- hi$marginaleffects_contrast_label
     contrast_null <- hi$marginaleffects_contrast_hi == hi$marginaleffects_contrast_lo
 
-    tmp <- !grepl("^marginaleffects_contrast", colnames(lo))
-    lo <- lo[, tmp, with = FALSE]
-    hi <- hi[, tmp, with = FALSE]
+    keep <- !grepl("^marginaleffects_contrast", colnames(lo))
+    lo <- lo[, keep, with = FALSE]
+    hi <- hi[, keep, with = FALSE]
 
-    out <- list(
+    list(
         rowid = original$rowid,
         lo = lo,
         hi = hi,
@@ -125,7 +135,6 @@ get_comparisons_data_factor <- function(
         lab = contrast_label,
         contrast_null = contrast_null
     )
-    return(out)
 }
 
 

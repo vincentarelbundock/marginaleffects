@@ -1,9 +1,10 @@
-import pytest
 import pandas as pd
 import polars as pl
 import pyarrow as pa
-from marginaleffects.utils import ingest
+import pytest
+
 from marginaleffects.datasets import get_dataset
+from marginaleffects.utils import ingest
 
 
 def get_sample_data():

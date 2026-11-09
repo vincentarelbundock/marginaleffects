@@ -1,8 +1,9 @@
 import polars as pl
-import marginaleffects as me
-from polars.testing import assert_series_equal
-from tests.helpers import wage_panel_pd
 from linearmodels.panel import PanelOLS
+from polars.testing import assert_series_equal
+
+import marginaleffects as me
+from tests.helpers import wage_panel_pd
 
 formula = "lwage ~ exper * hours * educ * married - 1"
 data = wage_panel_pd

@@ -4,10 +4,10 @@ import statsmodels.formula.api as smf
 
 from marginaleffects import get_dataset
 from marginaleffects.by import get_by
+from marginaleffects.planning import prediction_plan_apply, prediction_plan_predict
 from marginaleffects.planning.core import _nan_weighted_mean
 from marginaleffects.predictions import _predictions_build
 from marginaleffects.test import get_hypothesis
-from marginaleffects.planning import prediction_plan_apply, prediction_plan_predict
 from marginaleffects.utils import prepare_base_inputs
 
 

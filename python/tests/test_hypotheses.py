@@ -2,9 +2,9 @@ import numpy as np
 import polars as pl
 import statsmodels.formula.api as smf
 from polars.testing import assert_series_equal
+
 from marginaleffects import *
 from marginaleffects import MarginaleffectsResult
-
 
 # Read the same vendored CSV as tests/r/test_hypotheses.R so the R fixtures and the Python
 # results are computed from identical bytes.
@@ -67,4 +67,4 @@ def test_coef():
     assert isinstance(h, MarginaleffectsResult)
     assert isinstance(h.data, pl.DataFrame)
     assert h.shape[0] == 1
-    assert h["term"][0] == "Pop1831=Desertion"
+    assert h["hypothesis"][0] == "Pop1831=Desertion"

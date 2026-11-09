@@ -151,20 +151,17 @@ def _apply_hypothesis(J, hyp, estimate_pre):
     return None if G is None or G.shape[1] != J.shape[0] else (G @ J, True)
 
 
-def _prediction_jacobian(plan, model):
-    stage = _model_stage(model, plan.exog, plan.n_pred)
-    if stage is None or plan.has_na:
-        return None
-    X, pred, deriv = stage
-    J = X if deriv is None else X * deriv[:, None]
-    J = _align_rows(J, plan.align)
-    if J is None:
-        return None
+def _compose_downstream(J, plan, replay_stages):
+    """Aggregate, apply the hypothesis stage, and check the final Jacobian.
+
+    ``replay_stages()`` replays the plan's post-model stages and is evaluated
+    only once aggregation succeeds.
+    """
     if plan.agg is not None:
         J = _aggregate_rows(J, plan.agg_blocks or plan.agg)
         if J is None:
             return None
-    replay = prediction_plan_apply_stages(plan, pred)
+    replay = replay_stages()
     composed = _apply_hypothesis(J, plan.hyp, replay.pre)
     if composed is None:
         return None
@@ -174,15 +171,23 @@ def _prediction_jacobian(plan, model):
     return J, replay.post, numerical_stage
 
 
-def _comparison_jacobian(plan, model):
-    if (
-        plan.has_na
-        or any(group.uses_y for group in plan.groups)
-        or any(group.fun_key is None for group in plan.groups)
-    ):
+def _prediction_jacobian(plan, model):
+    stage = _model_stage(model, plan.exog, plan.n_pred)
+    if stage is None or plan.has_na:
         return None
-    if any(
-        group.fun_key is not None and group.fun_key not in EXACT_COMPARISON_KEYS
+    X, pred, deriv = stage
+    J = X if deriv is None else X * deriv[:, None]
+    J = _align_rows(J, plan.align)
+    if J is None:
+        return None
+    return _compose_downstream(
+        J, plan, lambda: prediction_plan_apply_stages(plan, pred)
+    )
+
+
+def _comparison_jacobian(plan, model):
+    if plan.has_na or any(
+        group.uses_y or group.fun_key not in EXACT_COMPARISON_KEYS
         for group in plan.groups
     ):
         return None
@@ -224,19 +229,9 @@ def _comparison_jacobian(plan, model):
             value = X_hi[idx] * grad_hi[:, None] + X_lo[idx] * grad_lo[:, None]
         J[group.out_idx] = np.asarray(value).reshape(-1, beta.size)
 
-    if plan.agg is not None:
-        J = _aggregate_rows(J, plan.agg_blocks or plan.agg)
-        if J is None:
-            return None
-
-    replay = comparison_plan_apply_stages(plan, raw_hi, raw_lo)
-    composed = _apply_hypothesis(J, plan.hyp, replay.pre)
-    if composed is None:
-        return None
-    J, numerical_stage = composed
-    if not np.isfinite(J).all():
-        return None
-    return J, replay.post, numerical_stage
+    return _compose_downstream(
+        J, plan, lambda: comparison_plan_apply_stages(plan, raw_hi, raw_lo)
+    )
 
 
 def analytic_try(plan, model, V, estimate, kind):

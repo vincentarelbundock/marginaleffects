@@ -21,6 +21,7 @@
 import polars as pl
 import statsmodels.formula.api as smf
 from polars.testing import assert_series_equal
+
 from marginaleffects import comparisons, predictions
 from tests.helpers import iris
 

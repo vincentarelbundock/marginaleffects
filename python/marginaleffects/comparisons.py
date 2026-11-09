@@ -9,13 +9,7 @@ from .classes import MarginaleffectsResult
 from .docstrings import doc
 from .estimands import estimands
 from .hypothesis_compile import hypothesis_compile
-from .inference import (
-    analytic_try,
-    get_jacobian,
-    get_se,
-    is_unconditional,
-    unconditional_result,
-)
+from .inference import attach_standard_errors, is_unconditional
 from .planning import (
     AggGroup,
     ComparisonPlan,
@@ -51,106 +45,55 @@ def _cross_postprocess(cross):
     return add_term
 
 
-def _tag_frame(df, variable, lab, comparison, **extra_cols):
-    """Add term, contrast, marginaleffects_comparison columns to a frame."""
-    vcomp = "custom" if callable(comparison) else comparison
-    cols = {
-        "term": pl.lit(variable if not isinstance(variable, tuple) else variable[0]),
-        "marginaleffects_comparison": pl.lit(vcomp),
-    }
-    if lab is not None:
-        cols["contrast"] = pl.lit(lab)
-    cols.update({k: pl.lit(v) for k, v in extra_cols.items()})
-    return df.with_columns(**cols)
+def _comparison_tag(v):
+    vcomp = "custom" if callable(v.comparison) else v.comparison
+    return pl.lit(vcomp).alias("marginaleffects_comparison")
 
 
 def _build_comparison_frames(newdata, variables, cross):
+    nd = []
     hi = []
     lo = []
-    nd = []
     if not cross:
         for v in variables:
-            vcomp = "custom" if callable(v.comparison) else v.comparison
-            nd.append(
-                newdata.with_columns(
-                    pl.lit(v.variable).alias("term"),
-                    pl.lit(v.lab).alias("contrast"),
-                    pl.lit(vcomp).alias("marginaleffects_comparison"),
-                )
-            )
-            hi.append(
-                newdata.with_columns(
-                    pl.lit(v.hi).alias(v.variable),
-                    pl.lit(v.variable).alias("term"),
-                    pl.lit(v.lab).alias("contrast"),
-                    pl.lit(vcomp).alias("marginaleffects_comparison"),
-                )
-            )
-            lo.append(
-                newdata.with_columns(
-                    pl.lit(v.lo).alias(v.variable),
-                    pl.lit(v.variable).alias("term"),
-                    pl.lit(v.lab).alias("contrast"),
-                    pl.lit(vcomp).alias("marginaleffects_comparison"),
-                )
-            )
+            shared = [
+                pl.lit(v.variable).alias("term"),
+                pl.lit(v.lab).alias("contrast"),
+                _comparison_tag(v),
+            ]
+            nd.append(newdata.with_columns(*shared))
+            hi.append(newdata.with_columns(pl.lit(v.hi).alias(v.variable), *shared))
+            lo.append(newdata.with_columns(pl.lit(v.lo).alias(v.variable), *shared))
+    elif variables and isinstance(variables[0].variable, tuple):
+        for v in variables:
+            names = v.variable
+            shared = [
+                *(
+                    pl.lit(f"{v.hi[k]} - {v.lo[k]}").alias(f"contrast_{name}")
+                    for k, name in enumerate(names)
+                ),
+                pl.lit(names[0]).alias("term"),
+                _comparison_tag(v),
+            ]
+            hi_vals = [pl.lit(v.hi[k]).alias(name) for k, name in enumerate(names)]
+            lo_vals = [pl.lit(v.lo[k]).alias(name) for k, name in enumerate(names)]
+            nd.append(newdata.with_columns(*shared))
+            hi.append(newdata.with_columns(*hi_vals, *shared))
+            lo.append(newdata.with_columns(*lo_vals, *shared))
     else:
-        if variables and isinstance(variables[0].variable, tuple):
-            for v in variables:
-                vcomp = "custom" if callable(v.comparison) else v.comparison
-
-                var_names = v.variable
-                nd_row = newdata.clone()
-                hi_row = newdata.clone()
-                lo_row = newdata.clone()
-
-                for k, var_name in enumerate(var_names):
-                    hi_row = hi_row.with_columns(pl.lit(v.hi[k]).alias(var_name))
-                    lo_row = lo_row.with_columns(pl.lit(v.lo[k]).alias(var_name))
-                    contrast_label = f"{v.hi[k]} - {v.lo[k]}"
-                    nd_row = nd_row.with_columns(
-                        pl.lit(contrast_label).alias(f"contrast_{var_name}")
-                    )
-                    hi_row = hi_row.with_columns(
-                        pl.lit(contrast_label).alias(f"contrast_{var_name}")
-                    )
-                    lo_row = lo_row.with_columns(
-                        pl.lit(contrast_label).alias(f"contrast_{var_name}")
-                    )
-
-                nd_row = nd_row.with_columns(
-                    pl.lit(var_names[0]).alias("term"),
-                    pl.lit(vcomp).alias("marginaleffects_comparison"),
-                )
-                hi_row = hi_row.with_columns(
-                    pl.lit(var_names[0]).alias("term"),
-                    pl.lit(vcomp).alias("marginaleffects_comparison"),
-                )
-                lo_row = lo_row.with_columns(
-                    pl.lit(var_names[0]).alias("term"),
-                    pl.lit(vcomp).alias("marginaleffects_comparison"),
-                )
-
-                nd.append(nd_row)
-                hi.append(hi_row)
-                lo.append(lo_row)
-        else:
-            nd_row = newdata.clone()
-            hi_row = newdata.clone()
-            lo_row = newdata.clone()
-            for v in variables:
-                vcomp = "custom" if callable(v.comparison) else v.comparison
-                shared = [
-                    pl.lit(v.variable).alias("term"),
-                    pl.lit(v.lab).alias(f"contrast_{v.variable}"),
-                    pl.lit(vcomp).alias("marginaleffects_comparison"),
-                ]
-                nd_row = nd_row.with_columns(*shared)
-                hi_row = hi_row.with_columns(pl.lit(v.hi).alias(v.variable), *shared)
-                lo_row = lo_row.with_columns(pl.lit(v.lo).alias(v.variable), *shared)
-            nd.append(nd_row)
-            hi.append(hi_row)
-            lo.append(lo_row)
+        nd_row = hi_row = lo_row = newdata
+        for v in variables:
+            shared = [
+                pl.lit(v.variable).alias("term"),
+                pl.lit(v.lab).alias(f"contrast_{v.variable}"),
+                _comparison_tag(v),
+            ]
+            nd_row = nd_row.with_columns(*shared)
+            hi_row = hi_row.with_columns(pl.lit(v.hi).alias(v.variable), *shared)
+            lo_row = lo_row.with_columns(pl.lit(v.lo).alias(v.variable), *shared)
+        nd.append(nd_row)
+        hi.append(hi_row)
+        lo.append(lo_row)
     return nd, hi, lo
 
 
@@ -177,64 +120,47 @@ def _finalize_counterfactual_frames(
     pad_df = upcast(pad_df, hi)
     nd = upcast(nd, hi)
 
-    dfs = {"nd": nd, "hi": hi, "lo": lo}
+    def list_to_string(frame, col):
+        return frame.with_columns(
+            frame[col].list.eval(pl.element().cast(pl.String)).alias(col)
+        )
 
-    for df_name, df in dfs.items():
-        common_cols = set(pad_df.columns) & set(df.columns)
-        for col in common_cols:
-            pad_dtype = str(pad_df[col].dtype)
-            df_dtype = str(df[col].dtype)
-            if (
-                pad_dtype != df_dtype
-                and pad_dtype.startswith("List(")
-                and df_dtype.startswith("List(")
+    def is_list(dtype):
+        return str(dtype).startswith("List(")
+
+    # Reconcile List columns whose element types differ between the padding
+    # rows and each counterfactual frame, with progressively blunter fallbacks.
+    frames = [nd, hi, lo]
+    for i, df in enumerate(frames):
+        for col in set(pad_df.columns) & set(df.columns):
+            pad_dtype, df_dtype = pad_df[col].dtype, df[col].dtype
+            if str(pad_dtype) == str(df_dtype) or not (
+                is_list(pad_dtype) and is_list(df_dtype)
             ):
+                continue
+            try:
+                pad_df = list_to_string(pad_df, col)
+                df = list_to_string(df, col)
+            except Exception as e:  # noqa: BLE001 -- dtype recovery path
+                warnings.warn(f"Could not convert List column {col} to strings: {e}")
                 try:
-                    if col in pad_df.columns:
-                        pad_df = pad_df.with_columns(
-                            pad_df[col]
-                            .list.eval(pl.element().cast(pl.String))
-                            .alias(col)
-                        )
-                    if col in df.columns:
-                        df = df.with_columns(
-                            df[col].list.eval(pl.element().cast(pl.String)).alias(col)
-                        )
-                except Exception as e:  # noqa: BLE001 -- dtype recovery path
-                    warnings.warn(
-                        f"Could not convert List column {col} to strings: {e}"
-                    )
-                    try:
-                        if col in pad_df.columns and pad_df.height > 0:
-                            pad_df = pad_df.explode(col)
-                        if col in df.columns and df.height > 0:
-                            df = df.explode(col)
-                    except Exception as e2:  # noqa: BLE001 -- final recovery path
-                        warnings.warn(f"Could not explode List column {col}: {e2}")
-                        if col in pad_df.columns:
-                            pad_df = pad_df.with_columns(
-                                pad_df[col].cast(pl.String).alias(col)
-                            )
-                        if col in df.columns:
-                            df = df.with_columns(df[col].cast(pl.String).alias(col))
+                    if pad_df.height > 0:
+                        pad_df = pad_df.explode(col)
+                    if df.height > 0:
+                        df = df.explode(col)
+                except Exception as e2:  # noqa: BLE001 -- final recovery path
+                    warnings.warn(f"Could not explode List column {col}: {e2}")
+                    pad_df = pad_df.with_columns(pad_df[col].cast(pl.String))
+                    df = df.with_columns(df[col].cast(pl.String))
+        frames[i] = df
 
-        dfs[df_name] = df
+    nd, hi, lo = (pl.concat([pad_df, df], how="diagonal") for df in frames)
 
-    nd, hi, lo = dfs["nd"], dfs["hi"], dfs["lo"]
-
-    nd = pl.concat([pad_df, nd], how="diagonal")
-    hi = pl.concat([pad_df, hi], how="diagonal")
-    lo = pl.concat([pad_df, lo], how="diagonal")
-
-    list_cols = [col for col in nd.columns if str(nd[col].dtype).startswith("List(")]
-    categorical_list_cols = []
-    for col in list_cols:
-        dtype_str = str(nd[col].dtype)
-        if "Enum(" in dtype_str or "String" in dtype_str or "UInt32" in dtype_str:
-            categorical_list_cols.append(col)
-
-    if categorical_list_cols:
-        for col in categorical_list_cols:
+    for col in nd.columns:
+        dtype = str(nd[col].dtype)
+        if dtype.startswith("List(") and any(
+            t in dtype for t in ("Enum(", "String", "UInt32")
+        ):
             nd = nd.explode(col)
             hi = hi.explode(col)
             lo = lo.explode(col)
@@ -540,7 +466,8 @@ def _compute_fd_estimates(
         by_keys = _resolve_grouping_keys(by, tmp)
     tmp = _apply_comparison_estimands(tmp, by_keys, wts, eps, comparison_functions)
     tmp, _ = _record_comparison_aggregation(tmp, by_keys, wts, by)
-    tmp = get_hypothesis(tmp, hypothesis=hypothesis, by=by_keys)
+    by_labels = ["by"] if by_is_frame(by) else by
+    tmp = get_hypothesis(tmp, hypothesis=hypothesis, by=by_labels)
     return tmp
 
 
@@ -556,6 +483,7 @@ def _comparisons_build(
     wts,
     eps,
     comparison_functions,
+    newdata=None,
 ):
     coefs = model.get_coef()
     tmp, align, plan_predictions = _assemble_prediction_table(
@@ -594,7 +522,8 @@ def _comparisons_build(
     if by_is_frame(by):
         # The frame has done its work; downstream only sees the label column.
         by = ["by"]
-    tmp, hyp = hypothesis_compile(tmp, hypothesis=hypothesis, by=by_keys)
+    # Labels and function hypotheses see the user's `by`, as in R.
+    tmp, hyp = hypothesis_compile(tmp, hypothesis=hypothesis, by=by, newdata=newdata)
 
     groups = []
     start = 0
@@ -869,46 +798,25 @@ def comparisons(
         wts=wts,
         eps=eps,
         comparison_functions=comparison_functions,
+        newdata=newdata,
     )
-    jacobian_method = None
-    if is_unconditional(V):
-        out, J, jacobian_method, _V = unconditional_result(
-            plan=plan,
-            model=model,
-            kind="comparisons",
-            request=V,
-            newdata=newdata,
-            out=out,
-            eps_vcov=eps_vcov,
-        )
-    elif vcov is not None and vcov is not False and V is not None:
-        # An explicit `eps_vcov` requests finite differences with that step size,
-        # so the exact-derivative paths are skipped when the user supplies one.
-        ad = None
-        if eps_vcov is None:
-            ad = analytic_try(
-                plan=plan,
-                model=model,
-                V=V,
-                estimate=out["estimate"].to_numpy(),
-                kind="comparisons",
-            )
-        if ad is not None:
-            J = ad.jacobian
-            jacobian_method = ad.method
-            out = out.with_columns(pl.Series(ad.std_error).alias("std_error"))
-        else:
 
-            def replay(beta):
-                hi_pred, lo_pred, y_pred = comparison_plan_predict(plan, model, beta)
-                return comparison_plan_apply(plan, hi_pred, lo_pred, y_pred)
+    def replay(beta):
+        hi_pred, lo_pred, y_pred = comparison_plan_predict(plan, model, beta)
+        return comparison_plan_apply(plan, hi_pred, lo_pred, y_pred)
 
-            J = get_jacobian(replay, model.get_coef(), eps_vcov)
-            jacobian_method = "finite_difference"
-            se = get_se(J, V)
-            out = out.with_columns(pl.Series(se).alias("std_error"))
-    else:
-        J = None
+    if not is_unconditional(V) and (vcov is None or vcov is False):
+        V = None
+    out, J, jacobian_method = attach_standard_errors(
+        out,
+        plan=plan,
+        model=model,
+        V=V,
+        kind="comparisons",
+        newdata=newdata,
+        eps_vcov=eps_vcov,
+        replay=replay,
+    )
 
     return finalize_result(
         out,

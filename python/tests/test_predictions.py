@@ -1,10 +1,11 @@
-import pytest
 import polars as pl
-from polars.testing import assert_series_equal
+import pytest
 import statsmodels.formula.api as smf
-from tests.helpers import guerry, penguins, diamonds, mtcars
+from polars.testing import assert_series_equal
+
 from marginaleffects import *
 from marginaleffects import MarginaleffectsResult
+from tests.helpers import diamonds, guerry, mtcars, penguins
 from tests.utilities import *
 
 df = guerry.with_columns(pl.Series(range(guerry.shape[0])).alias("row_id")).sort(

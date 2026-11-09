@@ -170,7 +170,7 @@ merge_original_data <- function(
     if (isTRUE(deduplicate)) {
         idx <- duplicated(tmp, by = bycols)
         tmp <- tmp[!idx]
-    } else if (any(duplicated(tmp, by = bycols))) {
+    } else if (anyDuplicated(tmp, by = bycols) > 0) {
         if ("rowid" %in% bycols && nrow(tmp) != nrow(out)) {
             tmp <- tmp[rowid %in% out[["rowid"]]]
         }
@@ -244,24 +244,6 @@ group_to_factor <- function(group, model) {
     )
 }
 
-
-...mget <- function(x) {
-    found <- match(x, eval(quote(...names()), parent.frame(1L)))
-    not_found <- is.na(found)
-    if (all(not_found)) {
-        return(list())
-    }
-    stats::setNames(
-        lapply(found[!not_found], function(z) {
-            eval(
-                quote(...elt(.z)),
-                pairlist(.z = z),
-                parent.frame(3L)
-            )
-        }),
-        x[!not_found]
-    )
-}
 
 stop_deprecate <- function(old, new = NULL) {
     if (is.null(new)) {

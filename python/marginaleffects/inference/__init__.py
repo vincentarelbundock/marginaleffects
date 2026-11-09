@@ -2,6 +2,7 @@
 
 from .analytic import AnalyticResult, analytic_try
 from .delta import add_standard_errors, get_jacobian, get_se
+from .standard_errors import attach_standard_errors
 from .statistics import get_z_p_ci
 from .unconditional import (
     VcovUnconditional,
@@ -19,6 +20,7 @@ __all__ = [
     "add_standard_errors",
     "analytic_try",
     "as_unconditional",
+    "attach_standard_errors",
     "get_jacobian",
     "get_se",
     "get_z_p_ci",

@@ -1,7 +1,8 @@
 import polars as pl
 import statsmodels.formula.api as smf
-from tests.helpers import mtcars
+
 from marginaleffects import *
+from tests.helpers import mtcars
 
 mod = smf.probit("am ~ hp + wt", data=mtcars).fit()
 

@@ -1,3 +1,65 @@
+# Development
+
+Breaking changes:
+
+The `hypothesis` argument now behaves like the R package, as checked by a new
+R-reference test covering each kind of hypothesis. The one deliberate
+difference is that positional indices stay 0-based in Python (`b0` is the
+first estimate; R starts at `b1`).
+
+* Formula and equation hypotheses return their labels in a `hypothesis`
+  column, placed first, instead of `term`. Weights (vector, matrix or data
+  frame) still return a `term` column, as in R.
+* Formula labels follow R: values are pasted with a space (`(0 4) - (0 3)`,
+  not `(0, 4) - (0, 3)`) and formatted as R does (`2`, not `2.0`). Without a
+  `by` argument, the `datagrid()` variables label the rows. When no column
+  identifies the rows, or labels repeat, rows are labelled `b0`, `b1`, ...
+  (0-based, like positional indices) instead of `0`, `1`, ...
+* Weight columns without names are labelled `custom` instead of `H1`, `H2`.
+* Term names in an equation must be unique. Previously, rows sharing a term
+  (e.g. unit-level comparisons) were silently averaged; this now raises an
+  error, as in R. Use positional indices or `by=` instead.
+* The `revsequential` formula shortcut is removed (R does not have it).
+* Bare strings such as `hypothesis="pairwise"` raise R's deprecation error;
+  use the formula interface (`hypothesis="~pairwise"`).
+
+New features:
+
+* `hypothesis` accepts a function, as in R. It receives `x` (the estimates as
+  a polars DataFrame) and optionally `newdata` and `by`, and returns a data
+  frame with `term` (or `hypothesis`) and `estimate` columns, or a vector.
+* `hypothesis` accepts a list of numbers (one weight per estimate) or a data
+  frame of weights whose column names label the results.
+* The `b*` wildcard works in equations (it was documented but failed), and
+  equations accept R syntax: `^` for powers and `exp`, `log`, `sqrt` and other
+  math functions without the `np.` prefix.
+
+* Formula hypotheses support the `meandev`, `meanotherdev`, `trt_vs_ctrl`,
+  `poly` and `helmert` shortcuts on the right-hand side, matching the R
+  package. `poly` and `helmert` take a `dotproduct` (or empty) left-hand side
+  and use the same contrast weights as R's `contr.poly()` and
+  `contr.helmert()`. All shortcuts work with `| group` and use exact
+  Jacobians when the hypothesis is linear. Ex: `hypothesis="~ poly"`,
+  `hypothesis="ratio ~ meandev | am"`.
+
+Bug fixes:
+
+* `pairwise` and `revpairwise` formula hypotheses dropped every difference
+  that was exactly zero (e.g. two equal estimates), so estimates and labels
+  no longer lined up.
+* `pairwise` and `revpairwise` now return rows in the same order as R. The
+  order differed with four or more estimates; values and labels were already
+  the same.
+* Grouped formula hypotheses (`~ ... | group`) no longer include the grouping
+  columns in their row labels, matching R: `~ reference | am` gives
+  `(4) - (3)` rather than also listing the `am` value. Groups are returned
+  in a fixed order, which the exact Jacobian for these hypotheses relies on.
+* Row labels built from several columns now list those columns in a stable
+  order.
+* A positional index one past the last estimate (e.g. `b4` with four
+  estimates) raised a `NameError`; it now raises the informative
+  "cannot be used" error.
+
 # 0.6.2
 
 Bug fixes:

@@ -1,15 +1,7 @@
-import copy
-
 from ..docstrings import doc
 from ..sanitize import sanitize_model
 from ..slopes import slopes
-from .common import (
-    dt_on_condition,
-    extract_var_list,
-    plot_common,
-    plot_labels,
-    validate_plot_args,
-)
+from .common import plot_estimates
 
 
 @doc("""
@@ -54,35 +46,29 @@ def plot_slopes(
 
     assert variables, "The `variables` argument must be supplied."
 
-    validate_plot_args(condition, by, newdata, wts)
+    def estimate(newdata):
+        return slopes(
+            model,
+            variables=variables,
+            newdata=newdata,
+            slope=slope,
+            vcov=vcov,
+            conf_level=conf_level,
+            by=by,
+            wts=wts,
+            eps=eps,
+            eps_vcov=eps_vcov,
+        )
 
-    # before dt_on_condition, which modifies in-place
-    condition_input = copy.deepcopy(condition)
-
-    if condition is not None:
-        newdata = dt_on_condition(model, condition)
-
-    dt = slopes(
+    return plot_estimates(
         model,
-        variables=variables,
-        newdata=newdata,
-        slope=slope,
-        vcov=vcov,
-        conf_level=conf_level,
-        by=by,
-        wts=wts,
-        eps=eps,
-        eps_vcov=eps_vcov,
+        condition,
+        by,
+        newdata,
+        wts,
+        draw,
+        estimate,
+        "Slope",
+        gray=gray,
+        facet_contrast=True,
     )
-
-    dt = plot_labels(model, dt, condition_input)
-
-    if not draw:
-        return dt
-
-    var_list = extract_var_list(condition, by)
-
-    if "contrast" in dt.columns and dt["contrast"].unique().len() > 1:
-        var_list = var_list + ["contrast"]
-
-    return plot_common(model, dt, "Slope", var_list, gray=gray)

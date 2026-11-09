@@ -4,6 +4,7 @@ import polars as pl
 
 from .. import formula as fml
 from ..classes import ModelAbstract, ModelVault
+from ..classes.model import predictions_to_frame
 from ..docstrings import doc
 from ..sanitize.utils import validate_types
 from ..utils import ingest
@@ -211,24 +212,7 @@ class ModelStatsmodels(ModelAbstract):
         if self._is_ordered_model() and exog.shape[1] == self.model.model.k_vars + 1:
             exog = exog[:, 1:]
         p = self.model.model.predict(params, exog)
-        if p.ndim == 1:
-            p = pl.DataFrame({"rowid": range(newdata.shape[0]), "estimate": p})
-        elif p.ndim == 2:
-            colnames = {f"column_{i}": str(i) for i in range(p.shape[1])}
-            p = (
-                pl.DataFrame(p)
-                .rename(colnames)
-                .with_columns(
-                    pl.Series(range(p.shape[0]), dtype=pl.Int32).alias("rowid")
-                )
-                .unpivot(index="rowid", variable_name="group", value_name="estimate")
-            ).sort("group", "rowid")  # somehow very important for SEs
-        else:
-            raise ValueError(
-                "The `predict()` method must return an array with 1 or 2 dimensions."
-            )
-        p = p.with_columns(pl.col("rowid").cast(pl.Int32))
-        return p
+        return predictions_to_frame(p, sort_groups=True)  # sort: very important for SEs
 
     def get_df(self):
         return self.model.df_resid

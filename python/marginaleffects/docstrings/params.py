@@ -13,29 +13,38 @@ The type of slope or (semi-)elasticity to compute. Acceptable values are:
 - "dyex": dY/dX * X"""
 
 PARAM_HYPOTHESIS = """\
-#### `hypothesis`: (str, int, float, list of str, numpy array)
+#### `hypothesis`: (str, int, float, list, numpy array, data frame, callable)
 
 Specifies a hypothesis test or custom contrast.
 
 - int, float:
     - The null hypothesis used in the computation of Z and p-values (before applying transform).
-- string:
-    - Equation specifying linear or non-linear hypothesis tests. Use the names of the model variables, or use `b0`, `b1` to identify the position of each parameter. The `b*` wildcard can be used to test hypotheses on all estimates. Ex:
+- string equation:
+    - Linear or non-linear hypothesis test. Use the values of the `term` column, or `b0`, `b1`, ... to identify estimates by position, starting at `b0` for the first estimate (R starts at `b1`). Term names must be unique: use positions when the `term` column repeats. The `b*` wildcard tests the same hypothesis on every estimate. `^` is a power, and `exp`, `log`, `sqrt` and other common math functions can be used without a prefix. Ex:
         - `hp = drat`
         - `hp + drat = 12`
         - `b0 + b1 + b2 = 0`
         - `b* / b0 = 1`
-    - One of the following hypothesis test strings:
-        - `pairwise` and `revpairwise`: pairwise differences between estimates in each row.
-        - `reference` and `revreference`: differences between the estimates in each row and the estimate in the first row.
-        - `sequential` and `revsequential`: differences between an estimate and the estimate in the next row.
-    - Two-sided formula like "ratio ~ reference":
-        - Left-hand side: "ratio", "difference"
-        - Right-hand side: "reference", "sequential", "pairwise", "revreference", "revsequential", "revpairwise"
+        - `exp(b1) = 1`
+- string formula like "ratio ~ reference":
+    - Left-hand side: "difference" (default when empty), "ratio", or "dotproduct" (for "poly" and "helmert").
+    - Right-hand side:
+        - "reference", "revreference": each estimate compared to the first (or the reverse).
+        - "sequential": each estimate compared to the previous one.
+        - "pairwise", "revpairwise": every pair of estimates.
+        - "meandev": each estimate compared to the mean of all estimates.
+        - "meanotherdev": each estimate compared to the mean of all other estimates.
+        - "trt_vs_ctrl": the mean of all estimates after the first, compared to the first.
+        - "poly": orthogonal polynomial contrasts (linear, quadratic, ... up to quintic), as in R's `contr.poly()`.
+        - "helmert": Helmert contrasts, each estimate after the first contrasted with the mean of the estimates before it (unnormalized weights, as in R's `contr.helmert()`).
+    - Group the hypothesis by a column with `|`, e.g. "~ meandev | am".
+    - The output has a `hypothesis` column of labels built from the `term`, `contrast` and `by` columns (or the `datagrid()` variables), or `b0`, `b1`, ... when those do not identify the rows.
 - list of strings:
     - Multiple hypotheses evaluated in sequence, each processed as if passed individually. The resulting rows are stacked in the order supplied. Ex: `["b1 - b0 = 0", "b2 = 1"]`.
-- numpy.ndarray:
-    - Each column is a vector of weights. The output is the dot product between these vectors of weights and the vectors of estimates. e.g. `hypothesis=np.array([[1, 1, 2], [2, 2, 3]]).T`docs
+- list of numbers, numpy array, or data frame of weights:
+    - Each column is a vector of weights, with one row per estimate. The output is the dot product between these vectors of weights and the vector of estimates. Columns are labelled by their names when the weights are a data frame, and "custom" otherwise. Ex: `hypothesis=np.array([[1, 1, 2], [2, 2, 3]]).T`
+- callable:
+    - A function that accepts `x` (the estimates as a polars DataFrame) and optionally `newdata` and `by`, and returns a data frame with `term` (or `hypothesis`) and `estimate` columns, or a vector of estimates. Ex: `hypothesis=lambda x: pl.DataFrame({"hypothesis": ["range"], "estimate": [x["estimate"].max() - x["estimate"].min()]})`
 - See the Examples section and the vignette: https://marginaleffects.com/chapters/hypothesis.html"""
 
 PARAM_BY = """\
@@ -232,10 +241,15 @@ Data frame or string specifying where statistics are evaluated in the predictor 
     - "median": Compute slopes at the median of the regressor.
     - "balanced": Compute slopes on a balanced grid with every combination of categories and numeric variables held at their means."""
 
-PARAM_CONDITION_PREDICTIONS = """\
+
+def _plot_param(template, kind):
+    return template.replace("<kind>", kind)
+
+
+_PARAM_CONDITION_TEMPLATE = """\
 #### `condition`: (str, list, dictionary)
 
-Conditional predictions.
+Conditional <kind>.
 
 - Position's representation:
     1. x-axis.
@@ -252,75 +266,57 @@ Conditional predictions.
             - String: "minmax", "threenum", "fivenum".
     - string: Same as list of length 1."""
 
-PARAM_CONDITION_COMPARISONS = """\
-#### `condition`: (str, list, dictionary)
+PARAM_CONDITION_PREDICTIONS = _plot_param(_PARAM_CONDITION_TEMPLATE, "predictions")
+PARAM_CONDITION_COMPARISONS = _plot_param(_PARAM_CONDITION_TEMPLATE, "comparisons")
+PARAM_CONDITION_SLOPES = _plot_param(_PARAM_CONDITION_TEMPLATE, "slopes")
 
-Conditional comparisons.
-
-- Position's representation:
-    1. x-axis.
-    2. color.
-    3. facet (wrap if no fourth variable, otherwise cols of grid).
-    4. facet (rows of grid).
-- Argument types:
-    - list: Names of the predictors to display.
-        - Numeric variables in position 1 is summarized by 100 numbers.
-        - Numeric variables in positions 2, 3 and 4 are summarized by Tukey's five numbers.
-    - dictionary: Keys correspond to predictors. Values can be one of the two below depending on predictor's type:
-        - Series or list of the same type as the original variable.
-        - Numeric variables:
-            - String: "minmax", "threenum", "fivenum".
-    - string: Same as list of length 1."""
-
-PARAM_CONDITION_SLOPES = """\
-#### `condition`: (str, list, dictionary)
-
-Conditional slopes.
-
-- Position's representation:
-    1. x-axis.
-    2. color.
-    3. facet (wrap if no fourth variable, otherwise cols of grid).
-    4. facet (rows of grid).
-- Argument types:
-    - list: Names of the predictors to display.
-        - Numeric variables in position 1 is summarized by 100 numbers.
-        - Numeric variables in positions 2, 3 and 4 are summarized by Tukey's five numbers.
-    - dictionary: Keys correspond to predictors. Values can be one of the two below depending on predictor's type:
-        - Series or list of the same type as the original variable.
-        - Numeric variables:
-            - String: "minmax", "threenum", "fivenum".
-    - string: Same as list of length 1."""
-
-PARAM_BY_PLOT_PREDICTIONS = """\
+_PARAM_BY_PLOT_TEMPLATE = """\
 #### `by`: (bool, str, list)
 
-Marginal predictions. Names of the categorical predictors to marginalize across. Max length of list is 4, with position meanings:
+Marginal <kind>. Names of the categorical predictors to marginalize across. Max length of list is 4, with position meanings:
 
 1. x-axis.
 2. color.
 3. facet (wrap if no fourth variable, otherwise columns of grid).
 4. facet (rows of grid)"""
 
-PARAM_BY_PLOT_COMPARISONS = """\
-#### `by`: (bool, str, list)
+PARAM_BY_PLOT_PREDICTIONS = _plot_param(_PARAM_BY_PLOT_TEMPLATE, "predictions")
+PARAM_BY_PLOT_COMPARISONS = _plot_param(_PARAM_BY_PLOT_TEMPLATE, "comparisons")
+PARAM_BY_PLOT_SLOPES = _plot_param(_PARAM_BY_PLOT_TEMPLATE, "slopes")
 
-Marginal comparisons. Names of the categorical predictors to marginalize across. Max length of list is 4, with position meanings:
+_PARAM_NEWDATA_PLOT_TEMPLATE = """\
+#### `newdata`: (dataframe)
 
-1. x-axis.
-2. color.
-3. facet (wrap if no fourth variable, otherwise columns of grid).
-4. facet (rows of grid)"""
+When newdata is None, the grid is determined by the condition argument. When newdata is not None, the argument behaves in the same way as in the <kind>() function."""
 
-PARAM_BY_PLOT_SLOPES = """\
-#### `by`: (bool, str, list)
+PARAM_NEWDATA_PLOT_PREDICTIONS = _plot_param(
+    _PARAM_NEWDATA_PLOT_TEMPLATE, "predictions"
+)
+PARAM_NEWDATA_PLOT_COMPARISONS = _plot_param(
+    _PARAM_NEWDATA_PLOT_TEMPLATE, "comparisons"
+)
+PARAM_NEWDATA_PLOT_SLOPES = _plot_param(_PARAM_NEWDATA_PLOT_TEMPLATE, "slopes")
 
-Marginal slopes. Names of the categorical predictors to marginalize across. Max length of list is 4, with position meanings:
+_PARAM_PLOT_INTRO_TEMPLATE = """\
+Plot <kind> on the y-axis against values of one or more predictors (x-axis, colors/shapes, and facets).
 
-1. x-axis.
-2. color.
-3. facet (wrap if no fourth variable, otherwise columns of grid).
-4. facet (rows of grid)"""
+The `by` argument is used to plot marginal <kind>, that is, <kind> made on the original data, but averaged
+by subgroups. This is analogous to using the `by` argument in the `<kind>()` function.
+
+The `condition` argument is used to plot conditional <kind>, that is, <kind> made on a user-specified grid.
+This is analogous to using the `newdata` argument and `datagrid()` function in a `<kind>()` call.
+
+All unspecified variables are held at their mean or mode. This includes grouping variables in mixed-effects models, so analysts who fit such models may want to specify the groups of interest using the `variables` argument, or supply model-specific arguments to compute population-level estimates. See details below.
+
+See the "Plots" vignette and website for tutorials and information on how to customize plots:
+
+- https://marginaleffects.com/articles/plot.html
+- https://marginaleffects.com"""
+
+PARAM_PLOT_INTRO_PREDICTIONS = _plot_param(_PARAM_PLOT_INTRO_TEMPLATE, "predictions")
+PARAM_PLOT_INTRO_COMPARISONS = _plot_param(_PARAM_PLOT_INTRO_TEMPLATE, "comparisons")
+PARAM_PLOT_INTRO_SLOPES = _plot_param(_PARAM_PLOT_INTRO_TEMPLATE, "slopes")
+
 
 PARAM_VARIABLES_PLOT_CONTRAST = """\
 #### `variables`: (str, list, dictionary)
@@ -331,69 +327,6 @@ PARAM_VARIABLES_PLOT_SLOPE = """\
 #### `variables`: (str, list, dictionary)
 
 Name of the variable whose marginal effect (slope) we want to plot on the y-axis. Refer to the `comparisons()` documentation."""
-
-PARAM_NEWDATA_PLOT_PREDICTIONS = """\
-#### `newdata`: (dataframe)
-
-When newdata is None, the grid is determined by the condition argument. When newdata is not None, the argument behaves in the same way as in the predictions() function."""
-
-PARAM_NEWDATA_PLOT_COMPARISONS = """\
-#### `newdata`: (dataframe)
-
-When newdata is None, the grid is determined by the condition argument. When newdata is not None, the argument behaves in the same way as in the comparisons() function."""
-
-PARAM_NEWDATA_PLOT_SLOPES = """\
-#### `newdata`: (dataframe)
-
-When newdata is None, the grid is determined by the condition argument. When newdata is not None, the argument behaves in the same way as in the slopes() function."""
-
-PARAM_PLOT_INTRO_PREDICTIONS = """\
-Plot predictions on the y-axis against values of one or more predictors (x-axis, colors/shapes, and facets).
-
-The `by` argument is used to plot marginal predictions, that is, predictions made on the original data, but averaged
-by subgroups. This is analogous to using the `by` argument in the `predictions()` function.
-
-The `condition` argument is used to plot conditional predictions, that is, predictions made on a user-specified grid.
-This is analogous to using the `newdata` argument and `datagrid()` function in a `predictions()` call.
-
-All unspecified variables are held at their mean or mode. This includes grouping variables in mixed-effects models, so analysts who fit such models may want to specify the groups of interest using the `variables` argument, or supply model-specific arguments to compute population-level estimates. See details below.
-
-See the "Plots" vignette and website for tutorials and information on how to customize plots:
-
-- https://marginaleffects.com/articles/plot.html
-- https://marginaleffects.com"""
-
-PARAM_PLOT_INTRO_COMPARISONS = """\
-Plot comparisons on the y-axis against values of one or more predictors (x-axis, colors/shapes, and facets).
-
-The `by` argument is used to plot marginal comparisons, that is, comparisons made on the original data, but averaged
-by subgroups. This is analogous to using the `by` argument in the `comparisons()` function.
-
-The `condition` argument is used to plot conditional comparisons, that is, comparisons made on a user-specified grid.
-This is analogous to using the `newdata` argument and `datagrid()` function in a `comparisons()` call.
-
-All unspecified variables are held at their mean or mode. This includes grouping variables in mixed-effects models, so analysts who fit such models may want to specify the groups of interest using the `variables` argument, or supply model-specific arguments to compute population-level estimates. See details below.
-
-See the "Plots" vignette and website for tutorials and information on how to customize plots:
-
-- https://marginaleffects.com/articles/plot.html
-- https://marginaleffects.com"""
-
-PARAM_PLOT_INTRO_SLOPES = """\
-Plot slopes on the y-axis against values of one or more predictors (x-axis, colors/shapes, and facets).
-
-The `by` argument is used to plot marginal slopes, that is, slopes made on the original data, but averaged
-by subgroups. This is analogous to using the `by` argument in the `slopes()` function.
-
-The `condition` argument is used to plot conditional slopes, that is, slopes made on a user-specified grid.
-This is analogous to using the `newdata` argument and `datagrid()` function in a `slopes()` call.
-
-All unspecified variables are held at their mean or mode. This includes grouping variables in mixed-effects models, so analysts who fit such models may want to specify the groups of interest using the `variables` argument, or supply model-specific arguments to compute population-level estimates. See details below.
-
-See the "Plots" vignette and website for tutorials and information on how to customize plots:
-
-- https://marginaleffects.com/articles/plot.html
-- https://marginaleffects.com"""
 
 
 # ---------------------------------------------------------------------------

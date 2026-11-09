@@ -9,9 +9,10 @@ try:
 except ImportError:
     PYFIXEST_AVAILABLE = False
 
+import numpy as np
 import polars as pl
 from polars.testing import assert_series_equal
-import numpy as np
+
 from marginaleffects import *
 from marginaleffects.pyfixest.model import ModelPyfixest
 
@@ -231,14 +232,14 @@ def test_pyfixest_standard_errors_across_models():
 
     # Non-linear with fixed effects: SEs disabled automatically
     fit_pois_fe = fepois("Y ~ X1 * X2 * Z1 | f1", data=poisson_data)
-    with pytest.warns(
-        UserWarning,
-        match="cannot take into account the uncertainty in fixed-effects",
-    ):
-        try:
+    try:
+        with pytest.warns(
+            UserWarning,
+            match="cannot take into account the uncertainty in fixed-effects",
+        ):
             comp_pois_fe = comparisons(fit_pois_fe)
-        except NotImplementedError:
-            pytest.skip(
-                "PyFixest does not yet support prediction with newdata for Poisson regression."
-            )
+    except NotImplementedError:
+        pytest.skip(
+            "PyFixest does not yet support prediction with newdata for Poisson regression."
+        )
     assert "std_error" not in comp_pois_fe.columns

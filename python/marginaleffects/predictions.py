@@ -5,13 +5,7 @@ from .by import get_by_plan
 from .classes import MarginaleffectsResult
 from .docstrings import doc
 from .hypothesis_compile import hypothesis_compile
-from .inference import (
-    analytic_try,
-    get_jacobian,
-    get_se,
-    is_unconditional,
-    unconditional_result,
-)
+from .inference import attach_standard_errors
 from .planning import (
     PredictionPlan,
     plan_values_allclose,
@@ -122,7 +116,7 @@ def _predictions_build(model, exog, newdata, by, wts, hypothesis):
     if by_is_frame(by):
         # The frame has done its work; downstream only sees the label column.
         by = ["by"]
-    out, hyp = hypothesis_compile(out, hypothesis=hypothesis, by=by)
+    out, hyp = hypothesis_compile(out, hypothesis=hypothesis, by=by, newdata=newdata)
     plan = PredictionPlan(
         n_pred=n_pred,
         exog=exog,
@@ -265,45 +259,18 @@ def predictions(
         hypothesis=hypothesis,
     )
 
-    J = None
-    jacobian_method = None
-    if is_unconditional(V):
-        out, J, jacobian_method, _V = unconditional_result(
-            plan=plan,
-            model=model,
-            kind="predictions",
-            request=V,
-            newdata=newdata,
-            out=out,
-            eps_vcov=eps_vcov,
-        )
-    elif V is not None:
-        # An explicit `eps_vcov` requests finite differences with that step size,
-        # so the exact-derivative paths are skipped when the user supplies one.
-        ad = None
-        if eps_vcov is None:
-            ad = analytic_try(
-                plan=plan,
-                model=model,
-                V=V,
-                estimate=out["estimate"].to_numpy(),
-                kind="predictions",
-            )
-        if ad is not None:
-            J = ad.jacobian
-            jacobian_method = ad.method
-            out = out.with_columns(pl.Series(ad.std_error).alias("std_error"))
-        else:
-            J = get_jacobian(
-                lambda beta: prediction_plan_apply(
-                    plan, prediction_plan_predict(plan, model, beta)
-                ),
-                model.get_coef(),
-                eps_vcov,
-            )
-            jacobian_method = "finite_difference"
-            se = get_se(J, V)
-            out = out.with_columns(pl.Series(se).alias("std_error"))
+    out, J, jacobian_method = attach_standard_errors(
+        out,
+        plan=plan,
+        model=model,
+        V=V,
+        kind="predictions",
+        newdata=newdata,
+        eps_vcov=eps_vcov,
+        replay=lambda beta: prediction_plan_apply(
+            plan, prediction_plan_predict(plan, model, beta)
+        ),
+    )
 
     return finalize_result(
         out,

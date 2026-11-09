@@ -1,6 +1,7 @@
 import polars as pl
 import statsmodels.formula.api as smf
 from polars.testing import assert_series_equal
+
 from marginaleffects import *
 from tests.utilities import sort_categories_pandas
 

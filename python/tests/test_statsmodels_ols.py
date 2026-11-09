@@ -6,7 +6,6 @@ from marginaleffects import *
 from tests.helpers import mtcars
 from tests.utilities import sort_categories_pandas
 
-
 dat = mtcars.with_columns(pl.col("cyl").cast(pl.String).cast(pl.Categorical))
 mod = smf.ols(
     "mpg ~ qsec * wt + cyl", data=sort_categories_pandas(dat.to_pandas())

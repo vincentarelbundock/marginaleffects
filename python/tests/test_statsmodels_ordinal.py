@@ -1,8 +1,9 @@
 import numpy as np
-import polars as pl
 import pandas as pd
-from marginaleffects import *
+import polars as pl
 from statsmodels.miscmodels.ordinal_model import OrderedModel
+
+from marginaleffects import *
 
 # Read the same vendored CSV as tests/r/test_statsmodels_ordinal.R. The level
 # order is spelled out on both sides: a CSV carries no factor metadata, and

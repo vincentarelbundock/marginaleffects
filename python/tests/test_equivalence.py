@@ -1,9 +1,9 @@
 import polars as pl
 import statsmodels.formula.api as smf
 from polars.testing import assert_series_equal
-from tests.helpers import guerry
 
 from marginaleffects import *
+from tests.helpers import guerry
 
 mod_py = smf.ols("Literacy ~ Pop1831 * Desertion", guerry.to_pandas()).fit()
 

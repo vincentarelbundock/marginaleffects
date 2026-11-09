@@ -13,5 +13,5 @@ __all__ = [
 ]
 
 
-def get_hypothesis(x, hypothesis, by=None):
-    return hypothesis_compile(x, hypothesis, by=by)[0]
+def get_hypothesis(x, hypothesis, by=None, newdata=None):
+    return hypothesis_compile(x, hypothesis, by=by, newdata=newdata)[0]
