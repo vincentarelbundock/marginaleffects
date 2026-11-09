@@ -119,13 +119,49 @@ def _score_obs(model, params):
     return exog * (resid / scale)[:, None]
 
 
+def _nonrobust_vcov(model):
+    """The model's non-robust (model-based) covariance, used as the bread.
+
+    `get_vcov(True)` returns whatever covariance the fitted results carry,
+    which is a sandwich when the user fit with `cov_type="HC1"`,
+    `"cluster"`, etc. Using that as the bread would wrap a second sandwich
+    around the scores and inflate the standard errors. statsmodels keeps the
+    model-based matrix in `normalized_cov_params`, scaled by `scale`, whatever
+    `cov_type` was requested: `(X'X)^-1 * sigma^2` for OLS/WLS, the inverse
+    Fisher information times the dispersion for GLM, and the inverse negative
+    Hessian (with `scale == 1`) for discrete MLE models such as Logit.
+    """
+    fitted = model.get_fitted_model()
+    normalized = getattr(fitted, "normalized_cov_params", None)
+    scale = getattr(fitted, "scale", None)
+    if normalized is not None and scale is not None:
+        return np.asarray(normalized, dtype=float) * float(scale)
+    # Without the model-based matrix, `get_vcov(True)` is safe only when the
+    # fit is known to be non-robust.
+    cov_type = getattr(fitted, "cov_type", None)
+    if cov_type != "nonrobust":
+        raise ValueError(
+            "`vcov=vcovUnconditional()` needs the model's non-robust "
+            "covariance, which this model does not expose. Refit the model "
+            "with the default covariance; `vcovUnconditional()` computes its "
+            "own robust variance."
+        )
+    V0 = model.get_vcov(True)
+    if V0 is None:
+        raise ValueError(
+            "`vcov=vcovUnconditional()` requires a model covariance matrix."
+        )
+    return np.asarray(V0, dtype=float)
+
+
 def beta_influence(model):
     """Observation-level influence function of the coefficients, IF_i(beta).
 
     Under the sandwich convention this is `scores @ bread`. Using the model's
     own non-robust covariance as the bread (times `n`) keeps whatever scale
     convention the fitting library chose, because the same scale appears in
-    the scores and cancels.
+    the scores and cancels. The bread ignores any robust `cov_type` the model
+    was fit with (see `_nonrobust_vcov`).
     """
     params = np.asarray(model.get_coef(), dtype=float).reshape(-1)
     if not np.isfinite(params).all():
@@ -139,12 +175,7 @@ def beta_influence(model):
             "`vcov=vcovUnconditional()` could not extract observation-level "
             "scores for this model."
         )
-    V0 = model.get_vcov(True)
-    if V0 is None:
-        raise ValueError(
-            "`vcov=vcovUnconditional()` requires a model covariance matrix."
-        )
-    V0 = np.asarray(V0, dtype=float)
+    V0 = _nonrobust_vcov(model)
     if scores.shape[1] != V0.shape[0] or V0.shape[0] != V0.shape[1]:
         raise ValueError(
             "`vcov=vcovUnconditional()` could not align the model score matrix "

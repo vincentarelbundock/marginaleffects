@@ -27,7 +27,8 @@ x <- mod |>
     suppressWarnings()
 expect_equivalent(nrow(x), 2)
 
-# {fwb} error when user supplied its own weights
-dat <- transform(mtcars, w = runif(32))
-mod <- lm(mpg ~ hp, data = dat)
-expect_error(inferences(comparisons(mod, wts = "w"), method = "fwb"), pattern = "wts")
+# default case (no `newdata`): random weights reweight the averaging, as before
+mod <- lm(mpg ~ hp * wt + factor(cyl), mtcars)
+set.seed(48103)
+x <- suppressWarnings(inferences(avg_comparisons(mod, variables = "hp", by = "am"), method = "fwb", R = 20))
+expect_equivalent(x$std.error, c(0.010135652354473135, 0.011897911186007120))

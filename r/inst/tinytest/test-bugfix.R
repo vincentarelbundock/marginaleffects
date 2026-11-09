@@ -803,3 +803,135 @@ p_ref <- avg_predictions(mod_1771_ref, by = "grp")
 expect_equivalent(p$estimate, p_ref$estimate)
 expect_equivalent(p$std.error, p_ref$std.error)
 expect_equivalent(p$conf.low, p_ref$conf.low)
+
+
+# `hypotheses(x)` stripped the class of `x` by reference (data.table::setDT)
+mod <- lm(mpg ~ hp * wt + factor(cyl), data = mtcars)
+x <- avg_comparisons(mod, variables = "hp", by = "cyl")
+hypotheses(x)
+expect_inherits(x, "comparisons")
+hypotheses(x, multcomp = "holm")
+expect_inherits(x, "comparisons")
+
+
+# `inferences(method = "fwb")` failed with a `newdata` holding other rows than
+# the model data, raised an error with `wts`, and weighted the averaging by the
+# model weights when the point estimate is unweighted
+if (requireNamespace("fwb", quietly = TRUE) && packageVersion("fwb") > "0.5.0") {
+    old <- options(marginaleffects_fwb_newdata_fixed = TRUE, marginaleffects_safe = TRUE)
+
+    # model weights are not used in the averaging unless `wts = TRUE`
+    modw <- lm(mpg ~ hp * wt + factor(cyl), mtcars, weights = qsec)
+    set.seed(48103)
+    x <- suppressWarnings(inferences(avg_comparisons(modw, variables = "hp"), method = "fwb", R = 20))
+    set.seed(48103)
+    y <- suppressWarnings(inferences(avg_comparisons(modw, variables = "hp", wts = TRUE), method = "fwb", R = 20))
+    expect_false(isTRUE(all.equal(x$std.error, y$std.error)))
+
+    # rows of the model data in `newdata` reweight the averaging, without
+    # warning: another order, a subset, a counterfactual grid
+    fixed_warning <- function(expr) {
+        msgs <- character()
+        out <- withCallingHandlers(expr, warning = function(w) {
+            msgs <<- c(msgs, conditionMessage(w))
+            invokeRestart("muffleWarning")
+        })
+        list(out = out, fixed = any(grepl("treated as fixed", msgs)))
+    }
+    fwb_draws <- function(x) as.numeric(attr(x, "marginaleffects")@draws)
+    mod <- lm(mpg ~ hp * wt + factor(cyl), mtcars)
+    set.seed(48103)
+    ref <- suppressWarnings(inferences(avg_comparisons(mod, variables = "hp"), method = "fwb", R = 20))
+    set.seed(48103)
+    x <- fixed_warning(inferences(avg_comparisons(mod, variables = "hp", newdata = mtcars[32:1, ]), method = "fwb", R = 20))
+    expect_false(x$fixed)
+    expect_equivalent(x$out$std.error, ref$std.error)
+
+    # subset: same draws as a bootstrap which reweights the treated rows.
+    # `mtcars` holds two rows which are identical on the model variables.
+    mod <- lm(mpg ~ hp * am, mtcars)
+    stat <- function(data, w) {
+        b <- coef(lm(mpg ~ hp * am, data = data, weights = w))
+        g <- b[["am"]] + b[["hp:am"]] * data$hp
+        k <- data$am == 1
+        sum(w[k] * g[k]) / sum(w[k])
+    }
+    set.seed(48103)
+    ref <- fwb::fwb(mtcars, stat, R = 20, verbose = FALSE)
+    set.seed(48103)
+    x <- fixed_warning(inferences(avg_comparisons(mod, variables = "am", newdata = subset(mtcars, am == 1)), method = "fwb", R = 20))
+    expect_false(x$fixed)
+    expect_equivalent(fwb_draws(x$out), as.numeric(ref$t))
+    set.seed(48103)
+    x <- fixed_warning(inferences(avg_comparisons(mod, variables = "am", newdata = subset(am == 1)), method = "fwb", R = 20))
+    expect_false(x$fixed)
+    expect_equivalent(fwb_draws(x$out), as.numeric(ref$t))
+
+    # counterfactual grid: each copy of a row gets the weight of that row
+    stat <- function(data, w) {
+        fit <- lm(mpg ~ hp * am, data = data, weights = w)
+        p0 <- predict(fit, transform(data, am = 0))
+        p1 <- predict(fit, transform(data, am = 1))
+        c(sum(w * p0), sum(w * p1)) / sum(w)
+    }
+    set.seed(48103)
+    ref <- fwb::fwb(mtcars, stat, R = 20, verbose = FALSE)
+    set.seed(48103)
+    x <- fixed_warning(inferences(avg_predictions(mod, variables = "am"), method = "fwb", R = 20))
+    expect_false(x$fixed)
+    expect_equivalent(fwb_draws(x$out), as.numeric(t(ref$t)))
+    set.seed(48103)
+    x <- fixed_warning(inferences(
+        avg_predictions(mod, newdata = datagrid(am = 0:1, grid_type = "counterfactual"), by = "am"),
+        method = "fwb", R = 20))
+    expect_false(x$fixed)
+    expect_equivalent(fwb_draws(x$out), as.numeric(t(ref$t)))
+
+    # a matrix column in the model data does not break the row matching
+    dat <- mtcars
+    dat$P <- poly(dat$hp, 2)
+    mod_p <- lm(mpg ~ P + wt, dat)
+    x <- fixed_warning(inferences(avg_predictions(mod_p), method = "fwb", R = 20))
+    expect_false(x$fixed)
+    expect_true(all(is.finite(x$out$std.error)))
+
+    # other rows: model refit, averaging fixed, with a warning. Rows are
+    # compared exactly.
+    mod <- lm(mpg ~ hp * wt + factor(cyl), mtcars)
+    nd <- transform(mtcars, hp = hp + 1e-9)
+    set.seed(1024)
+    x <- fixed_warning(inferences(avg_comparisons(mod, variables = "hp", newdata = nd), method = "fwb", R = 20))
+    expect_true(x$fixed)
+    expect_equivalent(x$out$estimate, avg_comparisons(mod, variables = "hp", newdata = nd)$estimate)
+    expect_true(all(is.finite(x$out$std.error)))
+    expect_true(all(x$out$std.error > 0))
+    options(marginaleffects_fwb_newdata_fixed = TRUE)
+    x <- fixed_warning(inferences(avg_comparisons(mod, variables = "hp", newdata = datagrid(cyl = c(4, 6))), method = "fwb", R = 20))
+    expect_true(x$fixed)
+    expect_true(all(is.finite(x$out$std.error)))
+
+    # no averaging, no warning
+    options(marginaleffects_fwb_newdata_fixed = TRUE)
+    x <- fixed_warning(inferences(predictions(mod, newdata = datagrid(cyl = c(4, 6))), method = "fwb", R = 20))
+    expect_false(x$fixed)
+    expect_true(all(is.finite(x$out$std.error)))
+
+    # user `wts` are honoured, over the model data and over another `newdata`
+    set.seed(1024)
+    dat <- transform(mtcars, w = runif(32))
+    mod <- lm(mpg ~ hp * wt, data = dat)
+    ref <- avg_comparisons(mod, variables = "hp", wts = "w")
+    x <- suppressWarnings(inferences(avg_comparisons(mod, variables = "hp", wts = "w"), method = "fwb", R = 20))
+    expect_equivalent(x$estimate, ref$estimate)
+    expect_true(all(is.finite(x$std.error)))
+    x <- suppressWarnings(inferences(avg_comparisons(mod, variables = "hp", wts = dat$w), method = "fwb", R = 20))
+    expect_equivalent(x$estimate, ref$estimate)
+    expect_true(all(is.finite(x$std.error)))
+    nd <- subset(dat, cyl == 4)
+    ref <- avg_comparisons(mod, variables = "hp", newdata = nd, wts = "w")
+    x <- suppressWarnings(inferences(avg_comparisons(mod, variables = "hp", newdata = nd, wts = "w"), method = "fwb", R = 20))
+    expect_equivalent(x$estimate, ref$estimate)
+    expect_true(all(is.finite(x$std.error)))
+
+    options(old)
+}
