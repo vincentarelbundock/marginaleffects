@@ -50,6 +50,12 @@ Bug fixes:
   sandwich as the bread of its own sandwich. It now always uses the model's
   non-robust covariance, so results no longer depend on the `cov_type` used
   at fit time.
+* `vcov=vcovUnconditional()` returned wrong standard errors for statsmodels
+  WLS and GLS models, because the observation-level scores ignored the
+  weights. GLS models with correlated errors (a non-diagonal `sigma`), and
+  models which do not expose observation-level scores, such as `QuantReg` and
+  `RLM`, now raise an informative error instead of returning standard errors
+  which are not valid. Issue #1789.
 * `pairwise` and `revpairwise` formula hypotheses dropped every difference
   that was exactly zero (e.g. two equal estimates), so estimates and labels
   no longer lined up.

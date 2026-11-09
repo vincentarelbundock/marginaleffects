@@ -91,6 +91,12 @@ def as_unconditional(vcov) -> VcovUnconditional:
 # --- model-coefficient influence -------------------------------------------
 
 
+# statsmodels classes without `score_obs()` whose estimating function is the
+# (weighted) least-squares score. Other classes without `score_obs()`, such as
+# QuantReg and RLM, solve different estimating equations.
+LEAST_SQUARES_CLASSES = ("OLS", "WLS", "GLS")
+
+
 def _score_obs(model, params):
     """Observation-level scores on the same scale as the model's covariance."""
     fitted = model.get_fitted_model()
@@ -104,11 +110,15 @@ def _score_obs(model, params):
         if out is not None and out.ndim == 2:
             return out
 
-    # Linear models have no `score_obs`; their estimating function is the
+    # Linear models have no `score_obs`. Their estimating function is the
     # residual-weighted design matrix, whose scale cancels against the
-    # covariance it is multiplied by below.
-    exog = getattr(inner, "exog", None)
-    resid = getattr(fitted, "resid", None)
+    # covariance it is multiplied by below. The whitened design and residuals
+    # carry the weights of WLS and the diagonal `sigma` of GLS; for OLS they
+    # are the design and residuals themselves.
+    if type(inner).__name__ not in LEAST_SQUARES_CLASSES:
+        return None
+    exog = getattr(inner, "wexog", None)
+    resid = getattr(fitted, "wresid", None)
     if exog is None or resid is None:
         return None
     exog = np.asarray(exog, dtype=float)
@@ -359,6 +369,23 @@ def validate_model(model):
             "additional nuisance-parameter influence functions. Use a "
             "bootstrap method instead."
         )
+    if not callable(getattr(fitted, "score_obs", None)):
+        if type(fitted).__name__ not in LEAST_SQUARES_CLASSES:
+            raise ValueError(
+                "`vcov=vcovUnconditional()` is not supported for models of class "
+                f'"{type(fitted).__name__}", which do not expose observation-level '
+                "scores. Use a bootstrap method instead."
+            )
+        sigma = getattr(fitted, "sigma", None)
+        if sigma is not None and np.ndim(sigma) == 2:
+            sigma = np.asarray(sigma, dtype=float)
+            if np.count_nonzero(sigma - np.diag(np.diagonal(sigma))) > 0:
+                raise ValueError(
+                    "`vcov=vcovUnconditional()` is not supported for GLS models "
+                    "with correlated errors (a non-diagonal `sigma`), because "
+                    "observations do not contribute independent scores. Use a "
+                    "bootstrap method instead."
+                )
 
 
 def validate_target(plan, kind):

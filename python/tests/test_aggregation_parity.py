@@ -398,6 +398,7 @@ ROBUST_FITS = [
 
 UNCONDITIONAL_MODELS = {
     "ols": lambda d, **k: smf.ols("mpg ~ hp * am", d).fit(**k),
+    "wls": lambda d, **k: smf.wls("mpg ~ hp * am", d, weights=d["wt"]).fit(**k),
     "glm_gaussian": lambda d, **k: smf.glm("mpg ~ hp * am", d).fit(**k),
     "glm_binomial": lambda d, **k: smf.glm(
         "vs ~ mpg + am", d, family=sm.families.Binomial()
@@ -426,6 +427,73 @@ def test_unconditional_ignores_the_covariance_type_the_model_was_fit_with(
         expected = se(avg_predictions(reference, by="am", vcov=V))
         observed = se(avg_predictions(robust, by="am", vcov=V))
         np.testing.assert_allclose(observed, expected, rtol=1e-10)
+
+
+# Issue #1789: the least-squares scores ignored the weights of WLS and GLS
+# models. R: lm(mpg ~ hp * am, mtcars, weights = w), with w = wt for WLS, and
+# w = 1 / wt for GLS with the diagonal `sigma = wt`.
+WEIGHTED_LEAST_SQUARES = {
+    "wls": (
+        lambda d: smf.wls("mpg ~ hp * am", d, weights=d["wt"]).fit(),
+        {
+            "HC0": (1.0282372762, [0.9016893996, 1.6178092798], 0.0065968164),
+            "HC1": (1.0992318856, [0.9639465150, 1.7295108692], 0.0070522934),
+            "cluster": (1.0515134759, [2.0916648424, 3.3847275331], 0.0081867602),
+        },
+    ),
+    "gls": (
+        lambda d: smf.gls("mpg ~ hp * am", d, sigma=d["wt"].to_numpy()).fit(),
+        {
+            "HC0": (1.0792516713, [0.8164380986, 1.6703916834], 0.0059665896),
+            "HC1": (1.1537685681, [0.8728090407, 1.7857238232], 0.0063785526),
+            "cluster": (0.8768459013, [1.9778730525, 3.4625538817], 0.0102143182),
+        },
+    ),
+}
+
+
+@pytest.mark.parametrize("family", list(WEIGHTED_LEAST_SQUARES))
+@pytest.mark.parametrize("vtype", ["HC0", "HC1", "cluster"])
+def test_unconditional_weighted_least_squares_match_r(mtcars, family, vtype):
+    from marginaleffects import avg_slopes, vcovUnconditional
+
+    fit, reference = WEIGHTED_LEAST_SQUARES[family]
+    model = fit(mtcars)
+    comparison, prediction, slope = reference[vtype]
+    V = (
+        vcovUnconditional("HC0", cluster="cyl")
+        if vtype == "cluster"
+        else vcovUnconditional(vtype)
+    )
+    # The reference values are exact. WLS and GLS models use finite-difference
+    # derivatives in Python, hence the tolerances.
+    assert se(avg_comparisons(model, variables="am", vcov=V)) == pytest.approx(
+        [comparison], rel=2e-6
+    )
+    out = avg_predictions(model, by="am", vcov=V).to_polars().sort("am")
+    assert out["std_error"].to_numpy() == pytest.approx(prediction, rel=2e-6)
+    assert se(avg_slopes(model, variables="hp", vcov=V)) == pytest.approx(
+        [slope], rel=5e-4
+    )
+
+
+def test_unconditional_gls_with_correlated_errors_is_rejected(mtcars):
+    from marginaleffects import vcovUnconditional
+
+    n = mtcars.shape[0]
+    sigma = 0.5 ** np.abs(np.subtract.outer(np.arange(n), np.arange(n)))
+    model = smf.gls("mpg ~ hp * am", mtcars, sigma=sigma).fit()
+    with pytest.raises(ValueError, match="correlated"):
+        avg_predictions(model, vcov=vcovUnconditional())
+
+
+@pytest.mark.parametrize("fit", [smf.quantreg, smf.rlm], ids=["quantreg", "rlm"])
+def test_unconditional_rejects_models_without_least_squares_scores(mtcars, fit):
+    from marginaleffects import vcovUnconditional
+
+    model = fit("mpg ~ hp * am", mtcars).fit()
+    with pytest.raises(ValueError, match="observation-level scores"):
+        avg_predictions(model, vcov=vcovUnconditional())
 
 
 def test_unconditional_hypothesis_after_aggregation_matches_r(ols_simple):
