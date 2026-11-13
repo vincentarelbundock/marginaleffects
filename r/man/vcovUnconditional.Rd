@@ -17,7 +17,9 @@ used by the \code{sandwich} package.}
 variable used for one-way clustered inference. The right-hand side must be
 a bare variable name; transformations and multiple variables are not
 supported. As in the default behavior of \code{\link[sandwich:vcovCL]{sandwich::vcovCL()}}, clustered
-estimates include the cluster-count adjustment \code{G / (G - 1)}.}
+estimates include the cluster-count adjustment \code{G / (G - 1)}. Cannot be
+supplied with \code{\link[survey:svyglm]{survey::svyglm()}} models, for which the survey design
+already identifies the clusters.}
 }
 \value{
 An object which can be supplied to the \code{vcov} argument of
@@ -62,7 +64,13 @@ matrices through \code{sandwich::estfun()}/\code{sandwich::bread()} or model-spe
 equivalents. Supported model classes are validated through an allow-list.
 Survey-weighted linear and generalized linear models fitted by
 \code{\link[survey:svyglm]{survey::svyglm()}} are supported using their observation-level coefficient
-influence functions. Propensity-score-weighted models fitted by
+influence functions. For these models, the combined influence values are
+passed to the variance estimator of the survey design (Binder, 1983), so the
+standard errors account for clustering, stratification, finite population
+corrections, and calibration in the same way as \code{\link[survey:svytotal]{survey::svytotal()}}. With
+\code{type = "HC1"}, the multiplier \code{n / (n - k)} is applied to this design-based
+variance. Supply the survey weights to \code{wts} (e.g., \code{wts = "(weights)"}) to
+average over the population rather than the sample. Propensity-score-weighted models fitted by
 \code{WeightIt::glm_weightit()} or \code{WeightIt::lm_weightit()} are supported because
 their \code{estfun()} and \code{bread()} methods already account for estimation of the
 weights; the multi-equation \code{multinom_weightit}, \code{ordinal_weightit}, and
@@ -85,4 +93,9 @@ estimating equations; this is not guaranteed for every supported model and
 link under misspecification. HC2 through HC5 are not available because their
 regression-leverage adjustments are not defined for this combined influence
 function.
+}
+\references{
+Binder, D. A. (1983). On the variances of asymptotically normal estimators
+from complex surveys. \emph{International Statistical Review}, 51(3), 279–292.
+\doi{10.2307/1402588}
 }

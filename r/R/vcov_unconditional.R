@@ -33,7 +33,9 @@
 #'   variable used for one-way clustered inference. The right-hand side must be
 #'   a bare variable name; transformations and multiple variables are not
 #'   supported. As in the default behavior of [sandwich::vcovCL()], clustered
-#'   estimates include the cluster-count adjustment `G / (G - 1)`.
+#'   estimates include the cluster-count adjustment `G / (G - 1)`. Cannot be
+#'   supplied with [survey::svyglm()] models, for which the survey design
+#'   already identifies the clusters.
 #'
 #' @return An object which can be supplied to the `vcov` argument of
 #'   [avg_predictions()], [avg_comparisons()], or [avg_slopes()].
@@ -74,8 +76,14 @@
 #' equivalents. Supported model classes are validated through an allow-list.
 #' Survey-weighted linear and generalized linear models fitted by
 #' [survey::svyglm()] are supported using their observation-level coefficient
-#' influence functions. Propensity-score-weighted models fitted by
-#' `WeightIt::glm_weightit()` or `WeightIt::lm_weightit()` are supported because
+#' influence functions. For these models, the combined influence values are
+#' passed to the variance estimator of the survey design (Binder, 1983), so the
+#' standard errors account for clustering, stratification, finite population
+#' corrections, and calibration in the same way as [survey::svytotal()]. With
+#' `type = "HC1"`, the multiplier `n / (n - k)` is applied to this design-based
+#' variance. Supply the survey weights to `wts` (e.g., `wts = "(weights)"`) to
+#' average over the population rather than the sample.
+#' Propensity-score-weighted models fitted by `WeightIt::glm_weightit()` or `WeightIt::lm_weightit()` are supported because
 #' their `estfun()` and `bread()` methods already account for estimation of the
 #' weights; the multi-equation `multinom_weightit`, `ordinal_weightit`, and
 #' `coxph_weightit` classes are not supported.
@@ -97,6 +105,11 @@
 #' link under misspecification. HC2 through HC5 are not available because their
 #' regression-leverage adjustments are not defined for this combined influence
 #' function.
+#'
+#' @references
+#' Binder, D. A. (1983). On the variances of asymptotically normal estimators
+#' from complex surveys. *International Statistical Review*, 51(3), 279–292.
+#' \doi{10.2307/1402588}
 #'
 #' @export
 vcovUnconditional <- function(type = "HC0", cluster = NULL) {
@@ -229,7 +242,8 @@ plan_unconditional_se <- function(
     inputs <- list(
         n = n,
         k = attr(beta_dot, "score_dimension", exact = TRUE),
-        vcov = unconditional$vcov
+        vcov = unconditional$vcov,
+        design = if (inherits(model, "svyglm")) model[["survey.design"]]
     )
     # Phi contains influence values, not per-estimate score contributions.
     # get_unconditional_vcov() therefore applies the n^-2 scaling required for
@@ -827,15 +841,60 @@ get_unconditional_beta_dot <- function(model) {
 # Convert the n by q influence matrix into the q by q covariance of q
 # estimators. IID inference uses sum_i Phi_i Phi_i' / n^2. Clustered inference
 # first sums Phi within clusters, which retains arbitrary within-cluster
-# dependence before taking the cross-product.
+# dependence before taking the cross-product. Survey designs use the design's
+# own variance estimator; see get_unconditional_vcov_survey().
 get_unconditional_vcov <- function(Phi, inputs) {
     n <- inputs$n
     correction <- get_unconditional_correction(inputs)
+    if (!is.null(inputs$design)) {
+        return(get_unconditional_vcov_survey(Phi / n, inputs$design) * correction)
+    }
     if (!is.null(inputs$vcov$cluster)) {
         S <- rowsum(Phi, inputs$vcov$cluster, reorder = FALSE)
         return(crossprod(S) / n^2 * correction)
     }
     crossprod(Phi) / n^2 * correction
+}
+
+
+# Design-based covariance for svyglm models, given the n by q matrix `z` of
+# influence values on the scale of a total (i.e., Phi / n, so that each
+# estimate is linearized as sum_i z_i). Following Binder (1983), the variance
+# of such an estimator is the design variance of an estimated total of z_i.
+# The i.i.d. cross-product sum_i z_i z_i' is that variance only for a
+# with-replacement design with one unit per PSU and no strata; it ignores
+# clustering, stratification, finite population corrections, and calibration.
+# Dividing z by the sampling weights and totaling it as a set of design
+# variables with svytotal() lets survey choose the estimator for the design:
+# svyrecvar() for linearization designs (including calibrated and PPS designs)
+# and the replicate weights for replicate-weight designs. Adapted from
+# .svyglm_vcov() in the adrftools package.
+get_unconditional_vcov_survey <- function(z, design) {
+    insight::check_if_installed("survey")
+    w <- if (inherits(design, "svyrep.design")) {
+        stats::weights(design, "sampling")
+    } else {
+        stats::weights(design)
+    }
+    if (length(w) != nrow(z)) {
+        msg <- paste0(
+            "`vcov = \"unconditional\"` could not match the survey design to the ",
+            "model data: the design has %d observations, but the model data have %d rows."
+        )
+        stop_sprintf(msg, length(w), nrow(z))
+    }
+
+    # Units outside the domain of a subsetted design have zero weight and
+    # contribute nothing to the totals.
+    z <- z / w
+    z[w == 0, ] <- 0
+
+    z_names <- sprintf(".marginaleffects_if_%d", seq_len(ncol(z)))
+    colnames(z) <- z_names
+    design$variables <- cbind(design$variables, z)
+
+    V <- survey::svytotal(stats::reformulate(z_names), design = design)
+    matrix(stats::vcov(V), nrow = ncol(z), ncol = ncol(z))
 }
 
 
