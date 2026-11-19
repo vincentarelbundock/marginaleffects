@@ -7,11 +7,12 @@ if (!requiet("survey")) exit_file("survey not installed")
 # variance of the linearized estimator (Binder, 1983), not an i.i.d. sum of
 # squared influence values. The reference below computes the linearization by
 # hand for average predictions at each level of `stype`, weighted by the
-# survey weights, and passes it to survey::svyrecvar() directly.
-binder_se <- function(model, design, levels) {
+# survey weights, and passes it to survey::svyrecvar() directly. `w` holds the
+# averaging weights: the survey weights, or equal weights for the default
+# unweighted average.
+binder_se <- function(model, design, levels, w = weights(design)) {
     b <- coef(model)
     infl <- attr(model, "influence")
-    w <- weights(design)
     d <- model.frame(design)
     z <- sapply(levels, function(l) {
         d$stype <- factor(l, levels = levels(d$stype))
@@ -35,11 +36,37 @@ designs$calibrated <- calibrate(
     ~stype,
     c(`(Intercept)` = 6194, stypeH = 755, stypeM = 1018)
 )
+# The totals above are those of the stratified design, so calibration leaves
+# its weights unchanged. Calibrating the cluster sample moves every weight.
+designs$calibrated_cluster <- calibrate(
+    designs$cluster_fpc,
+    ~stype + api99,
+    c(`(Intercept)` = 6194, stypeH = 755, stypeM = 1018, api99 = 3914069)
+)
+expect_true(all(abs(weights(designs$calibrated_cluster) / weights(designs$cluster_fpc) - 1) > 1e-3))
 
 for (d in designs) {
     mod <- svyglm(api00 ~ ell + meals + stype, design = d, influence = TRUE)
     p <- avg_predictions(mod, variables = "stype", wts = "(weights)", vcov = "unconditional")
     expect_equivalent(p$std.error, binder_se(mod, d, as.character(p$stype)), tolerance = 1e-8)
+}
+
+# A domain of a calibrated design keeps the observations outside the domain,
+# with a weight of zero
+design_zero <- subset(designs$calibrated_cluster, sch.wide == "Yes")
+expect_equal(nrow(design_zero), nrow(apiclus1))
+expect_true(any(weights(design_zero) == 0))
+mod <- suppressWarnings(svyglm(api00 ~ ell + meals + stype, design = design_zero, influence = TRUE))
+p <- avg_predictions(mod, variables = "stype", wts = "(weights)", vcov = "unconditional")
+expect_equivalent(p$std.error, binder_se(mod, design_zero, as.character(p$stype)), tolerance = 1e-8)
+
+# Without `wts`, the estimates are unweighted averages over the sample, and the
+# linearization uses equal averaging weights
+for (d in designs[c("cluster_fpc", "strata_cluster", "domain")]) {
+    mod <- svyglm(api00 ~ ell + meals + stype, design = d, influence = TRUE)
+    p <- suppressWarnings(avg_predictions(mod, variables = "stype", vcov = "unconditional"))
+    se <- binder_se(mod, d, as.character(p$stype), w = rep(1, nrow(d)))
+    expect_equivalent(p$std.error, se, tolerance = 1e-8)
 }
 
 # With a one-stage cluster sample, ignoring the clusters makes the standard
