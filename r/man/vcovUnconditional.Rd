@@ -49,8 +49,11 @@ estimand. The \code{df} argument of the calling
 separately and does not determine these covariance multipliers.
 
 Unconditional variance is available for effects evaluated over original
-model-data rows, valid subsets of those rows, or counterfactual grids that
-preserve a valid \code{rowid}/\code{rowidcf} mapping to original model-data rows. The
+model-data rows, subsets of those rows, or counterfactual grids built on
+either. Each evaluation row must correspond to a row of the model data,
+through \code{rowid}/\code{rowidcf} or because its values match a model-data row. For
+example, \code{newdata = subset(treat == 1)} targets the treated units, as for the
+average treatment effect in the treated. The
 effect must be averaged or aggregated with \verb{avg_*()} or \code{by}, or it must be a
 scalar comparison. Hypotheses applied directly to unit-level effects are
 rejected because the empirical-distribution influence function is not
@@ -63,10 +66,13 @@ equivalents. Supported model classes are validated through an allow-list.
 Survey-weighted linear and generalized linear models fitted by
 \code{\link[survey:svyglm]{survey::svyglm()}} are supported using their observation-level coefficient
 influence functions. Propensity-score-weighted models fitted by
-\code{WeightIt::glm_weightit()} or \code{WeightIt::lm_weightit()} are supported because
-their \code{estfun()} and \code{bread()} methods already account for estimation of the
-weights; the multi-equation \code{multinom_weightit}, \code{ordinal_weightit}, and
-\code{coxph_weightit} classes are not supported.
+\code{WeightIt::glm_weightit()}, \code{WeightIt::lm_weightit()},
+\code{WeightIt::multinom_weightit()}, or \code{WeightIt::ordinal_weightit()} are
+supported because their \code{estfun()} and \code{bread()} methods already account for
+estimation of the weights; \code{coxph_weightit} models are not supported.
+Multinomial and ordinal models fitted by \code{nnet::multinom()} and
+\code{MASS::polr()} are also supported, with one standard error per outcome
+level.
 For multiple-imputation objects, unconditional variance is estimated in each
 completed dataset and the results are pooled using Rubin's rules. Prediction
 methods that return posterior draws, censored and survival models such as
