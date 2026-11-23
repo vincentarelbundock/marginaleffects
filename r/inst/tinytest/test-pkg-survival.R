@@ -192,3 +192,43 @@ for (v in c("age", "sex")) {
     ref <- sqrt(as.numeric(J %*% V %*% t(J)))
     expect_equivalent(slo$std.error[slo$term == v], ref, tolerance = 1e-3)
 }
+
+
+# set_coef.coxph(): predict(type = "expected" or "survival") estimates the
+# baseline hazard from the stored linear predictors, which must move with the
+# coefficients. Reference: refit with the coefficients fixed by `init` and no
+# iterations, then difference by hand.
+dat_cox <- na.omit(survival::lung[, c("time", "status", "age", "sex", "ph.ecog")])
+set.seed(1024)
+dat_cox$w <- runif(nrow(dat_cox), 0.5, 2)
+nd_cox <- data.frame(
+    time = c(200, 400, 600), status = 1,
+    age = c(50, 60, 70), sex = c(1, 2, 1), ph.ecog = c(0, 1, 2), w = 1
+)
+cox_ref_se <- function(fit, type, eps = 1e-6) {
+    b0 <- coef(fit)
+    J <- sapply(seq_along(b0), function(j) {
+        bp <- bm <- b0
+        bp[j] <- bp[j] + eps
+        bm[j] <- bm[j] - eps
+        fp <- suppressWarnings(update(fit, init = bp, control = coxph.control(iter.max = 0)))
+        fm <- suppressWarnings(update(fit, init = bm, control = coxph.control(iter.max = 0)))
+        (predict(fp, newdata = nd_cox, type = type) - predict(fm, newdata = nd_cox, type = type)) / (2 * eps)
+    })
+    sqrt(diag(J %*% vcov(fit) %*% t(J)))
+}
+mod_cox <- coxph(Surv(time, status) ~ age + sex + ph.ecog, data = dat_cox)
+mod_cox_strata <- coxph(Surv(time, status) ~ age + sex + strata(ph.ecog), data = dat_cox, weights = w)
+for (m in list(mod_cox, mod_cox_strata)) {
+    for (tp in c("lp", "risk", "expected", "survival")) {
+        p <- predictions(m, newdata = nd_cox, type = tp, vcov = vcov(m))
+        expect_equivalent(p$std.error, cox_ref_se(m, tp), tolerance = 1e-4)
+    }
+}
+
+# set_coef.coxph() moves the linear predictors exactly as a refit does
+b <- coef(mod_cox_strata) + 0.05
+mod_set <- set_coef(mod_cox_strata, b)
+mod_ref <- suppressWarnings(update(mod_cox_strata, init = b, control = coxph.control(iter.max = 0)))
+expect_equivalent(coef(mod_set), b)
+expect_equivalent(mod_set$linear.predictors, mod_ref$linear.predictors)

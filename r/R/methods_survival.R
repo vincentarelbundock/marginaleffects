@@ -20,6 +20,42 @@ set_coef.survreg <- function(model, coefs, ...) {
     model
 }
 
+#' @rdname set_coef
+#' @export
+set_coef.coxph <- function(model, coefs, ...) {
+    # `predict.coxph(type = "expected" or "survival")` estimates the baseline
+    # hazard from `exp(model$linear.predictors)`, so the stored linear predictors
+    # must move with the coefficients. Otherwise the Jacobian ignores how the
+    # baseline hazard depends on the coefficients. They are stored as
+    # `X %*% beta + offset - sum(beta * means)`, so only the change in `beta` is
+    # needed. `residuals` also depend on the coefficients, but `predict.coxph()`
+    # reads them only when `newdata` is missing, and `get_predict()` always
+    # supplies it.
+    old <- model[["coefficients"]]
+    model <- set_coef.default(model, coefs)
+    delta <- model[["coefficients"]] - old
+    delta[is.na(delta)] <- 0
+
+    if (is.null(model[["linear.predictors"]]) || all(delta == 0)) {
+        return(model)
+    }
+
+    # `model.matrix()` needs the model frame, which `predict.coxph()` rebuilds
+    # anyway for types that read the linear predictors. If it cannot be rebuilt,
+    # those types fail inside `predict()` regardless, and "lp" and "risk" do not
+    # need the update. Penalized terms (e.g., `pspline()`, `frailty()`) do not
+    # map one column to one coefficient, so they are left alone.
+    X <- tryCatch(stats::model.matrix(model), error = function(e) NULL)
+    if (is.null(X) || ncol(X) != length(delta)) {
+        return(model)
+    }
+
+    model[["linear.predictors"]] <- model[["linear.predictors"]] +
+        drop(X %*% delta) - sum(delta * model[["means"]])
+
+    model
+}
+
 #' @rdname get_predict
 #' @export
 get_predict.coxph <- function(
