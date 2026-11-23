@@ -137,10 +137,15 @@ f_rhs <- ~ treat * (age + educ)
 mod_glm <- WeightIt::glm_weightit(update(f_rhs, re78pos ~ .), data = dat, weightit = w,
     family = binomial())
 cmp_glm <- avg_comparisons(mod_glm, variables = "treat", vcov = vcovUnconditional())
-for (mod in list(
-    WeightIt::multinom_weightit(update(f_rhs, re78fac ~ .), data = dat, weightit = w),
-    WeightIt::ordinal_weightit(update(f_rhs, re78bin ~ .), data = dat, weightit = w)
-)) {
+mods_two <- list(
+    WeightIt::multinom_weightit(update(f_rhs, re78fac ~ .), data = dat, weightit = w))
+# `ordinal_weightit()` cannot fit a two-level outcome before WeightIt 2.2.0: the
+# optimizer stops early and the Hessian cannot be inverted.
+if (utils::packageVersion("WeightIt") >= "2.2.0") {
+    mods_two[[2]] <- WeightIt::ordinal_weightit(update(f_rhs, re78bin ~ .), data = dat,
+        weightit = w)
+}
+for (mod in mods_two) {
     cmp <- avg_comparisons(mod, variables = "treat", vcov = vcovUnconditional())
     cmp <- cmp[cmp$group == "1", ]
     expect_equivalent(cmp$estimate, cmp_glm$estimate, tolerance = 1e-5)
