@@ -259,7 +259,7 @@ predictions <- function(
 
     mfx@conf_level <- sanitize_conf_level(conf_level, ...)
 
-    mfx <- prediction_prepare_newdata(mfx, variables = variables)
+    mfx <- prediction_prepare_newdata(mfx, variables = variables, keep_source = unconditional)
     unpadded_newdata <- mfx@newdata # for degrees of freedom
     mfx@newdata <- pad(mfx@model, mfx@newdata)
     if (!isFALSE(vcov)) {

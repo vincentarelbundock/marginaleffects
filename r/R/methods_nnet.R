@@ -35,6 +35,15 @@ set_coef.multinom <- function(model, coefs, ...) {
 #' @rdname get_coef
 #' @export
 get_coef.multinom <- function(model, ...) {
+    # With two outcome levels, `coef()` is a vector rather than a matrix and
+    # `insight::get_parameters()` leaves the response empty. Name the
+    # coefficients after the second level, as for three or more levels and as
+    # `sandwich::estfun()` does.
+    cf <- stats::coef(model)
+    lev <- model[["lev"]]
+    if (!is.matrix(cf) && length(lev) == 2L) {
+        return(stats::setNames(as.vector(cf), sprintf("%s:%s", lev[2], names(cf))))
+    }
     get_coef.mlm(model, ...)
 }
 
@@ -73,6 +82,20 @@ get_predict.multinom <- function(
 
     # needed because `predict.multinom` uses `data` rather than `newdata`
     pred <- stats::predict(model, newdata = newdata, type = type, ...)
+
+    # `nnet::multinom()` stores the outcome levels in `lev`. With two levels,
+    # `predict()` returns only the probability of the second level. Return both
+    # levels, as for three or more, so the `group` column is complete and the
+    # latent scale is not computed from a single column. `lev` is more reliable
+    # than `insight::get_response()`, which returns the untransformed variable
+    # for a response such as `factor(y > 0)`.
+    lev <- if (inherits(model, "multinom")) model[["lev"]]
+    if (identical(type, "probs") &&
+        length(lev) == 2L &&
+        isTRUE(checkmate::check_atomic_vector(pred))) {
+        pred <- cbind(1 - as.vector(pred), as.vector(pred))
+        colnames(pred) <- lev
+    }
 
     # atomic vector means there is only one row in `newdata`
     # two levels DV returns a vector

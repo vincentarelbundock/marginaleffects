@@ -61,8 +61,11 @@
 #' separately and does not determine these covariance multipliers.
 #'
 #' Unconditional variance is available for effects evaluated over original
-#' model-data rows, valid subsets of those rows, or counterfactual grids that
-#' preserve a valid `rowid`/`rowidcf` mapping to original model-data rows. The
+#' model-data rows, subsets of those rows, or counterfactual grids built on
+#' either. Each evaluation row must correspond to a row of the model data,
+#' through `rowid`/`rowidcf` or because its values match a model-data row. For
+#' example, `newdata = subset(treat == 1)` targets the treated units, as for the
+#' average treatment effect in the treated. The
 #' effect must be averaged or aggregated with `avg_*()` or `by`, or it must be a
 #' scalar comparison. Hypotheses applied directly to unit-level effects are
 #' rejected because the empirical-distribution influence function is not
@@ -75,10 +78,13 @@
 #' Survey-weighted linear and generalized linear models fitted by
 #' [survey::svyglm()] are supported using their observation-level coefficient
 #' influence functions. Propensity-score-weighted models fitted by
-#' `WeightIt::glm_weightit()` or `WeightIt::lm_weightit()` are supported because
-#' their `estfun()` and `bread()` methods already account for estimation of the
-#' weights; the multi-equation `multinom_weightit`, `ordinal_weightit`, and
-#' `coxph_weightit` classes are not supported.
+#' `WeightIt::glm_weightit()`, `WeightIt::lm_weightit()`,
+#' `WeightIt::multinom_weightit()`, or `WeightIt::ordinal_weightit()` are
+#' supported because their `estfun()` and `bread()` methods already account for
+#' estimation of the weights; `coxph_weightit` models are not supported.
+#' Multinomial and ordinal models fitted by `nnet::multinom()` and
+#' `MASS::polr()` are also supported, with one standard error per outcome
+#' level.
 #' For multiple-imputation objects, unconditional variance is estimated in each
 #' completed dataset and the results are pooled using Rubin's rules. Prediction
 #' methods that return posterior draws, censored and survival models such as
@@ -164,7 +170,8 @@ plan_unconditional_se <- function(
         modeldata = modeldata,
         n = n,
         n_estimates = nrow(estimates),
-        allow_mismatch = allow_mismatch
+        allow_mismatch = allow_mismatch,
+        newdata_index = get_unconditional_newdata_index(mfx)
     )
 
     # Derivative of every final estimand with respect to beta. This includes
@@ -770,6 +777,23 @@ get_unconditional_beta_dot <- function(model) {
                 )
             }
         )
+    }
+
+    # With two outcome levels, `nnet::multinom()` has one equation: `estfun()`
+    # prefixes its columns with the second level (`yes:x`), but `vcov()`, and
+    # hence the default `bread()`, does not (`x`). The order is the same, so
+    # take the score names once they agree after dropping the prefix.
+    if (inherits(model, "multinom") &&
+        isTRUE(checkmate::check_matrix(scores)) &&
+        isTRUE(checkmate::check_matrix(bread, nrows = ncol(scores), ncols = ncol(scores))) &&
+        length(model[["lev"]]) == 2L) {
+        prefix <- paste0(model[["lev"]][2], ":")
+        stripped <- colnames(scores)
+        has_prefix <- startsWith(stripped, prefix)
+        stripped[has_prefix] <- substring(stripped[has_prefix], nchar(prefix) + 1L)
+        if (identical(rownames(bread), stripped) && identical(colnames(bread), stripped)) {
+            dimnames(bread) <- list(colnames(scores), colnames(scores))
+        }
     }
 
     beta <- get_unconditional_coef(model)
