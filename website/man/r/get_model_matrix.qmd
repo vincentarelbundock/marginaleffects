@@ -23,6 +23,9 @@ get_model_matrix(model, newdata, mfx = NULL)
 ## S3 method for class 'brglmFit'
 get_model_matrix(model, newdata, mfx = NULL)
 
+## S3 method for class 'fixest'
+get_model_matrix(model, newdata, mfx = NULL)
+
 ## S3 method for class 'geeglm'
 get_model_matrix(model, newdata, mfx = NULL)
 
