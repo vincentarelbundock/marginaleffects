@@ -665,10 +665,11 @@ beta_dot_svy_influence <- marginaleffects:::get_unconditional_beta_dot(mod_svy_i
 expect_equivalent(beta_dot_svy, beta_dot_svy_influence, tolerance = 1e-12)
 expect_identical(attr(beta_dot_svy, "score_dimension"), 4L)
 
-p_svy <- suppressWarnings(avg_predictions(mod_svy, vcov = "unconditional"))
+p_svy <- suppressWarnings(avg_predictions(mod_svy, wts = TRUE, vcov = "unconditional"))
 c_svy <- suppressWarnings(avg_comparisons(
     mod_svy,
     variables = "ell",
+    wts = TRUE,
     vcov = "unconditional"
 ))
 expect_unconditional(p_svy)

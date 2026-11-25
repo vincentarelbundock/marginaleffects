@@ -69,9 +69,13 @@ passed to the variance estimator of the survey design (Binder, 1983), so the
 standard errors account for clustering, stratification, finite population
 corrections, and calibration in the same way as \code{\link[survey:svytotal]{survey::svytotal()}}. With
 \code{type = "HC1"}, the multiplier \code{n / (n - k)} is applied to this design-based
-variance. Supply the survey weights to \code{wts} (e.g., \code{wts = "(weights)"}) to
-average over the population rather than the sample. Propensity-score-weighted models fitted by
-\code{WeightIt::glm_weightit()} or \code{WeightIt::lm_weightit()} are supported because
+variance. For these models, \code{wts} must be supplied explicitly: use
+\code{wts = TRUE} or \code{wts = "(weights)"} to average with the survey weights.
+Other weights are accepted, but on calibrated, post-stratified, or raked
+designs the standard errors are only valid when \code{wts} are the survey
+weights, because the design's calibration adjustment is applied to the
+whole linearization.
+Propensity-score-weighted models fitted by \code{WeightIt::glm_weightit()} or \code{WeightIt::lm_weightit()} are supported because
 their \code{estfun()} and \code{bread()} methods already account for estimation of the
 weights; the multi-equation \code{multinom_weightit}, \code{ordinal_weightit}, and
 \code{coxph_weightit} classes are not supported.

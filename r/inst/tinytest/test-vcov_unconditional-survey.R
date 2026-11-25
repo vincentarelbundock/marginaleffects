@@ -60,13 +60,16 @@ mod <- suppressWarnings(svyglm(api00 ~ ell + meals + stype, design = design_zero
 p <- avg_predictions(mod, variables = "stype", wts = "(weights)", vcov = "unconditional")
 expect_equivalent(p$std.error, binder_se(mod, design_zero, as.character(p$stype)), tolerance = 1e-8)
 
-# Without `wts`, the estimates are unweighted averages over the sample, and the
-# linearization uses equal averaging weights
+# `wts` must be supplied explicitly; `wts = TRUE` uses the survey weights
 for (d in designs[c("cluster_fpc", "strata_cluster", "domain")]) {
     mod <- svyglm(api00 ~ ell + meals + stype, design = d, influence = TRUE)
-    p <- suppressWarnings(avg_predictions(mod, variables = "stype", vcov = "unconditional"))
-    se <- binder_se(mod, d, as.character(p$stype), w = rep(1, nrow(d)))
-    expect_equivalent(p$std.error, se, tolerance = 1e-8)
+    expect_error(
+        avg_predictions(mod, variables = "stype", vcov = "unconditional"),
+        pattern = "requires the `wts` argument"
+    )
+    p_true <- avg_predictions(mod, variables = "stype", wts = TRUE, vcov = "unconditional")
+    p_name <- avg_predictions(mod, variables = "stype", wts = "(weights)", vcov = "unconditional")
+    expect_equivalent(p_true$std.error, p_name$std.error, tolerance = 1e-12)
 }
 
 # With a one-stage cluster sample, ignoring the clusters makes the standard

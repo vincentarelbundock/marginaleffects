@@ -81,8 +81,12 @@
 #' standard errors account for clustering, stratification, finite population
 #' corrections, and calibration in the same way as [survey::svytotal()]. With
 #' `type = "HC1"`, the multiplier `n / (n - k)` is applied to this design-based
-#' variance. Supply the survey weights to `wts` (e.g., `wts = "(weights)"`) to
-#' average over the population rather than the sample.
+#' variance. For these models, `wts` must be supplied explicitly: use
+#' `wts = TRUE` or `wts = "(weights)"` to average with the survey weights.
+#' Other weights are accepted, but on calibrated, post-stratified, or raked
+#' designs the standard errors are only valid when `wts` are the survey
+#' weights, because the design's calibration adjustment is applied to the
+#' whole linearization.
 #' Propensity-score-weighted models fitted by `WeightIt::glm_weightit()` or `WeightIt::lm_weightit()` are supported because
 #' their `estfun()` and `bread()` methods already account for estimation of the
 #' weights; the multi-equation `multinom_weightit`, `ordinal_weightit`, and

@@ -40,6 +40,21 @@ sanitize_unconditional_vcov_request <- function(vcov, mfx) {
         stop_sprintf(msg)
     }
 
+    # The design-based variance targets averages over the population, so the
+    # user must say which averaging weights to use. Any explicit `wts` is
+    # accepted, but svytotal() applies the calibration adjustment to the whole
+    # linearization, which is only valid for averages weighted by the survey
+    # weights.
+    if (inherits(mfx@model, "svyglm") && (is.null(mfx@wts) || isFALSE(mfx@wts))) {
+        msg <- paste0(
+            "`vcov = \"unconditional\"` with `svyglm` models requires the `wts` argument. ",
+            "Use `wts = TRUE` or `wts = \"(weights)\"` to average with the survey weights. ",
+            "Other weights are accepted, but on calibrated, post-stratified, or raked ",
+            "designs the standard errors are only valid when `wts` are the survey weights."
+        )
+        stop_sprintf(msg)
+    }
+
     modeldata <- data.table::as.data.table(mfx@modeldata)
     auxdata <- if (inherits(vcov$cluster, "formula")) {
         get_unconditional_auxdata(mfx, nrow(modeldata))
