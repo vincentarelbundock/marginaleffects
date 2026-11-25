@@ -247,7 +247,8 @@ plan_unconditional_se <- function(
         n = n,
         k = attr(beta_dot, "score_dimension", exact = TRUE),
         vcov = unconditional$vcov,
-        design = if (inherits(model, "svyglm")) model[["survey.design"]]
+        design = if (inherits(model, "svyglm")) model[["survey.design"]],
+        na_action = if (inherits(model, "svyglm")) model[["na.action"]]
     )
     # Phi contains influence values, not per-estimate score contributions.
     # get_unconditional_vcov() therefore applies the n^-2 scaling required for
@@ -722,6 +723,14 @@ get_unconditional_beta_dot <- function(model) {
         # convention used by the unconditional covariance calculation below.
         n <- nrow(stats::model.frame(model))
         scores <- attr(model, "influence", exact = TRUE)
+        # survey pads the saved influence matrix with zero rows at na.action,
+        # so it has one row per row of the original data, not per model-frame
+        # row.
+        na_action <- model[["na.action"]]
+        if (!is.null(scores) && length(na_action) > 0 &&
+            nrow(scores) == n + length(na_action)) {
+            scores <- scores[-as.integer(na_action), , drop = FALSE]
+        }
         if (is.null(scores)) {
             scores <- tcrossprod(
                 stats::model.matrix(model) *
@@ -851,7 +860,7 @@ get_unconditional_vcov <- function(Phi, inputs) {
     n <- inputs$n
     correction <- get_unconditional_correction(inputs)
     if (!is.null(inputs$design)) {
-        return(get_unconditional_vcov_survey(Phi / n, inputs$design) * correction)
+        return(get_unconditional_vcov_survey(Phi / n, inputs$design, inputs$na_action) * correction)
     }
     if (!is.null(inputs$vcov$cluster)) {
         S <- rowsum(Phi, inputs$vcov$cluster, reorder = FALSE)
@@ -873,12 +882,20 @@ get_unconditional_vcov <- function(Phi, inputs) {
 # svyrecvar() for linearization designs (including calibrated and PPS designs)
 # and the replicate weights for replicate-weight designs. Adapted from
 # .svyglm_vcov() in the adrftools package.
-get_unconditional_vcov_survey <- function(z, design) {
+get_unconditional_vcov_survey <- function(z, design, na_action = NULL) {
     insight::check_if_installed("survey")
     w <- if (inherits(design, "svyrep.design")) {
         stats::weights(design, "sampling")
     } else {
         stats::weights(design)
+    }
+    # Calibrated, post-stratified, raked, and PPS designs cannot drop rows, so
+    # svyglm() keeps rows with missing model data at weight zero. Pad z with
+    # zero rows at those positions, as survey does in svy.varcoef().
+    if (length(na_action) > 0 && length(w) == nrow(z) + length(na_action)) {
+        z_full <- matrix(0, nrow = length(w), ncol = ncol(z))
+        z_full[-as.integer(na_action), ] <- z
+        z <- z_full
     }
     if (length(w) != nrow(z)) {
         msg <- paste0(

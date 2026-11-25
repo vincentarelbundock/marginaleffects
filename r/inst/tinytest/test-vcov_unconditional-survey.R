@@ -126,3 +126,58 @@ expect_equivalent(
     se_collision(apiclus1),
     tolerance = 1e-12
 )
+
+# Missing values in the model data. Calibrated and PPS designs cannot drop
+# rows, so svyglm() keeps the incomplete rows at weight zero, and the saved
+# influence matrix is padded with zero rows at na.action on every design. The
+# reference uses survey's own padded influence matrix, with one row per design
+# row, for the weighted average prediction. svyglm() sets the weights of the
+# incomplete rows to zero in its own copy of the design, model$survey.design.
+binder_se_na <- function(model) {
+    design <- model$survey.design
+    w <- weights(design)
+    infl <- attr(model, "influence")
+    X <- matrix(0, nrow(design), ncol(infl))
+    X[-as.integer(model$na.action), ] <- model.matrix(model)
+    p <- drop(X %*% coef(model))
+    theta <- sum(w * p) / sum(w)
+    z <- w * (p - theta) / sum(w) + drop(infl %*% (colSums(w * X) / sum(w)))
+    sqrt(as.numeric(svyrecvar(z, design$cluster, design$strata, design$fpc,
+        postStrata = design$postStrata)))
+}
+dat_na <- apistrat
+dat_na$ell[c(3, 50, 120)] <- NA
+design_na <- svydesign(id = ~1, strata = ~stype, weights = ~pw, data = dat_na, fpc = ~fpc)
+# calibrating to the population total of api99 moves every weight
+design_na_cal <- calibrate(
+    design_na,
+    ~stype + api99,
+    c(`(Intercept)` = 6194, stypeH = 755, stypeM = 1018, api99 = 3914069)
+)
+expect_true(nrow(design_na_cal) == nrow(dat_na))
+mod_na_cal <- svyglm(api00 ~ ell + meals + stype, design = design_na_cal)
+mod_na_cal_inf <- svyglm(api00 ~ ell + meals + stype, design = design_na_cal, influence = TRUE)
+p_na_cal <- avg_predictions(mod_na_cal, wts = "(weights)", vcov = "unconditional")
+p_na_cal_inf <- avg_predictions(mod_na_cal_inf, wts = "(weights)", vcov = "unconditional")
+se_na_cal <- binder_se_na(mod_na_cal_inf)
+expect_equivalent(p_na_cal$std.error, se_na_cal, tolerance = 1e-8)
+expect_equivalent(p_na_cal_inf$std.error, se_na_cal, tolerance = 1e-8)
+
+# An ordinary design drops the incomplete rows, but the saved influence matrix
+# is still padded
+mod_na <- svyglm(api00 ~ ell + meals + stype, design = design_na)
+mod_na_inf <- svyglm(api00 ~ ell + meals + stype, design = design_na, influence = TRUE)
+expect_equivalent(
+    avg_predictions(mod_na_inf, wts = "(weights)", vcov = "unconditional")$std.error,
+    avg_predictions(mod_na, wts = "(weights)", vcov = "unconditional")$std.error,
+    tolerance = 1e-8
+)
+
+# PPS designs also keep the incomplete rows
+design_na_pps <- svydesign(id = ~1, fpc = ~I(pw^-1), data = dat_na, pps = "brewer")
+mod_na_pps <- svyglm(api00 ~ ell + meals + stype, design = design_na_pps)
+mod_na_pps_inf <- svyglm(api00 ~ ell + meals + stype, design = design_na_pps, influence = TRUE)
+se_pps <- avg_predictions(mod_na_pps, wts = "(weights)", vcov = "unconditional")$std.error
+se_pps_inf <- avg_predictions(mod_na_pps_inf, wts = "(weights)", vcov = "unconditional")$std.error
+expect_true(is.finite(se_pps))
+expect_equivalent(se_pps_inf, se_pps, tolerance = 1e-8)
