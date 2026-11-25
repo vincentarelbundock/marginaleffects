@@ -44,7 +44,17 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
     valid[["gamlss"]] <- c("what", "safe") # gamlss
     valid[["lme"]] <- c("level") # nlme::lme
     valid[["bife"]] <- c("alpha_new", "corrected") # nlme::lme
-    valid[["process_error"]] <- c("times", "p", "start")
+    valid[["mvgam"]] <- c(
+        "process_error",
+        "ndraws",
+        "draw_ids",
+        "re_formula",
+        "allow_new_levels",
+        "sample_new_levels",
+        "incl_autocor",
+        "resp"
+    ) # mvgam
+    valid[["mvgam_pooled"]] <- valid[["mvgam"]]
     valid[["flexsurvreg"]] <- c("times", "p", "start")
     valid[["nestedLogit"]] <- c("submodel")
 

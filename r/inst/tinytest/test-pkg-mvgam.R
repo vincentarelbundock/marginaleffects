@@ -5,6 +5,10 @@ if (ON_WINDOWS) exit_file("on windows")
 if (!minver("base", "4.1.0")) exit_file("R 4.1.0")
 if (!requiet("mvgam")) exit_file("mvgam not installed")
 
+# mvgam prediction arguments raise no warning
+mod_class <- structure(list(), class = "mvgam")
+expect_silent(marginaleffects:::sanity_dots(mod_class, process_error = TRUE, ndraws = 10))
+
 
 # load a pre-compiled model
 mod1 <- mvgam:::mvgam_example1
