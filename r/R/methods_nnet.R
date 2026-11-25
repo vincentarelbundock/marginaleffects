@@ -35,6 +35,11 @@ set_coef.multinom <- function(model, coefs, ...) {
 #' @rdname get_coef
 #' @export
 get_coef.multinom <- function(model, ...) {
+    # With two outcome levels, `coef()` is a named vector, as for a logit.
+    cf <- stats::coef(model)
+    if (!is.matrix(cf)) {
+        return(cf)
+    }
     get_coef.mlm(model, ...)
 }
 
@@ -77,7 +82,12 @@ get_predict.multinom <- function(
     # atomic vector means there is only one row in `newdata`
     # two levels DV returns a vector
     if (isTRUE(checkmate::check_atomic_vector(pred))) {
-        y_original <- sort(unique(insight::get_response(model)))
+        # `lev` holds the outcome levels. `insight::get_response()` returns
+        # the untransformed variable for a response such as `factor(y > 0)`.
+        y_original <- if (inherits(model, "multinom")) model[["lev"]]
+        if (is.null(y_original)) {
+            y_original <- sort(unique(insight::get_response(model)))
+        }
         two_levels <- length(y_original) == 2
         if (isTRUE(two_levels)) {
             pred <- matrix(pred)
@@ -104,7 +114,13 @@ get_predict.multinom <- function(
             log_mu <- log(mu)
             return(sweep(log_mu, 1, STATS = rowMeans(log_mu), FUN = "-"))
         }
-        pred <- inverse_softMax(pred)
+        # With two levels, `pred` holds only the second level's probability;
+        # its centered log probability is half the log odds.
+        if (ncol(pred) == 1L) {
+            pred <- (log(pred) - log1p(-pred)) / 2
+        } else {
+            pred <- inverse_softMax(pred)
+        }
     }
 
     # matrix with outcome levels as columns

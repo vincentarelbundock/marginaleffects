@@ -642,10 +642,10 @@ if (requiet("MASS")) {
     dat_polr$mpg3 <- ordered(cut(dat_polr$mpg, breaks = 3, labels = c("low", "mid", "high")))
     mod_polr <- MASS::polr(mpg3 ~ hp + wt, data = dat_polr, Hess = TRUE)
     expect_inherits(avg_predictions(mod_polr, vcov = FALSE), "predictions")
-    expect_error(
-        avg_predictions(mod_polr, vcov = "unconditional"),
-        pattern = "not currently supported"
-    )
+    # `polr` is supported; see test-vcov_unconditional-categorical.R
+    prd_polr <- avg_predictions(mod_polr, vcov = "unconditional")
+    expect_equal(nrow(prd_polr), 3)
+    expect_true(all(is.finite(prd_polr$std.error)))
 }
 
 data("api", package = "survey")

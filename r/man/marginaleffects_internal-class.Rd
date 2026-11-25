@@ -37,6 +37,12 @@ or NULL}
 
 \item{\code{newdata}}{The new data frame for predictions}
 
+\item{\code{newdata_modelrow}}{NULL, or a list mapping the rows of \code{newdata}, as
+built by \code{add_newdata()}, to rows of \code{modeldata}: \code{rowid} holds their
+\code{rowid} values and \code{index} their model-data rows, in the same order. Set
+when \code{newdata} is a \code{subset()} or \code{filter()} call evaluated on the model
+data.}
+
 \item{\code{type}}{The sanitized type from sanitize_type()}
 
 \item{\code{vcov_model}}{The variance-covariance matrix}

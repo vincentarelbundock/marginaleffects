@@ -34,6 +34,11 @@ setClassUnion("logicalOrNULL", c("logical", "NULL"))
 #' @slot model The fitted model object
 #' @slot modeldata The model data frame
 #' @slot newdata The new data frame for predictions
+#' @slot newdata_modelrow NULL, or a list mapping the rows of `newdata`, as
+#'   built by `add_newdata()`, to rows of `modeldata`: `rowid` holds their
+#'   `rowid` values and `index` their model-data rows, in the same order. Set
+#'   when `newdata` is a `subset()` or `filter()` call evaluated on the model
+#'   data.
 #' @slot type The sanitized type from sanitize_type()
 #' @slot vcov_model The variance-covariance matrix
 #' @slot wts The weights specification
@@ -62,6 +67,7 @@ setClass(
         modeldata = "ANY", # TODO: lmerTest returns nfnGroupedData
         modeldata_available = "logical",
         newdata = "ANY", # Changed from "data.frame" to handle mira deferred processing
+        newdata_modelrow = "ANY",
         numderiv = "list",
         type = "characterOrNULL",
         variables = "list",
@@ -162,6 +168,7 @@ new_marginaleffects_internal <- function(
         modeldata = modeldata,
         modeldata_available = TRUE,
         newdata = data.frame(),
+        newdata_modelrow = NULL,
         numderiv = numderiv,
         type = type,
         variables = variables,

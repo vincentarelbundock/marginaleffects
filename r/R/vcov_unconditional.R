@@ -63,8 +63,11 @@
 #' separately and does not determine these covariance multipliers.
 #'
 #' Unconditional variance is available for effects evaluated over original
-#' model-data rows, valid subsets of those rows, or counterfactual grids that
-#' preserve a valid `rowid`/`rowidcf` mapping to original model-data rows. The
+#' model-data rows, subsets of those rows, or counterfactual grids built on
+#' either. Each evaluation row must correspond to a row of the model data,
+#' through `rowid`/`rowidcf` or because its values match a model-data row. For
+#' example, `newdata = subset(treat == 1)` targets the treated units, as for the
+#' average treatment effect in the treated. The
 #' effect must be averaged or aggregated with `avg_*()` or `by`, or it must be a
 #' scalar comparison. Hypotheses applied directly to unit-level effects are
 #' rejected because the empirical-distribution influence function is not
@@ -87,10 +90,14 @@
 #' designs the standard errors are only valid when `wts` are the survey
 #' weights, because the design's calibration adjustment is applied to the
 #' whole linearization.
-#' Propensity-score-weighted models fitted by `WeightIt::glm_weightit()` or `WeightIt::lm_weightit()` are supported because
-#' their `estfun()` and `bread()` methods already account for estimation of the
-#' weights; the multi-equation `multinom_weightit`, `ordinal_weightit`, and
-#' `coxph_weightit` classes are not supported.
+#' Propensity-score-weighted models fitted by
+#' `WeightIt::glm_weightit()`, `WeightIt::lm_weightit()`,
+#' `WeightIt::multinom_weightit()`, or `WeightIt::ordinal_weightit()` are
+#' supported because their `estfun()` and `bread()` methods already account for
+#' estimation of the weights; `coxph_weightit` models are not supported.
+#' Multinomial and ordinal models fitted by `nnet::multinom()` and
+#' `MASS::polr()` are also supported, with one standard error per outcome
+#' level.
 #' For multiple-imputation objects, unconditional variance is estimated in each
 #' completed dataset and the results are pooled using Rubin's rules. Prediction
 #' methods that return posterior draws, censored and survival models such as
@@ -181,7 +188,8 @@ plan_unconditional_se <- function(
         modeldata = modeldata,
         n = n,
         n_estimates = nrow(estimates),
-        allow_mismatch = allow_mismatch
+        allow_mismatch = allow_mismatch,
+        newdata_index = get_unconditional_newdata_index(mfx)
     )
 
     # Derivative of every final estimand with respect to beta. This includes
@@ -386,7 +394,12 @@ get_unconditional_comparison_base <- function(plan, model, rowid, n) {
 
     est <- numeric(plan$n_comp)
     est_rowid <- rep(NA_integer_, plan$n_comp)
-    phi <- matrix(0, nrow = n, ncol = plan$n_comp)
+    # Only scalar comparisons carry influence values at this stage; unit-level
+    # comparisons get theirs when they are aggregated. Store the nonzero
+    # columns alone: a dense `n` x `n_comp` matrix is quadratic in `n` when
+    # the comparisons are unit-level.
+    phi_cols <- integer()
+    phi_vals <- list()
 
     for (g in plan$groups) {
         con <- comparison_plan_group_eval(g, hi = hi, lo = lo, y = y)
@@ -400,7 +413,8 @@ get_unconditional_comparison_base <- function(plan, model, rowid, n) {
         if (length(con) == length(g$idx)) {
             est_rowid[g$out_idx] <- rowid[g$idx]
         } else if (length(con) == 1L && length(g$idx) > 1L) {
-            phi[, g$out_idx] <- get_unconditional_scalar_comparison_phi(
+            phi_cols <- c(phi_cols, g$out_idx)
+            phi_vals[[length(phi_vals) + 1L]] <- get_unconditional_scalar_comparison_phi(
                 group = g,
                 hi = hi,
                 lo = lo,
@@ -414,10 +428,38 @@ get_unconditional_comparison_base <- function(plan, model, rowid, n) {
     if (!is.null(plan$est_keep)) {
         est <- est[plan$est_keep]
         est_rowid <- est_rowid[plan$est_keep]
-        phi <- phi[, plan$est_keep, drop = FALSE]
+        # Renumber the stored columns to their positions after `est_keep`.
+        pos <- match(phi_cols, seq_len(plan$n_comp)[plan$est_keep])
+        phi_vals <- phi_vals[!is.na(pos)]
+        phi_cols <- pos[!is.na(pos)]
     }
 
+    phi <- new_unconditional_sparse_phi(phi_cols, phi_vals, n)
     list(estimate = est, rowid = est_rowid, phi = phi)
+}
+
+
+# Influence columns of which only a few are nonzero: `cols` indexes the
+# estimates, and column j of `values` holds the influence values of estimate
+# `cols[j]`. Every other estimate has zero influence.
+new_unconditional_sparse_phi <- function(cols, values, n) {
+    mat <- if (length(values) > 0L) {
+        do.call(cbind, values)
+    } else {
+        matrix(0, nrow = n, ncol = 0L)
+    }
+    list(cols = as.integer(cols), values = mat)
+}
+
+
+# Dense `n` x `k` version, for when no aggregation follows and `k` is the
+# number of reported estimates.
+densify_unconditional_phi <- function(phi, k, n) {
+    out <- matrix(0, nrow = n, ncol = k)
+    if (!is.null(phi) && length(phi$cols) > 0L) {
+        out[, phi$cols] <- phi$values
+    }
+    out
 }
 
 
@@ -591,13 +633,10 @@ get_unconditional_known_scalar_comparison_phi <- function(
 # `base_phi` carries influence already created by a scalar comparison through a
 # possible second aggregation stage.
 get_unconditional_aggregate_phi <- function(agg, base_est, rowid, n, base_phi = NULL) {
-    if (is.null(base_phi)) {
-        base_phi <- matrix(0, nrow = n, ncol = length(base_est))
-    }
-
     if (is.null(agg)) {
-        return(base_phi)
+        return(densify_unconditional_phi(base_phi, length(base_est), n))
     }
+    has_base_phi <- !is.null(base_phi) && length(base_phi$cols) > 0L
 
     out <- matrix(0, nrow = n, ncol = agg$n)
 
@@ -629,7 +668,14 @@ get_unconditional_aggregate_phi <- function(agg, base_est, rowid, n, base_phi = 
             alpha <- numeric(length(ej))
             alpha[ok] <- wj[ok] / sum(wj[ok])
             # Linear combinations of already-linearized scalar estimates.
-            out[, col] <- out[, col] + as.vector(base_phi[, idx, drop = FALSE] %*% alpha)
+            if (has_base_phi) {
+                pos <- match(idx, base_phi$cols)
+                sel <- !is.na(pos) & alpha != 0
+                if (any(sel)) {
+                    out[, col] <- out[, col] +
+                        as.vector(base_phi$values[, pos[sel], drop = FALSE] %*% alpha[sel])
+                }
+            }
 
             # Direct empirical-distribution contribution of this average.
             ok_rowid <- ok & !is.na(rj)
@@ -713,7 +759,12 @@ get_unconditional_coef <- function(model) {
 # Supporting models with nuisance parameters requires retaining their full
 # score/bread system and, when relevant, including them in the estimand Jacobian.
 get_unconditional_beta_dot <- function(model) {
-    insight::check_if_installed("sandwich")
+    # `sandwich::estfun()` gained its `nnet::multinom()` method in 3.1-2.
+    if (identical(class(model)[1], "multinom")) {
+        insight::check_if_installed("sandwich", minimum_version = "3.1-2")
+    } else {
+        insight::check_if_installed("sandwich")
+    }
     if (inherits(model, "svyglm")) {
         # Inspired by Noah Greifer's implementation in the adrftools package.
         # survey::svyglm() can save the observation-level coefficient
@@ -797,6 +848,17 @@ get_unconditional_beta_dot <- function(model) {
                 )
             }
         )
+    }
+
+    # With two outcome levels, `nnet::multinom()` has one equation, and
+    # `estfun()` prefixes its columns with the second level (`yes:x`), unlike
+    # `coef()` and `vcov()`.
+    if (inherits(model, "multinom") && length(model[["lev"]]) == 2L) {
+        prefix <- paste0(model[["lev"]][2], ":")
+        cols <- colnames(scores)
+        has_prefix <- startsWith(cols, prefix)
+        cols[has_prefix] <- substring(cols[has_prefix], nchar(prefix) + 1L)
+        colnames(scores) <- cols
     }
 
     beta <- get_unconditional_coef(model)

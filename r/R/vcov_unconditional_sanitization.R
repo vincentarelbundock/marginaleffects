@@ -91,17 +91,21 @@ validate_unconditional_model_support <- function(model, kind) {
         stop_sprintf(msg, primary_class)
     }
 
-    # `glm_weightit` (and its `lm_weightit` alias, which shares the class) is
-    # included because `WeightIt` supplies `estfun()` and `bread()` methods
-    # that already fold the weight-estimation correction into the
-    # outcome-coefficient scores, so `scores %*% bread` is a complete influence
-    # function in the convention used by `get_unconditional_beta_dot()`. The
-    # multi-equation siblings `multinom_weightit` and `ordinal_weightit` are
-    # deliberately excluded: their grouped estimate tables index past the
-    # length of the row IDs, which silently drops the empirical-distribution
-    # term for every group after the first. `coxph_weightit` is rejected by the
-    # survival guard above.
-    if (isTRUE(primary_class %in% c("lm", "glm", "svyglm", "glm_weightit"))) {
+    # `glm_weightit` (and its `lm_weightit` alias, which shares the class),
+    # `multinom_weightit`, and `ordinal_weightit` are included because
+    # `WeightIt` supplies `estfun()` and `bread()` methods that already fold
+    # the weight-estimation correction into the outcome-coefficient scores, so
+    # `scores %*% bread` is a complete influence function in the convention
+    # used by `get_unconditional_beta_dot()`. `nnet::multinom()` and
+    # `MASS::polr()` are maximum-likelihood fits whose `sandwich` scores and
+    # breads are named like their coefficients, cutpoints included for `polr`.
+    # Multinomial and ordinal models return one block of predictions per
+    # outcome level; `sanitize_unconditional_plan()` maps each block back to
+    # the source rows. `coxph_weightit` is rejected by the survival guard above.
+    weightit_classes <- c("glm_weightit", "multinom_weightit", "ordinal_weightit")
+    categorical_classes <- c("multinom", "polr")
+    supported <- c("lm", "glm", "svyglm", weightit_classes, categorical_classes)
+    if (isTRUE(primary_class %in% supported)) {
         return(invisible(TRUE))
     }
 
@@ -132,7 +136,8 @@ validate_unconditional_model_support <- function(model, kind) {
     reason <- paste0(
         "only explicitly validated model classes are supported. ",
         "Currently supported classes include `lm`, `glm`, `svyglm`, ",
-        "`glm_weightit`, and selected `fixest` models"
+        "`glm_weightit`, `multinom_weightit`, `ordinal_weightit`, `multinom`, ",
+        "`polr`, and selected `fixest` models"
     )
     msg <- paste0(
         "`vcov = \"unconditional\"` is not currently supported for models ",
@@ -270,34 +275,112 @@ sanitize_unconditional_plan <- function(
     modeldata,
     n,
     n_estimates,
-    allow_mismatch = character()) {
+    allow_mismatch = character(),
+    newdata_index = NULL) {
 
-    source <- if (identical(plan$kind, "predictions")) {
-        plan$predict_args$newdata
+    if (identical(plan$kind, "predictions")) {
+        source <- plan$predict_args$newdata
+        n_pred <- plan$n_pred
     } else {
-        plan$predict_args$original
-    }
-    if (identical(plan$kind, "predictions") && !is.null(plan$keep)) {
-        source <- source[plan$keep, , drop = FALSE]
+        source <- plan$predict_args$original
+        n_pred <- length(plan$baseline_hi)
     }
 
     msg <- paste0(
         "`vcov = \"unconditional\"` requires effects evaluated over ",
         "original model-data rows, a subset of original rows with valid ",
-        "row IDs, or a full counterfactual grid that preserves `rowidcf`."
+        "row IDs, or a full counterfactual grid that preserves `rowidcf`. ",
+        "To target a subset of the model data, such as the treated units, ",
+        "use `newdata = subset(...)` or `by`."
     )
+
+    # `original` is NULL for `cross = TRUE` comparisons.
+    if (!inherits(source, "data.frame")) {
+        stop_sprintf(msg)
+    }
+
+    # Map every prediction row to the source row it was computed from. Models
+    # with several outcome levels return one block of predictions per level,
+    # each repeating the source rows in order; this is the layout `add_rowid()`
+    # assumes, and it has been checked for the classes below. Any other model
+    # must return one prediction per source row. Mapping before `keep` matters
+    # because `keep` indexes prediction rows, not source rows.
+    n_source <- nrow(source)
+    block_classes <- c("multinom", "polr", "multinom_weightit", "ordinal_weightit")
+    if (length(n_pred) != 1L || n_pred == n_source) {
+        source_idx <- seq_len(n_source)
+    } else if (
+        isTRUE(class(model)[1] %in% block_classes) &&
+            n_source > 0L &&
+            n_pred %% n_source == 0L
+    ) {
+        source_idx <- rep(seq_len(n_source), times = n_pred %/% n_source)
+    } else {
+        stop_sprintf(
+            paste0(
+                "`vcov = \"unconditional\"` is not supported for models of class `%s` ",
+                "with this `type`: the model returned %d predictions for %d rows of ",
+                "`newdata`, and they cannot be mapped to rows of the model data. ",
+                "Supported multi-outcome classes are `multinom`, `polr`, ",
+                "`multinom_weightit`, and `ordinal_weightit`."
+            ),
+            class(model)[1],
+            n_pred,
+            n_source
+        )
+    }
+    if (identical(plan$kind, "predictions") && !is.null(plan$keep)) {
+        source_idx <- source_idx[plan$keep]
+    }
+    used <- unique(source_idx)
+
     rowid <- resolve_unconditional_rowid(
-        source,
+        source[used, , drop = FALSE],
         n,
         modeldata = modeldata,
         allow_mismatch = allow_mismatch,
-        message = msg
+        message = msg,
+        newdata_index = newdata_index
     )
+    rowid <- rowid[match(source_idx, used)]
 
     validate_unconditional_plan_target(plan)
     validate_unconditional_fixest_plan(model, plan)
 
     rowid
+}
+
+
+# Map the rows of `mfx@newdata` to model-data rows, keyed by `newdata$rowid`.
+# Returns NULL, so that row resolution proceeds as if this map did not exist,
+# whenever some rows cannot be mapped or `rowid` does not identify rows.
+get_unconditional_newdata_index <- function(mfx) {
+    newdata <- tryCatch(mfx@newdata, error = function(e) NULL)
+    if (!inherits(newdata, "data.frame") || !"rowid" %in% colnames(newdata)) {
+        return(NULL)
+    }
+    # Padding rows (negative `rowid`) only supply factor levels and are dropped
+    # from the estimates, so they have no model-data row.
+    newdata <- drop_unconditional_padding(newdata)
+    # A user-supplied `rowid` column need not identify rows.
+    if (is.null(newdata) || anyDuplicated(newdata[["rowid"]]) > 0L) {
+        return(NULL)
+    }
+    index <- newdata_modelrow_index(mfx, newdata)
+    if (is.null(index)) {
+        return(NULL)
+    }
+    list(rowid = newdata[["rowid"]], index = index)
+}
+
+
+drop_unconditional_padding <- function(newdata) {
+    newdata <- as.data.frame(newdata)
+    rowid <- newdata[["rowid"]]
+    if (!is.numeric(rowid) || anyNA(rowid)) {
+        return(NULL)
+    }
+    newdata[which(rowid > 0), , drop = FALSE]
 }
 
 
@@ -322,7 +405,8 @@ resolve_unconditional_rowid <- function(
     n,
     modeldata = NULL,
     allow_mismatch = character(),
-    message = NULL) {
+    message = NULL,
+    newdata_index = NULL) {
 
     if (is.null(message)) {
         message <- "`vcov = \"unconditional\"` currently requires evaluation rows to map to the original model data."
@@ -341,6 +425,21 @@ resolve_unconditional_rowid <- function(
         common <- setdiff(common, c(ignored, allow_mismatch))
     }
 
+    # Trust a candidate mapping only if the rows it points to hold the same
+    # values as the evaluation rows.
+    rowid_values_match <- function(candidate) {
+        if (is.null(modeldata)) {
+            return(TRUE)
+        }
+        all(vapply(common, function(column) {
+            isTRUE(all.equal(
+                x[[column]],
+                modeldata[[column]][candidate],
+                check.attributes = FALSE
+            ))
+        }, logical(1)))
+    }
+
     rowid_cols <- intersect(c("rowidcf", "rowid"), colnames(x))
     for (rowid_col in rowid_cols) {
         candidate <- as.integer(x[[rowid_col]])
@@ -352,22 +451,26 @@ resolve_unconditional_rowid <- function(
             !setequal(unique(candidate), seq_len(n))) {
             next
         }
-        if (is.null(modeldata)) {
+        if (rowid_values_match(candidate)) {
             out <- candidate
-        } else {
-            matches <- vapply(common, function(column) {
-                isTRUE(all.equal(
-                    x[[column]],
-                    modeldata[[column]][candidate],
-                    check.attributes = FALSE
-                ))
-            }, logical(1))
-            if (all(matches)) {
-                out <- candidate
-            }
         }
         if (!is.null(out)) {
             break
+        }
+    }
+
+    # A subset of the model data, such as `newdata = subset(treat == 1)` for
+    # the ATT, carries `rowid = seq_len(nrow(newdata))`, which says nothing
+    # about the model-data rows. `newdata_index` maps each `newdata` row to the
+    # model-data row it was taken from, as recorded when the `subset()` or
+    # `filter()` call was evaluated on the model data; the source rows reach it
+    # through their `rowid`.
+    if (is.null(out) &&
+        !is.null(newdata_index) &&
+        "rowid" %in% colnames(x)) {
+        candidate <- newdata_index$index[match(x[["rowid"]], newdata_index$rowid)]
+        if (!anyNA(candidate) && rowid_values_match(candidate)) {
+            out <- as.integer(candidate)
         }
     }
 

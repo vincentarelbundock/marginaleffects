@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis Tests
-Version: 1.0.0.10009
+Version: 1.0.0.10010
 Authors@R:
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -172,7 +172,7 @@ Suggests:
     rstudioapi,
     rsvg,
     sampleSelection,
-    sandwich,
+    sandwich (>= 3.1-2),
     scam,
     spelling,
     speedglm,
