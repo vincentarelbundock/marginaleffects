@@ -49,4 +49,7 @@ mfx <- avg_predictions(
     vcov = vcovUnconditional("HC0")
 )
 expect_equivalent(mfx$estimate, adr$estimate, tolerance = 1e-6)
-expect_equivalent(mfx$std.error, adr$std.error, tolerance = 1e-5)
+# adrftools 0.1.0 treats the observations of a survey design as independent
+if (packageVersion("adrftools") > "0.1.0") {
+    expect_equivalent(mfx$std.error, adr$std.error, tolerance = 1e-5)
+}

@@ -38,6 +38,12 @@ or NULL
 </dd>
 <dt><code>newdata</code></dt><dd>The new data frame for predictions
 </dd>
+<dt><code>newdata_modelrow</code></dt><dd>NULL, or a list mapping the rows of <code>newdata</code>, as
+built by <code>add_newdata()</code>, to rows of <code>modeldata</code>: <code>rowid</code> holds their
+<code>rowid</code> values and <code>index</code> their model-data rows, in the same order. Set
+when <code>newdata</code> is a <code>subset()</code> or <code>filter()</code> call evaluated on the model
+data.
+</dd>
 <dt><code>type</code></dt><dd>The sanitized type from sanitize_type()
 </dd>
 <dt><code>vcov_model</code></dt><dd>The variance-covariance matrix

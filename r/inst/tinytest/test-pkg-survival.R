@@ -192,3 +192,95 @@ for (v in c("age", "sex")) {
     ref <- sqrt(as.numeric(J %*% V %*% t(J)))
     expect_equivalent(slo$std.error[slo$term == v], ref, tolerance = 1e-3)
 }
+
+
+# set_coef.coxph(): predict(type = "expected" or "survival") estimates the
+# baseline hazard from the stored linear predictors, which must move with the
+# coefficients. Reference: refit with the coefficients fixed by `init` and no
+# iterations, then difference by hand.
+dat_cox <- na.omit(survival::lung[, c("time", "status", "age", "sex", "ph.ecog")])
+set.seed(1024)
+dat_cox$w <- runif(nrow(dat_cox), 0.5, 2)
+nd_cox <- data.frame(
+    time = c(200, 400, 600), status = 1,
+    age = c(50, 60, 70), sex = c(1, 2, 1), ph.ecog = c(0, 1, 2), w = 1
+)
+cox_ref_se <- function(fit, type, eps = 1e-6) {
+    b0 <- coef(fit)
+    J <- sapply(seq_along(b0), function(j) {
+        bp <- bm <- b0
+        bp[j] <- bp[j] + eps
+        bm[j] <- bm[j] - eps
+        fp <- suppressWarnings(update(fit, init = bp, control = coxph.control(iter.max = 0)))
+        fm <- suppressWarnings(update(fit, init = bm, control = coxph.control(iter.max = 0)))
+        (predict(fp, newdata = nd_cox, type = type) - predict(fm, newdata = nd_cox, type = type)) / (2 * eps)
+    })
+    sqrt(diag(J %*% vcov(fit) %*% t(J)))
+}
+mod_cox <- coxph(Surv(time, status) ~ age + sex + ph.ecog, data = dat_cox)
+mod_cox_strata <- coxph(Surv(time, status) ~ age + sex + strata(ph.ecog), data = dat_cox, weights = w)
+for (m in list(mod_cox, mod_cox_strata)) {
+    for (tp in c("lp", "risk", "expected", "survival")) {
+        p <- predictions(m, newdata = nd_cox, type = tp, vcov = vcov(m))
+        expect_equivalent(p$std.error, cox_ref_se(m, tp), tolerance = 1e-4)
+    }
+}
+
+# set_coef.coxph() moves the linear predictors exactly as a refit does
+b <- coef(mod_cox_strata) + 0.05
+mod_set <- set_coef(mod_cox_strata, b)
+mod_ref <- suppressWarnings(update(mod_cox_strata, init = b, control = coxph.control(iter.max = 0)))
+expect_equivalent(coef(mod_set), b)
+expect_equivalent(mod_set$linear.predictors, mod_ref$linear.predictors)
+
+
+# Penalized coxph models: `ridge()` and `pspline()` are supported, with one
+# coefficient per design matrix column.
+dat_pen <- na.omit(survival::lung[, c("time", "status", "age", "sex", "inst", "wt.loss")])
+nd_pen <- head(dat_pen)
+mod_ps <- coxph(Surv(time, status) ~ pspline(age, df = 4) + sex, data = dat_pen)
+expect_equal(get_coef(mod_ps), coef(mod_ps))
+ref <- predict(mod_ps, newdata = nd_pen, type = "lp", se.fit = TRUE)
+p <- predictions(mod_ps, newdata = nd_pen, vcov = vcov(mod_ps))
+expect_equivalent(p$estimate, ref$fit)
+expect_equivalent(p$std.error, ref$se.fit, tolerance = 1e-4)
+expect_inherits(avg_comparisons(mod_ps, variables = "sex", type = "expected", vcov = vcov(mod_ps)), "comparisons")
+expect_equivalent(avg_comparisons(mod_ps, variables = "sex")$estimate, unname(coef(mod_ps)["sex"]))
+expect_error(predictions(mod_ps, type = "survival", vcov = FALSE), pattern = "lp.*risk.*expected")
+
+mod_ridge <- coxph(Surv(time, status) ~ ridge(age, wt.loss, theta = 1) + sex, data = dat_pen)
+ref <- predict(mod_ridge, newdata = nd_pen, type = "lp", se.fit = TRUE)
+p <- predictions(mod_ridge, newdata = nd_pen, type = "lp", vcov = vcov(mod_ridge))
+expect_equivalent(p$std.error, ref$se.fit, tolerance = 1e-4)
+
+for (frailty_term in c("frailty(inst, sparse = TRUE)", "frailty.gaussian(inst, sparse = TRUE)")) {
+    f <- reformulate(c("age", "sex", frailty_term), response = "Surv(time, status)")
+    mod_frail <- coxph(f, data = dat_pen)
+    p <- predictions(mod_frail, newdata = nd_pen, vcov = FALSE)
+    expect_equivalent(p$estimate, predict(mod_frail, newdata = nd_pen, type = "lp"))
+    p <- predictions(mod_frail, newdata = nd_pen, type = "risk", vcov = FALSE)
+    expect_equivalent(p$estimate, predict(mod_frail, newdata = nd_pen, type = "risk"))
+    expect_error(inferences(p, method = "simulation", R = 2), pattern = "frailty")
+    expect_error(predictions(mod_frail, newdata = nd_pen), pattern = "vcov = FALSE")
+    expect_error(predictions(mod_frail, newdata = nd_pen, type = "expected", vcov = FALSE), pattern = "frailty")
+}
+mod_frail <- suppressWarnings(coxph(Surv(time, status) ~ age + sex + frailty(inst, sparse = FALSE), data = dat_pen))
+expect_error(predictions(mod_frail, vcov = FALSE), pattern = "frailty")
+
+
+# coxph with an offset: `predict.coxph()` mishandles the offset with `newdata`
+# for "expected" and "survival", so those types are rejected.
+dat_off <- dat_pen
+set.seed(1)
+dat_off$off <- rnorm(nrow(dat_off), 0, 0.7)
+mod_ps_off <- coxph(Surv(time, status) ~ pspline(age) + sex + offset(off), data = dat_off)
+expect_error(predictions(mod_ps_off, type = "exp", vcov = FALSE), pattern = "lp.*risk.*expected")
+expect_error(get_predict(mod_ps_off, newdata = head(dat_off), type = "exp"), pattern = "lp.*risk.*expected")
+expect_error(predictions(mod_ps_off, type = "expected", vcov = FALSE), pattern = "offset")
+mod_off <- coxph(Surv(time, status) ~ age + sex + offset(off), data = dat_off)
+expect_error(predictions(mod_off, type = "expected", vcov = FALSE), pattern = "offset")
+expect_error(predictions(mod_off, type = "survival", vcov = FALSE), pattern = "offset")
+p <- predictions(mod_off, type = "lp", vcov = FALSE)
+expect_equivalent(p$estimate, predict(mod_off, type = "lp"))
+p <- predictions(mod_off, type = "risk", vcov = FALSE)
+expect_equivalent(p$estimate, predict(mod_off, type = "risk"))

@@ -30,7 +30,9 @@ An optional one-sided formula such as <code>~id</code> identifying the
 variable used for one-way clustered inference. The right-hand side must be
 a bare variable name; transformations and multiple variables are not
 supported. As in the default behavior of <code>sandwich::vcovCL()</code>, clustered
-estimates include the cluster-count adjustment <code>G / (G - 1)</code>.
+estimates include the cluster-count adjustment <code>G / (G - 1)</code>. Cannot be
+supplied with <code>survey::svyglm()</code> models, for which the survey design
+already identifies the clusters.
 </td></tr>
 </table>
 
@@ -75,7 +77,18 @@ matrices through <code>sandwich::estfun()</code>/<code>sandwich::bread()</code> 
 equivalents. Supported model classes are validated through an allow-list.
 Survey-weighted linear and generalized linear models fitted by
 <code>survey::svyglm()</code> are supported using their observation-level coefficient
-influence functions. Propensity-score-weighted models fitted by
+influence functions. For these models, the combined influence values are
+passed to the variance estimator of the survey design (Binder, 1983), so the
+standard errors account for clustering, stratification, finite population
+corrections, and calibration in the same way as <code>survey::svytotal()</code>. With
+<code>type = "HC1"</code>, the multiplier <code>n / (n - k)</code> is applied to this design-based
+variance. For these models, <code>wts</code> must be supplied explicitly: use
+<code>wts = TRUE</code> or <code>wts = "(weights)"</code> to average with the survey weights.
+Other weights are accepted, but on calibrated, post-stratified, or raked
+designs the standard errors are only valid when <code>wts</code> are the survey
+weights, because the design's calibration adjustment is applied to the
+whole linearization.
+Propensity-score-weighted models fitted by
 <code>WeightIt::glm_weightit()</code>, <code>WeightIt::lm_weightit()</code>,
 <code>WeightIt::multinom_weightit()</code>, or <code>WeightIt::ordinal_weightit()</code> are
 supported because their <code>estfun()</code> and <code>bread()</code> methods already account for
@@ -108,5 +121,13 @@ function.
 
 An object which can be supplied to the <code>vcov</code> argument of
 <code>avg_predictions()</code>, <code>avg_comparisons()</code>, or <code>avg_slopes()</code>.
+
+
+
+### References
+
+Binder, D. A. (1983). On the variances of asymptotically normal estimators
+from complex surveys. <em>International Statistical Review</em>, 51(3), 279–292.
+[doi:10.2307/1402588](https://doi.org/10.2307/1402588)
 
 

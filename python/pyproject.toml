@@ -30,7 +30,7 @@ test = [
     "pre-commit>=4.2.0",
     "numba",
     "pyfixest >=0.28.0",
-    "statsmodels >=0.14.0",
+    "statsmodels >=0.15.0",
     "scikit-learn",
     "typing-extensions >=4.7.0",
     "xgboost",

@@ -963,6 +963,10 @@ Some of the most common <code>type</code> values are:
 </tr>
 <tr>
  <td style="text-align: left;">
+   coxph.penal </td><td style="text-align: left;"> lp, risk, expected </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
    coxph_weightit </td><td style="text-align: left;"> survival, expected, lp, risk </td>
 </tr>
 <tr>
