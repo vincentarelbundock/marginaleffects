@@ -63,15 +63,16 @@ expect_equal(nrow(p), nrow(dat$test))
 coverage <- mean(mapply(function(y, s) y %in% s, as.character(p$Species), p$pred.set))
 expect_true(coverage >= 0.8)
 
-# classification: a fold that loses an outcome class. multinom becomes binary,
-# `predictions()` returns both remaining classes, and the absent class gets 0.
+# classification: a fold that loses an outcome class. multinom becomes binary
+# and `predictions()` returns only the non-reference class; the reference class
+# keeps the remaining probability, and the absent class gets 0.
 d2 <- iris[iris$Species != "virginica", ]
 m2 <- nnet::multinom(Species ~ Sepal.Length, data = d2, trace = FALSE) |> suppressWarnings()
 p2 <- predictions(m2, newdata = iris[c(1, 51, 101), ], vcov = FALSE)
 cc <- marginaleffects:::conformal_complete_classes(p2, levels(iris$Species), d2$Species)
 cc <- cc[order(cc$rowid, cc$group), ]
 expect_equal(nrow(cc), 9)
-expect_equivalent(cc$estimate[cc$group == "setosa"], 1 - p2$estimate[p2$group == "versicolor"])
+expect_equivalent(cc$estimate[cc$group == "setosa"], 1 - p2$estimate)
 expect_equivalent(cc$estimate[cc$group == "virginica"], c(0, 0, 0))
 expect_equivalent(as.numeric(tapply(cc$estimate, cc$rowid, sum)), c(1, 1, 1))
 
@@ -121,14 +122,14 @@ expect_equal(nrow(p), 1)
 expect_true(is.na(p$pred.low) && is.na(p$pred.high))
 
 # classification: missing training outcomes are not treated as a class, so a
-# binary fold's two classes keep all the probability
+# binary fold's reference class keeps all the remaining probability
 d2 <- iris[iris$Species != "virginica", ]
 m2 <- nnet::multinom(Species ~ Sepal.Length, data = d2, trace = FALSE) |> suppressWarnings()
 p2 <- predictions(m2, newdata = iris[c(1, 51), ], vcov = FALSE)
 cc <- marginaleffects:::conformal_complete_classes(
     p2, c(levels(iris$Species), NA), c(as.character(d2$Species), NA))
 expect_false(anyNA(cc$group))
-expect_equivalent(cc$estimate[cc$group == "setosa"], 1 - p2$estimate[p2$group == "versicolor"])
+expect_equivalent(cc$estimate[cc$group == "setosa"], 1 - p2$estimate)
 
 # end to end: missing outcomes and a fold that loses a class
 set.seed(48103)

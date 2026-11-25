@@ -35,14 +35,10 @@ set_coef.multinom <- function(model, coefs, ...) {
 #' @rdname get_coef
 #' @export
 get_coef.multinom <- function(model, ...) {
-    # With two outcome levels, `coef()` is a vector rather than a matrix and
-    # `insight::get_parameters()` leaves the response empty. Name the
-    # coefficients after the second level, as for three or more levels and as
-    # `sandwich::estfun()` does.
+    # With two outcome levels, `coef()` is a named vector, as for a logit.
     cf <- stats::coef(model)
-    lev <- model[["lev"]]
-    if (!is.matrix(cf) && length(lev) == 2L) {
-        return(stats::setNames(as.vector(cf), sprintf("%s:%s", lev[2], names(cf))))
+    if (!is.matrix(cf)) {
+        return(cf)
     }
     get_coef.mlm(model, ...)
 }
@@ -83,24 +79,15 @@ get_predict.multinom <- function(
     # needed because `predict.multinom` uses `data` rather than `newdata`
     pred <- stats::predict(model, newdata = newdata, type = type, ...)
 
-    # `nnet::multinom()` stores the outcome levels in `lev`. With two levels,
-    # `predict()` returns only the probability of the second level. Return both
-    # levels, as for three or more, so the `group` column is complete and the
-    # latent scale is not computed from a single column. `lev` is more reliable
-    # than `insight::get_response()`, which returns the untransformed variable
-    # for a response such as `factor(y > 0)`.
-    lev <- if (inherits(model, "multinom")) model[["lev"]]
-    if (identical(type, "probs") &&
-        length(lev) == 2L &&
-        isTRUE(checkmate::check_atomic_vector(pred))) {
-        pred <- cbind(1 - as.vector(pred), as.vector(pred))
-        colnames(pred) <- lev
-    }
-
     # atomic vector means there is only one row in `newdata`
     # two levels DV returns a vector
     if (isTRUE(checkmate::check_atomic_vector(pred))) {
-        y_original <- sort(unique(insight::get_response(model)))
+        # `lev` holds the outcome levels. `insight::get_response()` returns
+        # the untransformed variable for a response such as `factor(y > 0)`.
+        y_original <- if (inherits(model, "multinom")) model[["lev"]]
+        if (is.null(y_original)) {
+            y_original <- sort(unique(insight::get_response(model)))
+        }
         two_levels <- length(y_original) == 2
         if (isTRUE(two_levels)) {
             pred <- matrix(pred)
@@ -127,7 +114,13 @@ get_predict.multinom <- function(
             log_mu <- log(mu)
             return(sweep(log_mu, 1, STATS = rowMeans(log_mu), FUN = "-"))
         }
-        pred <- inverse_softMax(pred)
+        # With two levels, `pred` holds only the second level's probability;
+        # its centered log probability is half the log odds.
+        if (ncol(pred) == 1L) {
+            pred <- (log(pred) - log1p(-pred)) / 2
+        } else {
+            pred <- inverse_softMax(pred)
+        }
     }
 
     # matrix with outcome levels as columns

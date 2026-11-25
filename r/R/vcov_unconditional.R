@@ -822,21 +822,15 @@ get_unconditional_beta_dot <- function(model) {
         )
     }
 
-    # With two outcome levels, `nnet::multinom()` has one equation: `estfun()`
-    # prefixes its columns with the second level (`yes:x`), but `vcov()`, and
-    # hence the default `bread()`, does not (`x`). The order is the same, so
-    # take the score names once they agree after dropping the prefix.
-    if (inherits(model, "multinom") &&
-        isTRUE(checkmate::check_matrix(scores)) &&
-        isTRUE(checkmate::check_matrix(bread, nrows = ncol(scores), ncols = ncol(scores))) &&
-        length(model[["lev"]]) == 2L) {
+    # With two outcome levels, `nnet::multinom()` has one equation, and
+    # `estfun()` prefixes its columns with the second level (`yes:x`), unlike
+    # `coef()` and `vcov()`.
+    if (inherits(model, "multinom") && length(model[["lev"]]) == 2L) {
         prefix <- paste0(model[["lev"]][2], ":")
-        stripped <- colnames(scores)
-        has_prefix <- startsWith(stripped, prefix)
-        stripped[has_prefix] <- substring(stripped[has_prefix], nchar(prefix) + 1L)
-        if (identical(rownames(bread), stripped) && identical(colnames(bread), stripped)) {
-            dimnames(bread) <- list(colnames(scores), colnames(scores))
-        }
+        cols <- colnames(scores)
+        has_prefix <- startsWith(cols, prefix)
+        cols[has_prefix] <- substring(cols[has_prefix], nchar(prefix) + 1L)
+        colnames(scores) <- cols
     }
 
     beta <- get_unconditional_coef(model)

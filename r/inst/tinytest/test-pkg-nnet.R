@@ -250,7 +250,7 @@ expect_equivalent(get_coef(mod_tie), b)
 # Two outcome levels: `predict()` returns only the second level's probability,
 # and `insight::get_response()` returns the untransformed variable for a
 # response such as `factor(qsec > 18)`, so each row used to become its own
-# group. Both levels are returned, and the second matches a logit `glm()`.
+# group. Predictions are for the second level, and match a logit `glm()`.
 void <- capture.output(
     mod_two <- nnet::multinom(factor(qsec > 18) ~ mpg + am, data = mtcars,
         reltol = 1e-12, maxit = 1000)
@@ -258,25 +258,28 @@ void <- capture.output(
 mod_glm <- glm(I(qsec > 18) ~ mpg + am, data = mtcars, family = binomial)
 
 b <- get_coef(mod_two)
-expect_equal(names(b), colnames(sandwich::estfun(mod_two)))
+expect_equal(names(b), names(coef(mod_glm)))
 expect_equivalent(get_coef(set_coef(mod_two, b * 2)), b * 2)
 
 p <- predictions(mod_two)
-expect_equal(nrow(p), 2 * nrow(mtcars))
-expect_equal(sort(unique(as.character(p$group))), c("FALSE", "TRUE"))
+expect_equal(nrow(p), nrow(mtcars))
+expect_equal(unique(as.character(p$group)), "TRUE")
 
 cmp_two <- avg_comparisons(mod_two, variables = "am")
-cmp_two <- cmp_two[cmp_two$group == "TRUE", ]
 cmp_glm <- avg_comparisons(mod_glm, variables = "am")
+expect_equal(nrow(cmp_two), 1)
 expect_equivalent(cmp_two$estimate, cmp_glm$estimate, tolerance = 1e-5)
 expect_equivalent(cmp_two$std.error, cmp_glm$std.error, tolerance = 1e-5)
 
+# A user-supplied covariance matrix is named like the coefficients.
+prd_vcov <- avg_predictions(mod_two, vcov = vcov(mod_two))
+expect_true(is.finite(prd_vcov$std.error))
+
 unc_two <- avg_comparisons(mod_two, variables = "am", vcov = vcovUnconditional())
-unc_two <- unc_two[unc_two$group == "TRUE", ]
 unc_glm <- avg_comparisons(mod_glm, variables = "am", vcov = vcovUnconditional())
 expect_equivalent(unc_two$std.error, unc_glm$std.error, tolerance = 1e-5)
 
-# The latent scale is centered across both levels, not a single column of 0s.
-lat <- predictions(mod_two, type = "latent", newdata = head(mtcars, 1))
-expect_equivalent(sum(lat$estimate), 0, tolerance = 1e-10)
-expect_true(all(lat$estimate != 0))
+# The latent scale is the second level's centered log probability, half the
+# log odds, not 0.
+lat <- predictions(mod_two, type = "latent", newdata = head(mtcars, 2))
+expect_equivalent(lat$estimate, predict(mod_glm, head(mtcars, 2)) / 2, tolerance = 1e-5)
