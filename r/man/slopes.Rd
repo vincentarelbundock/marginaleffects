@@ -503,6 +503,7 @@ Some of the most common \code{type} values are:\tabular{ll}{
    clmm2 \tab prob \cr
    clogit \tab expected, lp, risk, survival \cr
    coxph \tab survival, expected, lp, risk \cr
+   coxph.penal \tab lp, risk, expected \cr
    coxph_weightit \tab survival, expected, lp, risk \cr
    crch \tab response, location, scale, density \cr
    fixest \tab invlink(link), response, link \cr

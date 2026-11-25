@@ -56,6 +56,7 @@
 \alias{set_coef.scam}
 \alias{set_coef.svyolr}
 \alias{set_coef.survreg}
+\alias{set_coef.coxph}
 \alias{set_coef.svy_vglm}
 \alias{set_coef.systemfit}
 \alias{set_coef.model_fit}
@@ -149,6 +150,8 @@ set_coef(model, coefs, ...)
 \method{set_coef}{svyolr}(model, coefs, ...)
 
 \method{set_coef}{survreg}(model, coefs, ...)
+
+\method{set_coef}{coxph}(model, coefs, ...)
 
 \method{set_coef}{svy_vglm}(model, coefs, ...)
 
