@@ -20,6 +20,27 @@ set_coef.survreg <- function(model, coefs, ...) {
     model
 }
 
+#' Design matrix that maps a coxph model's coefficients to its linear predictors
+#'
+#' Returns `stats::model.matrix(model)` when it has one column per coefficient
+#' and one row per stored linear predictor, and `NULL` otherwise: when the model
+#' frame cannot be rebuilt, when the data changed after the fit, or for
+#' multistate (`coxphms`) and sparse `frailty()` fits.
+#' @keywords internal
+#' @noRd
+coxph_design_matrix <- function(model) {
+    X <- tryCatch(stats::model.matrix(model), error = function(e) NULL)
+    ok <- is.matrix(X) &&
+        ncol(X) == length(model[["coefficients"]]) &&
+        nrow(X) == length(model[["linear.predictors"]])
+    if (!ok) {
+        return(NULL)
+    }
+    # Rows align positionally; row names would only cost memory.
+    dimnames(X) <- NULL
+    X
+}
+
 #' @rdname set_coef
 #' @export
 set_coef.coxph <- function(model, coefs, ...) {
@@ -33,20 +54,33 @@ set_coef.coxph <- function(model, coefs, ...) {
     # supplies it.
     old <- model[["coefficients"]]
     model <- set_coef.default(model, coefs)
-    delta <- model[["coefficients"]] - old
-    delta[is.na(delta)] <- 0
+    new <- model[["coefficients"]]
 
-    if (is.null(model[["linear.predictors"]]) || all(delta == 0)) {
+    # `get_coef()` and `coef()` disagree for some penalized fits (`pspline()`,
+    # `frailty()`), and the name-indexed assignment then appends entries.
+    # Those models fail later regardless; do not compound it with a recycled
+    # subtraction.
+    if (is.null(model[["linear.predictors"]]) || length(new) != length(old)) {
+        return(model)
+    }
+    delta <- new - old
+    delta[is.na(delta)] <- 0
+    if (all(delta == 0)) {
         return(model)
     }
 
-    # `model.matrix()` needs the model frame, which `predict.coxph()` rebuilds
-    # anyway for types that read the linear predictors. If it cannot be rebuilt,
-    # those types fail inside `predict()` regardless, and "lp" and "risk" do not
-    # need the update. Penalized terms (e.g., `pspline()`, `frailty()`) do not
-    # map one column to one coefficient, so they are left alone.
-    X <- tryCatch(stats::model.matrix(model), error = function(e) NULL)
-    if (is.null(X) || ncol(X) != length(delta)) {
+    # `sanitize_model_specific.coxph()` caches the design matrix, because
+    # `set_coef()` runs once per coefficient in the Jacobian and once per
+    # draw in `inferences(method = "simulation")`. `FALSE` records that no
+    # usable matrix exists. When the cache is absent (e.g., a coxph fit nested
+    # inside another object, which the sanitizer never sees), rebuild it here.
+    X <- attr(model, "marginaleffects_coxph_X")
+    if (is.null(X)) {
+        X <- coxph_design_matrix(model)
+    }
+    # If no matrix is available, types that read the linear predictors fail
+    # inside `predict()` regardless, and "lp" and "risk" do not need the update.
+    if (!is.matrix(X)) {
         return(model)
     }
 
@@ -80,6 +114,13 @@ sanitize_model_specific.coxph <- function(model, vcov, ...) {
     if (flag1 && flag2 && flag3) {
         msg <- 'The default delta method standard errors for `coxph` models only take into account uncertainty in the regression coefficients. Standard errors may be too small. Use the `inferences()` function or set `vcov` to "rsample", "boot"  or "fwb" to compute confidence intervals by bootstrapping. Set `vcov` to `FALSE` or `options(marginaleffects_safe=FALSE)` to silence this warning.'
         warning(msg, call. = FALSE)
+    }
+    # Cache the design matrix for `set_coef.coxph()`. `FALSE` marks that none
+    # is usable, so `set_coef()` does not retry on every call.
+    if (is.null(attr(model, "marginaleffects_coxph_X")) &&
+        !is.null(model[["linear.predictors"]])) {
+        X <- coxph_design_matrix(model)
+        attr(model, "marginaleffects_coxph_X") <- if (is.null(X)) FALSE else X
     }
     return(model)
 }
