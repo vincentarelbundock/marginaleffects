@@ -66,6 +66,15 @@ mm_dense <- function(x) {
 }
 
 
+# The dense model matrix of a design, as the dense path caches it: identical
+# to stats::model.matrix() (with `assign` and `contrasts`), without row names.
+mm_model_matrix <- function(x) {
+    out <- as.matrix(x)
+    data.table::setattr(out, "dimnames", list(NULL, colnames(out)))
+    out
+}
+
+
 # Are all the entries of a model matrix finite? `eta` is X %*% beta for
 # finite beta. A dense matrix is scanned. A design is judged by `eta`: its
 # kernels list every column of a row with a non-finite input, so any
