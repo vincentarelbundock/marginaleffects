@@ -179,6 +179,12 @@ add_wts_column <- function(wts, newdata, model) {
 
     if (isTRUE(wts)) {
         wtsname <- insight::find_weights(model)
+        # insight cannot find the weights of svyglm models fitted on some
+        # designs, such as subsets, but their model frame always stores the
+        # survey weights in "(weights)".
+        if (is.null(wtsname) && inherits(model, "svyglm") && "(weights)" %in% colnames(newdata)) {
+            wtsname <- "(weights)"
+        }
         if (
             !is.character(wtsname) ||
                 length(wtsname) != 1 ||
