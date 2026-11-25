@@ -441,7 +441,7 @@ simulation_replay_validate <- function(replay, model, expected) {
 # to the user.
 plan_jacobian_result <- function(J, method, propagate, safe = TRUE) {
     if (is.null(propagate)) {
-        return(list(jacobian = J, method = method))
+        return(list(jacobian = mm_dense(J), method = method))
     }
     propagated <- if (isTRUE(safe)) {
         tryCatch(propagate(J), error = function(e) NULL)

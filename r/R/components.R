@@ -43,7 +43,11 @@ components.marginaleffects <- function(object, component = NULL, ...) {
 
     checkmate::assert_choice(component, choices = valid_components)
 
-    return(methods::slot(mfx, component))
+    out <- methods::slot(mfx, component)
+    if (identical(component, "jacobian")) {
+        out <- mm_dense(out)
+    }
+    return(out)
 }
 
 #' @export

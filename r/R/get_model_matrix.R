@@ -105,10 +105,18 @@ add_model_matrix_attribute <- function(mfx = NULL, newdata = NULL, model = NULL)
     # without paying the connection overhead of hush()/capture.output().
     MM <- suppressMessages(suppressWarnings(
         tryCatch(
-            get_model_matrix(model, newdata = nd, mfx = mfx),
+            design_matrix_build(model, nd),
             error = function(e) NULL
         )
     ))
+    if (is.null(MM)) {
+        MM <- suppressMessages(suppressWarnings(
+            tryCatch(
+                get_model_matrix(model, newdata = nd, mfx = mfx),
+                error = function(e) NULL
+            )
+        ))
+    }
 
     # Cached consumers align rows positionally and coefficients by column name.
     # Dropping unused observation labels avoids retaining one string per row in
@@ -159,7 +167,7 @@ model_matrix_retry <- function(model, newdata, beta, error) {
         model = model
     )
     MM <- attr(newdata, "marginaleffects_model_matrix")
-    if (!isTRUE(checkmate::check_matrix(MM)) || ncol(MM) != length(beta)) {
+    if (!is_model_matrix_cache(MM) || ncol(MM) != length(beta)) {
         stop(error)
     }
     return(newdata)

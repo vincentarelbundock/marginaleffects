@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis Tests
-Version: 1.0.0.10009
+Version: 1.0.0.10010
 Authors@R:
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -72,6 +72,7 @@ Suggests:
     cobalt,
     collapse,
     conflicted,
+    design.matrix,
     countrycode,
     covr,
     crch,
@@ -204,6 +205,8 @@ Suggests:
     altdoc,
     knitr,
     quarto
+Remotes:
+    vincentarelbundock/design.matrix
 Collate:
     'add_hypothesis.R'
     'add_rowid.R'
@@ -316,6 +319,7 @@ Collate:
     'methods_systemfit.R'
     'methods_tidymodels.R'
     'methods_tobit1.R'
+    'model_matrix_ops.R'
     'modelarchive.R'
     'multcomp.R'
     'myTryCatch.R'

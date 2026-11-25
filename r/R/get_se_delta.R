@@ -113,13 +113,15 @@ std_error_from_jacobian <- function(J, V, object, ...) {
         V <- V[jnames, jnames, drop = FALSE]
     }
     if (!isTRUE(ncol(J) == ncol(V))) {
+        # Dropping columns needs the dense matrix.
+        J <- mm_dense(J)
         aligned <- align_jacobian_vcov(J, V, object, ...)
         J <- aligned$J
         V <- aligned$V
     }
 
     # Avoid constructing the full J V J' matrix when only its diagonal is used.
-    variances <- rowSums(tcrossprod(J, V) * J)
+    variances <- mm_quad_diag(J, V)
     # tiny negative variances are floating-point noise: clamp them to zero
     scale <- suppressWarnings(max(abs(variances), na.rm = TRUE))
     if (!is.finite(scale)) {

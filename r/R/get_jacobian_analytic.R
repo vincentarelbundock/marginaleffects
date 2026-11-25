@@ -49,7 +49,7 @@ jacobian_analytic_scale <- function(
     eta
   }
   d <- if (isTRUE(response_scale)) as.vector(family$mu.eta(eta)) else NULL
-  list(pred = pred, d = d)
+  list(pred = pred, d = d, eta = if (is.null(eta)) pred else eta)
 }
 
 
@@ -87,7 +87,12 @@ jacobian_analytic_comparison_exact <- function(
   pred_lo,
   plan
 ) {
-  out <- matrix(NA_real_, nrow = plan$n_comp, ncol = ncol(X_hi))
+  n_comp <- plan$n_comp
+  # Scalar groups contribute weighted column sums; rowwise groups contribute
+  # rows of the observation-level derivative. Both are collected across
+  # groups and formed at once below.
+  s_rows <- s_cols <- s_hi <- s_lo <- list()
+  r_out <- r_idx <- r_hi <- r_lo <- list()
 
   for (g in plan$groups) {
     key <- g$fun_key
@@ -118,22 +123,64 @@ jacobian_analytic_comparison_exact <- function(
     w_hi <- if (is.null(d_hi)) grad$hi else grad$hi * d_hi[idx]
     w_lo <- if (is.null(d_lo)) grad$lo else grad$lo * d_lo[idx]
 
+    k <- length(s_rows) + length(r_out) + 1L
     if (isTRUE(g$scalar)) {
       if (n_out != 1L) {
         return(NULL)
       }
-      value <- jacobian_analytic_weighted_columns(X_hi, idx, w_hi) +
-        jacobian_analytic_weighted_columns(X_lo, idx, w_lo)
+      s_rows[[k]] <- idx
+      s_cols[[k]] <- rep.int(g$out_idx, length(idx))
+      s_hi[[k]] <- w_hi
+      s_lo[[k]] <- w_lo
     } else {
       if (n_out != length(idx)) {
         return(NULL)
       }
-      value <- X_hi[idx, , drop = FALSE] * w_hi +
-        X_lo[idx, , drop = FALSE] * w_lo
+      r_out[[k]] <- g$out_idx
+      r_idx[[k]] <- idx
+      r_hi[[k]] <- w_hi
+      r_lo[[k]] <- w_lo
     }
-    out[g$out_idx, ] <- value
+  }
+  s_rows <- unlist(s_rows, use.names = FALSE)
+  r_out <- unlist(r_out, use.names = FALSE)
+
+  # Rowwise rows, in output order when they cover every output exactly once.
+  rowwise <- NULL
+  if (length(r_out) > 0L) {
+    ix <- unlist(r_idx, use.names = FALSE)
+    w_hi <- unlist(r_hi, use.names = FALSE)
+    w_lo <- unlist(r_lo, use.names = FALSE)
+    if (
+      length(s_rows) == 0L && length(r_out) == n_comp &&
+        anyDuplicated(r_out) == 0L && !identical(r_out, seq_len(n_comp))
+    ) {
+      ord <- order(r_out)
+      r_out <- r_out[ord]
+      ix <- ix[ord]
+      w_hi <- w_hi[ord]
+      w_lo <- w_lo[ord]
+    }
+    rows_of <- function(X) {
+      if (identical(ix, seq_len(nrow(X)))) X else X[ix, , drop = FALSE]
+    }
+    rowwise <- w_hi * rows_of(X_hi) + w_lo * rows_of(X_lo)
+    if (length(s_rows) == 0L && identical(r_out, seq_len(n_comp))) {
+      return(rowwise)
+    }
   }
 
+  out <- matrix(NA_real_, nrow = n_comp, ncol = ncol(X_hi))
+  if (length(s_rows) > 0L) {
+    s_cols <- unlist(s_cols, use.names = FALSE)
+    sums <- mm_group_sums(X_hi, n_comp, s_rows, s_cols, unlist(s_hi, use.names = FALSE)) +
+      mm_group_sums(X_lo, n_comp, s_rows, s_cols, unlist(s_lo, use.names = FALSE))
+    written <- unique(s_cols)
+    out[written, ] <- sums[written, , drop = FALSE]
+  }
+  if (!is.null(rowwise)) {
+    out[r_out, ] <- mm_dense(rowwise)
+  }
   out
 }
 
@@ -209,16 +256,7 @@ jacobian_analytic_aggregate_weights <- function(agg, n_rows) {
 # unstratified average, the common case -- is one weighted column sum, which
 # crossprod() forms without building any matrix at all.
 jacobian_analytic_aggregate_contract <- function(M, agg, rows, cols, vals) {
-  if (identical(as.integer(agg$n), 1L)) {
-    return(matrix(jacobian_analytic_weighted_columns(M, rows, vals), nrow = 1L))
-  }
-  W <- Matrix::sparseMatrix(
-    i = rows,
-    j = cols,
-    x = vals,
-    dims = c(nrow(M), agg$n)
-  )
-  as.matrix(Matrix::crossprod(W, M))
+  mm_group_sums(M, agg$n, rows, cols, vals)
 }
 
 
@@ -280,14 +318,6 @@ jacobian_analytic_hypothesis <- function(J, hyp, estimate_pre = NULL) {
     attr(out, "marginaleffects_numeric_stage") <- TRUE
   }
   out
-}
-
-
-jacobian_analytic_weighted_columns <- function(X, idx, w) {
-  if (identical(idx, seq_len(nrow(X)))) {
-    return(drop(crossprod(w, X)))
-  }
-  drop(crossprod(w, X[idx, , drop = FALSE]))
 }
 
 
@@ -503,10 +533,16 @@ compute_analytic_plan_jacobian <- function(
         return(NULL)
       }
 
+      # Finiteness is checked with the linear predictor, once it is known
+      # (mm_all_finite()). A design cannot reorder its columns, so it must
+      # already be in coefficient order.
       align_matrix <- function(X) {
+        if (is_design_matrix(X)) {
+          return(if (identical(colnames(X), beta_names)) X else NULL)
+        }
         if (
           !isTRUE(checkmate::check_matrix(X, mode = "numeric")) ||
-            ncol(X) != length(beta) || !matrix_all_finite(X)
+            ncol(X) != length(beta)
         ) {
           return(NULL)
         }
@@ -597,6 +633,12 @@ compute_analytic_plan_jacobian <- function(
         if (anyNA(pred_hi) || anyNA(pred_lo)) {
           return(NULL)
         }
+        if (
+          !mm_all_finite(X_hi, scale_hi$eta) ||
+            !mm_all_finite(X_lo, scale_lo$eta)
+        ) {
+          return(NULL)
+        }
         # Validate predictions on the effective scale before transforming the
         # derivative matrix with the recorded comparison operations.
         replay <- comparison_plan_apply_stages(plan, pred_hi, pred_lo)
@@ -624,6 +666,9 @@ compute_analytic_plan_jacobian <- function(
         # Same rejection as the comparisons branch: replay aggregation drops
         # missing predictions, the sparse weights do not.
         if (isTRUE(plan$has_na) || anyNA(pred)) {
+          return(NULL)
+        }
+        if (!mm_all_finite(X, scale_pred$eta)) {
           return(NULL)
         }
         replay <- prediction_plan_apply_stages(plan, pred)
@@ -726,6 +771,10 @@ compute_analytic_plan_jacobian <- function(
           return(NULL)
         }
       }
+      # The hypothesis stage works on dense matrices.
+      if (!is.null(plan$hyp)) {
+        J <- mm_dense(J)
+      }
       J <- jacobian_analytic_hypothesis(J, plan$hyp, replay$pre)
       if (is.null(J)) {
         return(NULL)
@@ -733,6 +782,14 @@ compute_analytic_plan_jacobian <- function(
 
       if (nrow(J) != length(estimate)) {
         return(NULL)
+      }
+      # A Jacobian built from designs stays a design: its standard errors
+      # come from quadratic_diagonal(), and its dense matrix is formed only
+      # on request (components(x, "jacobian")). Its model matrices were
+      # screened through the linear predictor; its row scales are screened
+      # here.
+      if (is_design_matrix(J)) {
+        return(if (mm_scales_finite(J)) J else NULL)
       }
       # Final guard on the output. The inputs were already screened by
       # align_matrix(), so this is a backstop for non-finite values produced
