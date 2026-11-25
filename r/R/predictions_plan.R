@@ -1,4 +1,4 @@
-prediction_prepare_newdata <- function(mfx, variables = NULL, keep_source = FALSE) {
+prediction_prepare_newdata <- function(mfx, variables = NULL) {
     # analogous to comparisons(variables=list(...))
     if (!is.null(variables)) {
         mfx <- add_variables(
@@ -14,17 +14,7 @@ prediction_prepare_newdata <- function(mfx, variables = NULL, keep_source = FALS
         for (v in mfx@variables) {
             args[[v$name]] <- v$value
         }
-        source <- mfx@newdata
         mfx@newdata <- do.call("datagrid", args)
-        # `rowidcf` numbers the rows of `source`, but the grid overwrites the
-        # focal variables and drops other columns. `vcov = "unconditional"`
-        # needs `source` to map the grid back to model-data rows when `source`
-        # is a subset of the model data, as in `newdata = subset(treat == 1)`.
-        # Kept only for that request, so other result objects do not carry a
-        # second copy of the data.
-        if (isTRUE(keep_source) && !"rowidcf" %in% colnames(source)) {
-            attr(mfx@newdata, "marginaleffects_counterfactual_source") <- source
-        }
     }
 
     if (!"rowid" %in% colnames(mfx@newdata)) {

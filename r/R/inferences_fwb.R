@@ -133,6 +133,8 @@ fwb_is_averaged <- function(mfx) {
 # Map each row of `newdata` to its row in the model data, or return NULL when
 # some rows of `newdata` are not rows of the model data.
 #
+# 0. The map recorded when `newdata` is a `subset()` or `filter()` call
+#    evaluated on the model data. This is exact and cheap.
 # 1. Row identifiers, where available: `rowidcf` in a counterfactual grid, and
 #    `rowid` when `newdata` is the model data. An identifier is only trusted
 #    after checking the values of the rows it points to, because `rowid` is
@@ -145,6 +147,10 @@ fwb_row_index <- function(mfx) {
     modeldata <- mfx@modeldata
     if (!inherits(newdata, "data.frame") || !inherits(modeldata, "data.frame")) {
         return(NULL)
+    }
+    idx <- newdata_modelrow_index(mfx, newdata)
+    if (!is.null(idx)) {
+        return(idx)
     }
     n <- nrow(modeldata)
     ignored <- c("rowid", "rowidcf", "rowid_dedup", "marginaleffects_wts_internal")

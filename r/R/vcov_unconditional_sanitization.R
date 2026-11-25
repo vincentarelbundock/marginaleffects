@@ -263,7 +263,9 @@ sanitize_unconditional_plan <- function(
     msg <- paste0(
         "`vcov = \"unconditional\"` requires effects evaluated over ",
         "original model-data rows, a subset of original rows with valid ",
-        "row IDs, or a full counterfactual grid that preserves `rowidcf`."
+        "row IDs, or a full counterfactual grid that preserves `rowidcf`. ",
+        "To target a subset of the model data, such as the treated units, ",
+        "use `newdata = subset(...)` or `by`."
     )
 
     # `original` is NULL for `cross = TRUE` comparisons.
@@ -324,7 +326,6 @@ get_unconditional_newdata_index <- function(mfx) {
     if (!inherits(newdata, "data.frame") || !"rowid" %in% colnames(newdata)) {
         return(NULL)
     }
-    source <- attr(newdata, "marginaleffects_counterfactual_source", exact = TRUE)
     # Padding rows (negative `rowid`) only supply factor levels and are dropped
     # from the estimates, so they have no model-data row.
     newdata <- drop_unconditional_padding(newdata)
@@ -332,39 +333,11 @@ get_unconditional_newdata_index <- function(mfx) {
     if (is.null(newdata) || anyDuplicated(newdata[["rowid"]]) > 0L) {
         return(NULL)
     }
-    index <- newdata_unconditional_row_index(mfx, newdata)
-
-    # A counterfactual grid built on a subset of the model data, such as
-    # `avg_predictions(variables = "treat", newdata = subset(treat == 1))`,
-    # numbers its units with `rowidcf` relative to the subset and overwrites
-    # the focal variables, so neither identifiers nor values point at a
-    # model-data row. Map the subset itself, then follow `rowidcf`, which
-    # `datagrid()` assigns as the row position in the subset.
-    if (is.null(index) &&
-        inherits(source, "data.frame") &&
-        "rowidcf" %in% colnames(newdata)) {
-        source <- as.data.frame(source)
-        source_index <- rep(NA_integer_, nrow(source))
-        keep <- if ("rowid" %in% colnames(source)) {
-            which(source[["rowid"]] > 0)
-        } else {
-            seq_len(nrow(source))
-        }
-        mapped <- newdata_unconditional_row_index(mfx, source[keep, , drop = FALSE])
-        rowidcf <- newdata[["rowidcf"]]
-        if (!is.null(mapped) &&
-            is.numeric(rowidcf) &&
-            !anyNA(rowidcf) &&
-            all(rowidcf >= 1 & rowidcf <= nrow(source) & rowidcf == round(rowidcf))) {
-            source_index[keep] <- mapped
-            index <- source_index[rowidcf]
-        }
-    }
-
-    if (is.null(index) || length(index) != nrow(newdata) || anyNA(index)) {
+    index <- newdata_modelrow_index(mfx, newdata)
+    if (is.null(index)) {
         return(NULL)
     }
-    list(rowid = newdata[["rowid"]], index = as.integer(index))
+    list(rowid = newdata[["rowid"]], index = index)
 }
 
 
@@ -375,15 +348,6 @@ drop_unconditional_padding <- function(newdata) {
         return(NULL)
     }
     newdata[which(rowid > 0), , drop = FALSE]
-}
-
-
-# Reuse the row matching of `inferences(method = "fwb")`, which checks row
-# identifiers against the model data and otherwise matches rows on their
-# values, pairing identical rows in order.
-newdata_unconditional_row_index <- function(mfx, newdata) {
-    mfx@newdata <- newdata
-    tryCatch(fwb_row_index(mfx), error = function(e) NULL)
 }
 
 
@@ -462,11 +426,11 @@ resolve_unconditional_rowid <- function(
         }
     }
 
-    # A user-supplied subset of the model data, such as `newdata = subset(treat
-    # == 1)` for the ATT, carries `rowid = seq_len(nrow(newdata))`, which says
-    # nothing about the model-data rows. `newdata_index` maps each `newdata`
-    # row to its model-data row using the same matching as `inferences(method =
-    # "fwb")`, which pairs identical rows in order; the source rows reach it
+    # A subset of the model data, such as `newdata = subset(treat == 1)` for
+    # the ATT, carries `rowid = seq_len(nrow(newdata))`, which says nothing
+    # about the model-data rows. `newdata_index` maps each `newdata` row to the
+    # model-data row it was taken from, as recorded when the `subset()` or
+    # `filter()` call was evaluated on the model data; the source rows reach it
     # through their `rowid`.
     if (is.null(out) &&
         !is.null(newdata_index) &&

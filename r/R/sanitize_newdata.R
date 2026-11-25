@@ -1,12 +1,34 @@
-sanitize_newdata_call <- function(scall, newdata = NULL, mfx = NULL, by = NULL) {
+sanitize_newdata_call <- function(scall, newdata = NULL, mfx = NULL, by = NULL, tag_modelrow = FALSE) {
     # For mice objects, defer newdata processing to process_imputation()
     if (!is.null(mfx) && inherits(mfx@model, c("mira", "amest"))) {
         # Return the call as-is, will be processed later with actual model data
         return(scall)
     }
 
+    # `subset()` and `filter()` calls are evaluated on the model data. With
+    # `tag_modelrow = TRUE`, the model data carries its row numbers in a
+    # temporary column, so each row of the result knows its model-data row.
+    # This is exact, even with duplicated or reordered rows, and it is cheap:
+    # adding a column does not copy the data. The row numbers are returned in
+    # the "marginaleffects_modelrow" attribute, and the column is removed.
+    tag <- "marginaleffects_modelrow_internal"
+    tagged_modeldata <- function() {
+        md <- mfx@modeldata
+        if (!isTRUE(tag_modelrow) || !inherits(md, "data.frame") || tag %in% colnames(md)) {
+            return(md)
+        }
+        if (data.table::is.data.table(md)) {
+            md <- data.table::copy(md)
+            data.table::set(md, j = tag, value = seq_len(nrow(md)))
+        } else {
+            md[[tag]] <- seq_len(nrow(md))
+        }
+        md
+    }
+
     if (rlang::quo_is_call(scall)) {
         df <- FALSE
+        tagged <- FALSE
         if (grepl("^datagrid", rlang::call_name(scall))) {
             if (!"model" %in% rlang::call_args_names(scall)) {
                 scall <- rlang::call_modify(scall, model = mfx@model)
@@ -16,12 +38,14 @@ sanitize_newdata_call <- function(scall, newdata = NULL, mfx = NULL, by = NULL) 
         } else if (isTRUE(rlang::call_name(scall) == "subset")) {
             argnames <- rlang::call_args_names(scall)
             if (!"x" %in% argnames && length(argnames) == 1) {
-                scall <- rlang::call_modify(scall, x = mfx@modeldata)
+                scall <- rlang::call_modify(scall, x = tagged_modeldata())
+                tagged <- TRUE
             }
         } else if (isTRUE(rlang::call_name(scall) == "filter")) {
             argnames <- rlang::call_args_names(scall)
             if (!".data" %in% argnames && length(argnames) == 1) {
-                scall <- rlang::call_modify(scall, .data = mfx@modeldata)
+                scall <- rlang::call_modify(scall, .data = tagged_modeldata())
+                tagged <- TRUE
             }
         } else if (rlang::call_name(scall) %in% "visualisation_matrix") {
             if (!"x" %in% rlang::call_args_names(scall)) {
@@ -32,6 +56,16 @@ sanitize_newdata_call <- function(scall, newdata = NULL, mfx = NULL, by = NULL) 
         # newdata=data.frame() all columns must be printed as explicit in print.R
         if (isTRUE(df)) {
             attr(out, "implicit") <- unique(c(attr(out, "implicit"), colnames(out)))
+        }
+        if (tagged && inherits(out, "data.frame") && tag %in% colnames(out)) {
+            modelrow <- out[[tag]]
+            if (data.table::is.data.table(out)) {
+                out <- data.table::copy(out)
+                data.table::set(out, j = tag, value = NULL)
+            } else {
+                out[[tag]] <- NULL
+            }
+            attr(out, "marginaleffects_modelrow") <- as.integer(modelrow)
         }
     } else {
         out <- newdata
@@ -231,7 +265,11 @@ add_newdata <- function(
     }
 
     # Step 1: Handle quoted calls to datagrid, subset, etc.
-    newdata <- sanitize_newdata_call(scall, newdata, mfx = mfx, by = by)
+    newdata <- sanitize_newdata_call(scall, newdata, mfx = mfx, by = by, tag_modelrow = TRUE)
+    modelrow <- attr(newdata, "marginaleffects_modelrow", exact = TRUE)
+    if (!is.null(modelrow)) {
+        attr(newdata, "marginaleffects_modelrow") <- NULL
+    }
 
     # Step 2: Streamlined newdata processing (combines sanitize_newdata + build_newdata)
     newdata <- sanitize_newdata(
@@ -240,6 +278,17 @@ add_newdata <- function(
         by = by,
         wts = wts
     )
+
+    # Map the rows of `newdata` to model-data rows, keyed by `rowid`. Used by
+    # `vcov = "unconditional"` and `inferences(method = "fwb")`.
+    mfx@newdata_modelrow <- NULL
+    if (!is.null(modelrow) &&
+        length(modelrow) == nrow(newdata) &&
+        !anyNA(modelrow) &&
+        "rowid" %in% colnames(newdata) &&
+        anyDuplicated(newdata[["rowid"]]) == 0L) {
+        mfx@newdata_modelrow <- list(rowid = newdata[["rowid"]], index = modelrow)
+    }
 
     # Step 3: Extract numeric weights from newdata and store in @wts slot
     if ("marginaleffects_wts_internal" %in% colnames(newdata)) {
@@ -294,4 +343,35 @@ add_newdata <- function(
 
     # Return the updated mfx object
     return(mfx)
+}
+
+
+# Map the rows of `newdata` to model-data rows using `mfx@newdata_modelrow`,
+# or return NULL. `newdata` is `mfx@newdata` or a later version of it: a row
+# keeps its `rowid`, and a counterfactual grid built by `datagrid()` numbers its
+# source rows with `rowidcf`, their position in the `newdata` that
+# `add_newdata()` built.
+newdata_modelrow_index <- function(mfx, newdata) {
+    map <- mfx@newdata_modelrow
+    if (is.null(map) || !inherits(newdata, "data.frame")) {
+        return(NULL)
+    }
+    if ("rowidcf" %in% colnames(newdata)) {
+        pos <- newdata[["rowidcf"]]
+        ok <- is.numeric(pos) &&
+            !anyNA(pos) &&
+            all(pos >= 1 & pos <= length(map$index) & pos == round(pos))
+        if (!ok) {
+            return(NULL)
+        }
+        out <- map$index[pos]
+    } else if ("rowid" %in% colnames(newdata)) {
+        out <- map$index[match(newdata[["rowid"]], map$rowid)]
+    } else {
+        return(NULL)
+    }
+    if (length(out) != nrow(newdata) || anyNA(out)) {
+        return(NULL)
+    }
+    as.integer(out)
 }
