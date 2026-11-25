@@ -98,5 +98,6 @@ for (spec in list(
     ref <- ref[ref$race == "hispan", ]
     sub <- avg_predictions(mod, newdata = subset(race == "hispan"), vcov = vcovUnconditional())
     expect_equivalent(sub$estimate, ref$estimate, tolerance = 1e-10)
-    expect_equivalent(sub$std.error, ref$std.error, tolerance = 1e-10)
+    # `polr` agrees to about 2.5e-10.
+    expect_equivalent(sub$std.error, ref$std.error, tolerance = 1e-8)
 }

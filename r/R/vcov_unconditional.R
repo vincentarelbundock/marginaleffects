@@ -739,7 +739,12 @@ get_unconditional_coef <- function(model) {
 # Supporting models with nuisance parameters requires retaining their full
 # score/bread system and, when relevant, including them in the estimand Jacobian.
 get_unconditional_beta_dot <- function(model) {
-    insight::check_if_installed("sandwich")
+    # `sandwich::estfun()` gained its `nnet::multinom()` method in 3.1-2.
+    if (identical(class(model)[1], "multinom")) {
+        insight::check_if_installed("sandwich", minimum_version = "3.1-2")
+    } else {
+        insight::check_if_installed("sandwich")
+    }
     if (inherits(model, "svyglm")) {
         # Inspired by Noah Greifer's implementation in the adrftools package.
         # survey::svyglm() can save the observation-level coefficient

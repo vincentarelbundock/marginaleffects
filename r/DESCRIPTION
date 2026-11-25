@@ -172,7 +172,7 @@ Suggests:
     rstudioapi,
     rsvg,
     sampleSelection,
-    sandwich,
+    sandwich (>= 3.1-2),
     scam,
     spelling,
     speedglm,

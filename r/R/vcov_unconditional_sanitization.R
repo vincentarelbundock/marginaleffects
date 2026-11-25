@@ -291,7 +291,14 @@ sanitize_unconditional_plan <- function(
         source_idx <- rep(seq_len(n_source), times = n_pred %/% n_source)
     } else {
         stop_sprintf(
-            "Internal error: %d predictions cannot be mapped to %d source rows for `vcov = \"unconditional\"`.",
+            paste0(
+                "`vcov = \"unconditional\"` is not supported for models of class `%s` ",
+                "with this `type`: the model returned %d predictions for %d rows of ",
+                "`newdata`, and they cannot be mapped to rows of the model data. ",
+                "Supported multi-outcome classes are `multinom`, `polr`, ",
+                "`multinom_weightit`, and `ordinal_weightit`."
+            ),
+            class(model)[1],
             n_pred,
             n_source
         )
