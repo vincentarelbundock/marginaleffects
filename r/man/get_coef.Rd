@@ -6,8 +6,8 @@
 %   R/methods_glmmTMB.R, R/methods_glmtoolbox.R, R/methods_lme4.R,
 %   R/methods_mclogit.R, R/methods_mgcv.R, R/methods_mlm.R, R/methods_mmrm.R,
 %   R/methods_nestedLogit.R, R/methods_ordinal.R, R/methods_sampleSelection.R,
-%   R/methods_scam.R, R/methods_survey.R, R/methods_svyVGAM.R,
-%   R/methods_systemfit.R, R/methods_tidymodels.R
+%   R/methods_scam.R, R/methods_survey.R, R/methods_survival.R,
+%   R/methods_svyVGAM.R, R/methods_systemfit.R, R/methods_tidymodels.R
 \name{get_coef}
 \alias{get_coef}
 \alias{get_coef.default}
@@ -38,6 +38,7 @@
 \alias{get_coef.selection}
 \alias{get_coef.scam}
 \alias{get_coef.svyolr}
+\alias{get_coef.coxph.penal}
 \alias{get_coef.svy_vglm}
 \alias{get_coef.systemfit}
 \alias{get_coef.workflow}
@@ -100,6 +101,8 @@ get_coef(model, ...)
 \method{get_coef}{scam}(model, ...)
 
 \method{get_coef}{svyolr}(model, ...)
+
+\method{get_coef}{coxph.penal}(model, ...)
 
 \method{get_coef}{svy_vglm}(model, ...)
 

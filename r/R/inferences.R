@@ -199,6 +199,10 @@ inferences <- function(
         data_test <- mfx@newdata
     }
 
+    if (coxph_has_sparse_frailty(mfx@model)) {
+        stop_sprintf("Sparse frailty models support point estimates only.")
+    }
+
     if (inherits(mfx@model, c("Learner", "model_fit", "workflow"))) {
         if (method == "simulation") {
             msg <- "Simulation-based inference is not supported for this class."

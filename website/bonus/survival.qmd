@@ -393,7 +393,12 @@ $$
 
 The variance of this prediction can be obtained from the estimated variance--covariance matrix of the coefficients alone. By contrast, uncertainty for survival and cumulative-hazard predictions must also account for the estimation of $H_{0}(t)$ and its dependence on $\hat\beta$.
 
-`marginaleffects` applies the multivariate delta method to propagate uncertainty from $\hat\beta$ to any user-defined function $g(\hat\beta)$. For Cox models, the current implementation does not propagate all uncertainty in $\hat H_{0}(t)$. This can make confidence intervals for absolute survival or cumulative-hazard predictions too narrow, sometimes substantially. The effect can be much smaller for contrasts because shared baseline-hazard uncertainty may cancel.
+`marginaleffects` applies the multivariate delta method to propagate uncertainty from $\hat\beta$ to any user-defined function $g(\hat\beta)$. For Cox models, $\hat H_{0}(t)$ contributes uncertainty through two channels:
+
+1. Its dependence on $\hat\beta$. When $\hat\beta$ changes, the Breslow estimate of $H_{0}(t)$ changes with it. The delta method in `marginaleffects` recomputes $\hat H_{0}(t)$ at every perturbed value of $\hat\beta$, so this channel is accounted for.
+2. Its own sampling variability. Even if $\beta$ were known exactly, $\hat H_{0}(t)$ would still be estimated from a finite number of events and risk sets. The delta method propagates only $\widehat{\text{Var}}(\hat\beta)$, so it ignores this channel.
+
+The second channel is usually the larger one. For example, for a single covariate profile in a Cox model fitted to the `lung` data, delta method standard errors for survival probabilities are about half as large as those from `survfit()` or from a non-parametric bootstrap. Confidence intervals for absolute survival or cumulative-hazard predictions can therefore be substantially too narrow. The effect can be much smaller for contrasts because shared baseline-hazard uncertainty may cancel.
 
 A simple remedy is the non‑parametric bootstrap: resample subjects (or clusters) with replacement, refit the Cox model in each replicate, and re‑calculate the target function.  Because every replicate re‑estimates both $\beta$ *and* $H_{0}(t)$, the resulting empirical distribution captures their joint variability without analytic derivations.  While computationally heavier, this method usually restores nominal coverage and works seamlessly with `marginaleffects` via the `vcov = "rsample"` argument or the `inferences()` function.
 
