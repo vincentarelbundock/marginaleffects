@@ -98,6 +98,10 @@ get_coef.coxph.penal <- function(model, ...) {
     stats::coef(model)
 }
 
+coxph_has_sparse_frailty <- function(model) {
+    inherits(model, "coxph.penal") && any(model[["pterms"]] == 2L)
+}
+
 #' @rdname get_predict
 #' @export
 get_predict.coxph <- function(
@@ -105,6 +109,14 @@ get_predict.coxph <- function(
     newdata = get_modeldata(model),
     type = "lp",
     ...) {
+    if (inherits(model, "coxph.penal")) {
+        # Direct callers can bypass sanitize_type(). Reject partial matches
+        # before checking for an offset.
+        type <- sanitize_type(model, type)
+        if (coxph_has_sparse_frailty(model) && !type %in% c("lp", "risk")) {
+            stop_sprintf('Sparse frailty models support only `type = "lp"` and `type = "risk"`, with the random effect set to zero.')
+        }
+    }
     if (isTRUE(type %in% c("expected", "survival")) && model_has_effective_offset(model)) {
         # With `newdata`, `predict.coxph()` adds the offset outside `exp()` for
         # these types, which gives wrong estimates. `get_predict()` always
@@ -113,10 +125,6 @@ get_predict.coxph <- function(
             '`type = "%s"` is not supported for `coxph` models with an offset, because `survival::predict.coxph()` mishandles the offset when `newdata` is supplied. Use `type = "lp"` or `type = "risk"`.',
             type
         )
-        stop_sprintf(msg)
-    }
-    if (identical(type, "survival") && inherits(model, "coxph.penal")) {
-        msg <- '`type = "survival"` is not supported for penalized `coxph` models (e.g., with `ridge()` or `pspline()` terms), because `survival::predict.coxph.penal()` does not support it. Use `type = "lp"`, `"risk"`, or `"expected"`.'
         stop_sprintf(msg)
     }
     out <- stats::predict(model, newdata = newdata, type = type, ...)
@@ -130,19 +138,23 @@ get_predict.coxph <- function(
 #' @export
 sanitize_model_specific.coxph <- function(model, vcov, ...) {
     insight::check_if_installed("survival")
-    # `ridge()` and `pspline()` map one column of the design matrix to one
-    # coefficient, so `coef()`, `vcov()`, and `predict()` agree. Frailty terms
-    # do not: their random effects are stored outside `coef()` (sparse) or
-    # mixed into it as `gamma:` coefficients, and the coefficient covariance
-    # does not describe them.
-    penalized <- names(model[["pterms"]])[model[["pterms"]] > 0]
+    # survival marks dense penalties with 1 and sparse frailty terms with 2.
+    # Dense frailty mixes random effects into coef() as gamma: coefficients.
+    pterms <- model[["pterms"]]
+    penalized <- names(pterms)[pterms == 1L]
     unsupported <- penalized[!grepl("^(survival::)?(ridge|pspline)\\(", penalized)]
     if (length(unsupported) > 0) {
         msg <- sprintf(
-            "`marginaleffects` does not support `coxph` models with these penalized terms: %s. Supported penalized terms are `ridge()` and `pspline()`.",
+            "`marginaleffects` does not support `coxph` models with these dense penalized terms: %s. Supported dense penalties are `ridge()` and `pspline()`.",
             paste(sprintf("`%s`", unsupported), collapse = ", ")
         )
         stop_sprintf(msg)
+    }
+    if (coxph_has_sparse_frailty(model)) {
+        if (!isFALSE(vcov)) {
+            stop_sprintf("Sparse frailty models support point estimates only. Set `vcov = FALSE`.")
+        }
+        return(model)
     }
     flag1 <- !isFALSE(vcov)
     flag2 <- !isTRUE(checkmate::check_choice(vcov, choices = c("rsample", "boot", "fwb")))

@@ -42,6 +42,9 @@ coxph,survival
 coxph,expected
 coxph,lp
 coxph,risk
+coxph.penal,lp
+coxph.penal,risk
+coxph.penal,expected
 coxph_weightit,survival
 coxph_weightit,expected
 coxph_weightit,lp
