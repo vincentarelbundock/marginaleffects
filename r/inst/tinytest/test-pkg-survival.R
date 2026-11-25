@@ -232,3 +232,43 @@ mod_set <- set_coef(mod_cox_strata, b)
 mod_ref <- suppressWarnings(update(mod_cox_strata, init = b, control = coxph.control(iter.max = 0)))
 expect_equivalent(coef(mod_set), b)
 expect_equivalent(mod_set$linear.predictors, mod_ref$linear.predictors)
+
+
+# Penalized coxph models: `ridge()` and `pspline()` are supported, with one
+# coefficient per design matrix column; frailty terms are rejected.
+dat_pen <- na.omit(survival::lung[, c("time", "status", "age", "sex", "inst", "wt.loss")])
+nd_pen <- head(dat_pen)
+mod_ps <- coxph(Surv(time, status) ~ pspline(age, df = 4) + sex, data = dat_pen)
+expect_equal(get_coef(mod_ps), coef(mod_ps))
+ref <- predict(mod_ps, newdata = nd_pen, type = "lp", se.fit = TRUE)
+p <- predictions(mod_ps, newdata = nd_pen, type = "lp", vcov = vcov(mod_ps))
+expect_equivalent(p$estimate, ref$fit)
+expect_equivalent(p$std.error, ref$se.fit, tolerance = 1e-4)
+expect_inherits(avg_comparisons(mod_ps, variables = "sex", type = "expected", vcov = vcov(mod_ps)), "comparisons")
+expect_error(predictions(mod_ps, type = "survival", vcov = FALSE), pattern = "penalized")
+
+mod_ridge <- coxph(Surv(time, status) ~ ridge(age, wt.loss, theta = 1) + sex, data = dat_pen)
+ref <- predict(mod_ridge, newdata = nd_pen, type = "lp", se.fit = TRUE)
+p <- predictions(mod_ridge, newdata = nd_pen, type = "lp", vcov = vcov(mod_ridge))
+expect_equivalent(p$std.error, ref$se.fit, tolerance = 1e-4)
+
+mod_frail <- coxph(Surv(time, status) ~ age + sex + frailty(inst), data = dat_pen)
+expect_error(predictions(mod_frail, vcov = FALSE), pattern = "frailty")
+mod_frail <- suppressWarnings(coxph(Surv(time, status) ~ age + sex + frailty(inst, sparse = FALSE), data = dat_pen))
+expect_error(predictions(mod_frail, vcov = FALSE), pattern = "frailty")
+mod_frail <- coxph(Surv(time, status) ~ age + sex + frailty.gaussian(inst), data = dat_pen)
+expect_error(predictions(mod_frail, vcov = FALSE), pattern = "frailty")
+
+
+# coxph with an offset: `predict.coxph()` mishandles the offset with `newdata`
+# for "expected" and "survival", so those types are rejected.
+dat_off <- dat_pen
+set.seed(1)
+dat_off$off <- rnorm(nrow(dat_off), 0, 0.7)
+mod_off <- coxph(Surv(time, status) ~ age + sex + offset(off), data = dat_off)
+expect_error(predictions(mod_off, type = "expected", vcov = FALSE), pattern = "offset")
+expect_error(predictions(mod_off, type = "survival", vcov = FALSE), pattern = "offset")
+p <- predictions(mod_off, type = "lp", vcov = FALSE)
+expect_equivalent(p$estimate, predict(mod_off, type = "lp"))
+p <- predictions(mod_off, type = "risk", vcov = FALSE)
+expect_equivalent(p$estimate, predict(mod_off, type = "risk"))

@@ -56,10 +56,9 @@ set_coef.coxph <- function(model, coefs, ...) {
     model <- set_coef.default(model, coefs)
     new <- model[["coefficients"]]
 
-    # `get_coef()` and `coef()` disagree for some penalized fits (`pspline()`,
-    # `frailty()`), and the name-indexed assignment then appends entries.
-    # Those models fail later regardless; do not compound it with a recycled
-    # subtraction.
+    # If `get_coef()` and `coef()` ever disagree, the name-indexed assignment
+    # appends entries instead of replacing them. Do not compound that with a
+    # recycled subtraction.
     if (is.null(model[["linear.predictors"]]) || length(new) != length(old)) {
         return(model)
     }
@@ -90,6 +89,15 @@ set_coef.coxph <- function(model, coefs, ...) {
     model
 }
 
+#' @rdname get_coef
+#' @export
+get_coef.coxph.penal <- function(model, ...) {
+    # `insight::get_parameters()` returns one row per term of the printed
+    # summary (e.g., "linear" and "nonlin" for `pspline()`), not one per
+    # coefficient.
+    stats::coef(model)
+}
+
 #' @rdname get_predict
 #' @export
 get_predict.coxph <- function(
@@ -97,6 +105,20 @@ get_predict.coxph <- function(
     newdata = get_modeldata(model),
     type = "lp",
     ...) {
+    if (isTRUE(type %in% c("expected", "survival")) && model_has_effective_offset(model)) {
+        # With `newdata`, `predict.coxph()` adds the offset outside `exp()` for
+        # these types, which gives wrong estimates. `get_predict()` always
+        # supplies `newdata`.
+        msg <- sprintf(
+            '`type = "%s"` is not supported for `coxph` models with an offset, because `survival::predict.coxph()` mishandles the offset when `newdata` is supplied. Use `type = "lp"` or `type = "risk"`.',
+            type
+        )
+        stop_sprintf(msg)
+    }
+    if (identical(type, "survival") && inherits(model, "coxph.penal")) {
+        msg <- '`type = "survival"` is not supported for penalized `coxph` models (e.g., with `ridge()` or `pspline()` terms), because `survival::predict.coxph.penal()` does not support it. Use `type = "lp"`, `"risk"`, or `"expected"`.'
+        stop_sprintf(msg)
+    }
     out <- stats::predict(model, newdata = newdata, type = type, ...)
     out <- data.table(estimate = out)
     out <- add_rowid(out, newdata)
@@ -108,6 +130,20 @@ get_predict.coxph <- function(
 #' @export
 sanitize_model_specific.coxph <- function(model, vcov, ...) {
     insight::check_if_installed("survival")
+    # `ridge()` and `pspline()` map one column of the design matrix to one
+    # coefficient, so `coef()`, `vcov()`, and `predict()` agree. Frailty terms
+    # do not: their random effects are stored outside `coef()` (sparse) or
+    # mixed into it as `gamma:` coefficients, and the coefficient covariance
+    # does not describe them.
+    penalized <- names(model[["pterms"]])[model[["pterms"]] > 0]
+    unsupported <- penalized[!grepl("^(survival::)?(ridge|pspline)\\(", penalized)]
+    if (length(unsupported) > 0) {
+        msg <- sprintf(
+            "`marginaleffects` does not support `coxph` models with these penalized terms: %s. Supported penalized terms are `ridge()` and `pspline()`.",
+            paste(sprintf("`%s`", unsupported), collapse = ", ")
+        )
+        stop_sprintf(msg)
+    }
     flag1 <- !isFALSE(vcov)
     flag2 <- !isTRUE(checkmate::check_choice(vcov, choices = c("rsample", "boot", "fwb")))
     flag3 <- isTRUE(getOption("marginaleffects_safe", default = TRUE))
