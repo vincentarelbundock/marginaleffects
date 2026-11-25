@@ -43,7 +43,20 @@ components.marginaleffects <- function(object, component = NULL, ...) {
 
     checkmate::assert_choice(component, choices = valid_components)
 
-    return(methods::slot(mfx, component))
+    out <- methods::slot(mfx, component)
+    if (identical(component, "jacobian")) {
+        out <- mm_dense(out)
+    }
+    # The model matrix cached on `newdata` is part of the public contract
+    # (marginaleffectsJAX reads it): a lazy design is expanded to the dense
+    # matrix the dense path caches.
+    if (identical(component, "newdata") && is.data.frame(out)) {
+        MM <- attr(out, "marginaleffects_model_matrix", exact = TRUE)
+        if (is_design_matrix(MM)) {
+            attr(out, "marginaleffects_model_matrix") <- mm_model_matrix(MM)
+        }
+    }
+    return(out)
 }
 
 #' @export

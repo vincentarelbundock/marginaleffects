@@ -30,7 +30,7 @@ get_predict.lm <- function(
     ...) {
     MM <- attr(newdata, "marginaleffects_model_matrix")
     beta <- get_coef(model)
-    if (!isTRUE(checkmate::check_matrix(MM)) || ncol(MM) != length(beta)) {
+    if (!is_model_matrix_cache(MM) || ncol(MM) != length(beta)) {
         out <- tryCatch(
             get_predict.default(
                 model = model,
@@ -54,10 +54,10 @@ get_predict.lm <- function(
     p1 <- seq_len(p)
     piv <- if (p) qr(model)$pivot[p1]
     if (!all(seq_len(ncol(MM)) %in% piv)) {
-        MM <- MM[, piv, drop = FALSE]
+        MM <- mm_dense(MM)[, piv, drop = FALSE]
         beta <- beta[piv]
     }
-    pred <- drop(MM %*% beta)
+    pred <- as.vector(MM %*% beta)
 
     # `pred` is a secret argument which re-uses the default get_predict to format a vector a data frame using correct `rowid`
     out <- get_predict.default(
@@ -86,7 +86,7 @@ get_predict.glm <- function(
     link <- isTRUE(checkmate::check_choice(type, "link"))
     response <- isTRUE(checkmate::check_choice(type, "response")) || is.null(type)
     MM <- attr(newdata, "marginaleffects_model_matrix")
-    if (isTRUE(checkmate::check_matrix(MM)) && (link || response)) {
+    if (is_model_matrix_cache(MM) && (link || response)) {
         out <- get_predict.lm(model = model, newdata = newdata, ...)
         if (response) {
             out$estimate <- stats::family(model)$linkinv(out$estimate)

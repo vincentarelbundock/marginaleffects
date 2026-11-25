@@ -9,6 +9,9 @@ New features:
 
 Performance:
 
+* When the optional `design.matrix` package is installed, `lm` and `glm` models build their model matrices lazily and compute predictions, averaged Jacobians, and unit-level standard errors directly from factor codes and numeric variables, without forming the dense matrix. On a 1 million row logit, unit-level `predictions()`, `comparisons()`, and `slopes()` are 2.5 to 3.6 times faster (4 to 5 times with `design.matrix::design_threads(8)`), `avg_*()` functions are 1.6 to 2.4 times faster, and the stored Jacobian shrinks from 816 MB to under 70 MB. Disable with `options(marginaleffects_design_matrix = FALSE)`.
+* Analytic Jacobians of averaged and grouped comparisons are contracted in a single pass. `avg_comparisons(by = ...)` on large data is faster even without `design.matrix`. Standard errors can differ from earlier versions by floating point rounding.
+
 * Exact analytic Jacobians for additional model classes and VCOVs: `fixest::feols()` (excl. IV models) and `fixest::feglm()` (excl. models with FEs), `WeightIt::glm_weightit()` and `WeightIt::lm_weightit()`, and `vcov = "unconditional"` (extends automatically to analytic-eligible models, e.g. `lm`, `glm`, `fixest`, etc.). Thanks to @grantmcdermott for PR #1769.
 
 Bug fixes:

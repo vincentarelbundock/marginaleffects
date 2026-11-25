@@ -56,7 +56,7 @@ setClass(
         hypothesis_null = "ANY",
         hypothesis_direction = "ANY",
         inferences = "ANY",
-        jacobian = "matrixOrNULL",
+        jacobian = "ANY", # matrix, NULL, or a design.matrix design (model_matrix_ops.R)
         jacobian_method = "characterOrNULL",
         model = "ANY",
         modeldata = "ANY", # TODO: lmerTest returns nfnGroupedData
