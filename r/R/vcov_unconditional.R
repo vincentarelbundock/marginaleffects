@@ -374,7 +374,12 @@ get_unconditional_comparison_base <- function(plan, model, rowid, n) {
 
     est <- numeric(plan$n_comp)
     est_rowid <- rep(NA_integer_, plan$n_comp)
-    phi <- matrix(0, nrow = n, ncol = plan$n_comp)
+    # Only scalar comparisons carry influence values at this stage; unit-level
+    # comparisons get theirs when they are aggregated. Store the nonzero
+    # columns alone: a dense `n` x `n_comp` matrix is quadratic in `n` when
+    # the comparisons are unit-level.
+    phi_cols <- integer()
+    phi_vals <- list()
 
     for (g in plan$groups) {
         con <- comparison_plan_group_eval(g, hi = hi, lo = lo, y = y)
@@ -388,7 +393,8 @@ get_unconditional_comparison_base <- function(plan, model, rowid, n) {
         if (length(con) == length(g$idx)) {
             est_rowid[g$out_idx] <- rowid[g$idx]
         } else if (length(con) == 1L && length(g$idx) > 1L) {
-            phi[, g$out_idx] <- get_unconditional_scalar_comparison_phi(
+            phi_cols <- c(phi_cols, g$out_idx)
+            phi_vals[[length(phi_vals) + 1L]] <- get_unconditional_scalar_comparison_phi(
                 group = g,
                 hi = hi,
                 lo = lo,
@@ -402,10 +408,38 @@ get_unconditional_comparison_base <- function(plan, model, rowid, n) {
     if (!is.null(plan$est_keep)) {
         est <- est[plan$est_keep]
         est_rowid <- est_rowid[plan$est_keep]
-        phi <- phi[, plan$est_keep, drop = FALSE]
+        # Renumber the stored columns to their positions after `est_keep`.
+        pos <- match(phi_cols, seq_len(plan$n_comp)[plan$est_keep])
+        phi_vals <- phi_vals[!is.na(pos)]
+        phi_cols <- pos[!is.na(pos)]
     }
 
+    phi <- new_unconditional_sparse_phi(phi_cols, phi_vals, n)
     list(estimate = est, rowid = est_rowid, phi = phi)
+}
+
+
+# Influence columns of which only a few are nonzero: `cols` indexes the
+# estimates, and column j of `values` holds the influence values of estimate
+# `cols[j]`. Every other estimate has zero influence.
+new_unconditional_sparse_phi <- function(cols, values, n) {
+    mat <- if (length(values) > 0L) {
+        do.call(cbind, values)
+    } else {
+        matrix(0, nrow = n, ncol = 0L)
+    }
+    list(cols = as.integer(cols), values = mat)
+}
+
+
+# Dense `n` x `k` version, for when no aggregation follows and `k` is the
+# number of reported estimates.
+densify_unconditional_phi <- function(phi, k, n) {
+    out <- matrix(0, nrow = n, ncol = k)
+    if (!is.null(phi) && length(phi$cols) > 0L) {
+        out[, phi$cols] <- phi$values
+    }
+    out
 }
 
 
@@ -579,13 +613,10 @@ get_unconditional_known_scalar_comparison_phi <- function(
 # `base_phi` carries influence already created by a scalar comparison through a
 # possible second aggregation stage.
 get_unconditional_aggregate_phi <- function(agg, base_est, rowid, n, base_phi = NULL) {
-    if (is.null(base_phi)) {
-        base_phi <- matrix(0, nrow = n, ncol = length(base_est))
-    }
-
     if (is.null(agg)) {
-        return(base_phi)
+        return(densify_unconditional_phi(base_phi, length(base_est), n))
     }
+    has_base_phi <- !is.null(base_phi) && length(base_phi$cols) > 0L
 
     out <- matrix(0, nrow = n, ncol = agg$n)
 
@@ -617,7 +648,14 @@ get_unconditional_aggregate_phi <- function(agg, base_est, rowid, n, base_phi = 
             alpha <- numeric(length(ej))
             alpha[ok] <- wj[ok] / sum(wj[ok])
             # Linear combinations of already-linearized scalar estimates.
-            out[, col] <- out[, col] + as.vector(base_phi[, idx, drop = FALSE] %*% alpha)
+            if (has_base_phi) {
+                pos <- match(idx, base_phi$cols)
+                sel <- !is.na(pos) & alpha != 0
+                if (any(sel)) {
+                    out[, col] <- out[, col] +
+                        as.vector(base_phi$values[, pos[sel], drop = FALSE] %*% alpha[sel])
+                }
+            }
 
             # Direct empirical-distribution contribution of this average.
             ok_rowid <- ok & !is.na(rj)
