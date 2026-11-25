@@ -91,3 +91,38 @@ expect_error(
     avg_predictions(mod, wts = "(weights)", vcov = vcovUnconditional(cluster = ~dnum)),
     pattern = "cannot be supplied"
 )
+
+# Two-phase designs read their variables from the phase-1 sample, so the
+# influence values must be passed to svytotal() as a matrix. The reference
+# linearizes the weighted average prediction by hand.
+if (requiet("survival")) {
+    data(nwtco, package = "survival")
+    d2 <- twophase(
+        id = list(~seqno, ~seqno), strata = list(NULL, ~rel),
+        subset = ~I(in.subcohort | rel), data = nwtco
+    )
+    mod <- svyglm(rel ~ factor(stage) + age, design = d2, family = quasibinomial(), influence = TRUE)
+    p <- avg_predictions(mod, wts = "(weights)", vcov = "unconditional")
+    w <- weights(d2)
+    X <- model.matrix(mod)
+    mu <- drop(plogis(X %*% coef(mod)))
+    theta <- sum(w * mu) / sum(w)
+    z <- w * (mu - theta) / sum(w) +
+        drop(attr(mod, "influence") %*% (colSums(w * mu * (1 - mu) * X) / sum(w)))
+    se <- sqrt(as.numeric(vcov(svytotal(matrix(z / w), d2))))
+    expect_equivalent(p$std.error, se, tolerance = 1e-8)
+}
+
+# A user column that shares a name with an internal column does not change
+# the standard errors
+se_collision <- function(dat) {
+    d <- svydesign(id = ~dnum, weights = ~pw, data = dat)
+    m <- svyglm(api00 ~ ell + meals, design = d)
+    avg_predictions(m, wts = "(weights)", vcov = "unconditional")$std.error
+}
+set.seed(1)
+expect_equivalent(
+    se_collision(transform(apiclus1, .marginaleffects_if_1 = rnorm(nrow(apiclus1)))),
+    se_collision(apiclus1),
+    tolerance = 1e-12
+)

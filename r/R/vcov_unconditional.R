@@ -893,11 +893,10 @@ get_unconditional_vcov_survey <- function(z, design) {
     z <- z / w
     z[w == 0, ] <- 0
 
-    z_names <- sprintf(".marginaleffects_if_%d", seq_len(ncol(z)))
-    colnames(z) <- z_names
-    design$variables <- cbind(design$variables, z)
-
-    V <- survey::svytotal(stats::reformulate(z_names), design = design)
+    # Pass the matrix itself rather than appending columns to
+    # design$variables: two-phase designs read their variables from the
+    # phase-1 sample, and appended columns could collide with user columns.
+    V <- survey::svytotal(z, design = design)
     matrix(stats::vcov(V), nrow = ncol(z), ncol = ncol(z))
 }
 
