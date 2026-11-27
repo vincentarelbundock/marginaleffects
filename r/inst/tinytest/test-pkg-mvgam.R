@@ -8,6 +8,7 @@ if (!requiet("mvgam")) exit_file("mvgam not installed")
 # mvgam prediction arguments raise no warning
 mod_class <- structure(list(), class = "mvgam")
 expect_silent(marginaleffects:::sanity_dots(mod_class, process_error = TRUE, ndraws = 10))
+expect_silent(marginaleffects:::sanity_dots(mod_class, dpar = "sigma"))
 
 
 # load a pre-compiled model

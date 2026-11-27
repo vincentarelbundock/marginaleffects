@@ -52,7 +52,8 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
         "allow_new_levels",
         "sample_new_levels",
         "incl_autocor",
-        "resp"
+        "resp",
+        "dpar"
     ) # mvgam
     valid[["mvgam_pooled"]] <- valid[["mvgam"]]
     valid[["flexsurvreg"]] <- c("times", "p", "start")
