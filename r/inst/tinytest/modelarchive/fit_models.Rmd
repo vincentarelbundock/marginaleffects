@@ -127,3 +127,19 @@ dat$y <- as.numeric(dat$emp > median(dat$emp))
 brms_logit_re <- brm(y ~ x + (1 | firm), data = dat, backend = "cmdstanr", family = "bernoulli")
 saveRDS(brms_logit_re, "data/brms_logit_re.rds")
 ```
+
+## `mvgam`
+
+```{r}
+#| eval: false
+library("mvgam")
+
+# two Poisson series with a smooth covariate effect and AR(1) latent trends
+simdat <- sim_mvgam(family = poisson(), n_series = 2L, n_timepoints = 48L,
+                    trend_model = AR(), seed = 1024)
+mvgam_ar <- mvgam(y ~ s(x, k = 5) + series, trend_formula = ~ AR(p = 1),
+                  data = simdat$data_train, family = poisson(),
+                  backend = "cmdstanr", chains = 2, iter = 1000, seed = 1024,
+                  silent = 2)
+saveRDS(mvgam_ar, "data/mvgam_ar.rds")
+```
